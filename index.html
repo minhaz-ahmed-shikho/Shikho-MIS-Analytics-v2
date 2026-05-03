@@ -551,6 +551,353 @@ canvas{font-family:'Poppins','Hind Siliguri','Inter',Arial,sans-serif}
   flex:0 0 28px;
 }
 
+/* ===== Control Room Redesign v2 ===== */
+:root{
+  --navy:#334487;
+  --navy-2:#5263B8;
+  --navy-deep:#111827;
+  --magenta:#C02980;
+  --gold:#D79A16;
+  --teal:#1F9EAD;
+  --green:#16815D;
+  --green-bg:#E8F6F0;
+  --red:#D1435B;
+  --red-bg:#FCECEF;
+  --amber:#B26A00;
+  --amber-bg:#FFF5E0;
+  --bg:#F6F7F9;
+  --card:#FFFFFF;
+  --surface:#FFFFFF;
+  --surface-2:#F9FAFB;
+  --text:#111827;
+  --muted:#667085;
+  --faint:#98A2B3;
+  --line:#E4E7EC;
+  --grid:#EAECF0;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.05);
+  --shadow-soft:0 1px 2px rgba(16,24,40,.05);
+  --radius-card:8px;
+  --radius-control:8px;
+}
+
+html[data-theme="dark"]{
+  --navy:#AAB6FF;
+  --navy-2:#7F8DE8;
+  --navy-deep:#070B14;
+  --magenta:#F06BB8;
+  --gold:#F0B84D;
+  --teal:#5BC7D2;
+  --green:#67C89F;
+  --green-bg:#123D2F;
+  --red:#FF7B8E;
+  --red-bg:#4B1720;
+  --amber:#F3BD61;
+  --amber-bg:#452D0A;
+  --bg:#0C111D;
+  --card:#121826;
+  --surface:#151C2B;
+  --surface-2:#0F1624;
+  --text:#F2F4F7;
+  --muted:#A6B0C3;
+  --faint:#768299;
+  --line:#253047;
+  --grid:#26344A;
+  --shadow:0 1px 2px rgba(0,0,0,.28),0 14px 32px rgba(0,0,0,.22);
+  --shadow-soft:0 1px 2px rgba(0,0,0,.22);
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter','Poppins','Hind Siliguri',Arial,sans-serif;
+  letter-spacing:0;
+}
+.sidebar{
+  width:72px;
+  background:linear-gradient(180deg,#101828 0%,#172033 100%);
+  border-right:1px solid rgba(255,255,255,.08);
+  box-shadow:none;
+}
+.sidebar:hover{width:256px}
+.logo-area{
+  height:72px;
+  padding:0 14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.logo-mark{
+  width:40px;
+  height:40px;
+  flex-basis:40px;
+  border-radius:8px;
+  box-shadow:none;
+}
+.logo-mark img{width:30px;height:30px}
+.logo-copy strong{font-size:15px;letter-spacing:0}
+.logo-copy span{font-size:10.5px;color:rgba(255,255,255,.64)}
+.nav-list{padding:12px 8px;gap:4px}
+.nav-item{
+  height:44px;
+  border-radius:8px;
+  padding:0 14px;
+  color:rgba(255,255,255,.64);
+}
+.nav-item:hover{background:rgba(255,255,255,.07)}
+.nav-item.active{
+  background:rgba(192,41,128,.18);
+  color:#fff;
+  box-shadow:inset 3px 0 0 var(--magenta);
+}
+.nav-icon svg{width:21px;height:21px;stroke-width:2.1}
+.nav-label{font-size:12px;font-weight:700;letter-spacing:0}
+.topbar{
+  left:72px;
+  height:72px;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);
+  border-bottom:1px solid var(--line);
+  box-shadow:none;
+}
+.topbar-title{
+  color:var(--text);
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:0;
+}
+.topbar-subtitle{
+  display:block;
+  color:var(--muted);
+  font-size:11.5px;
+  font-weight:600;
+  margin-top:2px;
+}
+.main{
+  margin-left:72px;
+  margin-top:72px;
+  padding:22px;
+}
+.section-header{
+  margin:6px 0 18px;
+  padding:0;
+  border:0;
+}
+.section-num{
+  width:38px;
+  height:38px;
+  border-radius:8px;
+  background:var(--surface);
+  color:var(--magenta);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow-soft);
+}
+.section-title{
+  color:var(--text);
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:0;
+}
+.section-sub{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:600;
+}
+.view-note{
+  color:var(--muted);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:999px;
+  box-shadow:none;
+}
+.period-select,.small-select,.icon-btn,.pl-toggle-btn,.theme-toggle{
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--line);
+  border-radius:var(--radius-control);
+  box-shadow:none;
+}
+.theme-toggle{
+  height:38px;
+  min-width:38px;
+  padding:0 11px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-family:inherit;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+}
+.theme-toggle svg{width:16px;height:16px;stroke-width:2.2}
+.btn-group{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:10px;
+  box-shadow:none;
+}
+.btn-group button{border-radius:7px;color:var(--muted)}
+.btn-group button.active{
+  background:var(--text);
+  color:var(--bg);
+  box-shadow:none;
+}
+.data-status{
+  background:var(--surface);
+  color:var(--muted);
+  border:1px solid var(--line);
+  border-radius:8px;
+  box-shadow:none;
+  padding:9px 11px;
+}
+.data-status strong{color:var(--text)}
+.data-status.ok{
+  background:color-mix(in srgb,var(--green-bg) 58%,var(--surface));
+  color:var(--green);
+  border-color:color-mix(in srgb,var(--green) 26%,var(--line));
+}
+.data-status.warning{
+  background:color-mix(in srgb,var(--amber-bg) 58%,var(--surface));
+  color:var(--amber);
+  border-color:color-mix(in srgb,var(--amber) 28%,var(--line));
+}
+.kpi-grid{gap:12px;margin-bottom:16px}
+.chart-grid{gap:14px;margin-bottom:14px}
+.insight-grid{gap:12px;margin-bottom:16px}
+.kpi-card,.rev-kpi-card,.chart-card,.insight-card,.table-wrap,.modal-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-card);
+  box-shadow:var(--shadow-soft);
+}
+.kpi-card,.rev-kpi-card{padding:16px;min-height:112px}
+.kpi-card:before,.rev-kpi-card:before{display:none}
+.kpi-top{align-items:flex-start}
+.kpi-label,.rev-kpi-label{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.55px;
+}
+.kpi-value,.rev-kpi-value{
+  color:var(--text);
+  font-size:27px;
+  margin:14px 0 9px;
+  letter-spacing:0;
+}
+.kpi-status{
+  border:1px solid var(--line);
+  background:var(--surface-2);
+}
+.badge,.pill{
+  background:var(--surface-2);
+  color:var(--muted);
+  border:1px solid var(--line);
+  font-size:10.5px;
+}
+.badge.good,.kpi-status.good{background:var(--green-bg);color:var(--green);border-color:color-mix(in srgb,var(--green) 24%,var(--line))}
+.badge.bad,.kpi-status.bad{background:var(--red-bg);color:var(--red);border-color:color-mix(in srgb,var(--red) 24%,var(--line))}
+.badge.watch,.kpi-status.watch{background:var(--amber-bg);color:var(--amber);border-color:color-mix(in srgb,var(--amber) 24%,var(--line))}
+.chart-card-header{
+  padding:15px 16px 11px;
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+}
+.chart-title{
+  color:var(--text);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.15px;
+  text-transform:none;
+}
+.chart-sub{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.35;
+}
+.chart-body{height:330px;padding:14px}
+.chart-body.tall{height:392px}
+.chart-filter label,.line-toggle{
+  background:var(--surface-2);
+  color:var(--muted);
+  border:1px solid var(--line);
+  box-shadow:none;
+  padding:7px 10px;
+}
+.chart-filter label.active,.line-toggle.active{
+  background:color-mix(in srgb,var(--magenta) 10%,var(--surface));
+  border-color:color-mix(in srgb,var(--magenta) 40%,var(--line));
+  color:var(--text);
+}
+.drill-click-note{
+  background:color-mix(in srgb,var(--magenta) 10%,var(--surface));
+  color:var(--magenta);
+  border:1px solid color-mix(in srgb,var(--magenta) 35%,var(--line));
+  border-radius:999px;
+  padding:6px 9px;
+  font-size:10px;
+}
+.insight-head{
+  color:var(--text);
+  padding:13px 16px;
+  border-bottom:1px solid var(--line);
+}
+.insight-head span{width:4px;height:18px;border-radius:999px;background:var(--magenta)}
+.insight-card:nth-child(2) .insight-head span{background:var(--amber)}
+.insight-card:nth-child(3) .insight-head span{background:var(--navy-2)}
+.insight-body{
+  color:var(--muted);
+  padding:13px 16px 15px;
+  font-size:12px;
+  line-height:1.5;
+}
+.insight-body li{margin:5px 0}
+.table-wrap{background:var(--surface)}
+.pl-table-head{
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+}
+.pl-table-title{color:var(--text);font-size:14px}
+table{color:var(--text)}
+th{
+  background:var(--surface-2);
+  color:var(--muted);
+  border-bottom:1px solid var(--line);
+  font-weight:800;
+}
+td{
+  border-bottom:1px solid var(--line);
+  color:var(--text);
+}
+tr.total-row td,.pl-flow-row td,.pl-flow-row td:first-child{
+  background:var(--surface-2)!important;
+  color:var(--text)!important;
+}
+.pl-child-row td,.pl-section-row td,.pl-subheader-row td{
+  background:color-mix(in srgb,var(--surface-2) 72%,var(--surface))!important;
+  color:var(--muted)!important;
+}
+.modal-backdrop{background:rgba(2,6,23,.58)}
+.modal-card{background:var(--surface);border-color:var(--line);border-radius:10px}
+.modal-head{border-bottom:1px solid var(--line)}
+.modal-title{color:var(--text)}
+.modal-sub{color:var(--muted)}
+.modal-close{background:var(--surface-2);color:var(--muted)}
+.modal-body,.modal-chart-box,.modal-table{background:var(--surface);border-color:var(--line)}
+.modal-table table th{background:var(--surface-2);color:var(--muted)}
+.cost-driver-card,.cost-driver-footer{
+  background:var(--surface);
+  color:var(--muted);
+}
+.cost-driver-title,.cost-driver-footer strong,.cost-driver-value{color:var(--text)}
+.cost-driver-track{background:var(--surface-2)}
+.cash-note-neutral{background:var(--surface-2);border-color:var(--line);color:var(--muted)}
+@media(max-width:1180px){
+  .topbar{overflow:auto}
+  .chart-body.tall{height:360px}
+}
+@media(max-width:760px){
+  .topbar{left:0}
+  .main{margin-left:0}
+}
+
 </style>
 </head>
 <body>
@@ -559,10 +906,14 @@ canvas{font-family:'Poppins','Hind Siliguri','Inter',Arial,sans-serif}
   <div class="nav-list" id="navList"></div>
 </nav>
 <header class="topbar">
-  <div><div class="topbar-title" id="topbarTitle">Shikho Finance Governance Dashboard</div><div class="topbar-subtitle"></div></div>
+  <div><div class="topbar-title" id="topbarTitle">Shikho Finance Governance Dashboard</div><div class="topbar-subtitle" id="topbarSubtitle">Finance control room</div></div>
   <div class="spacer"></div>
   <select class="period-select" id="periodSelect"></select>
   <div class="btn-group" id="viewGroup"><button class="active" data-view="monthly">Monthly</button><button data-view="ytd">YTD</button></div>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark theme">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.5 6.5 0 0 0 21 12.8z"/></svg>
+    <span>Dark</span>
+  </button>
 </header>
 <main class="main" id="main"></main>
 <script>
@@ -606,15 +957,19 @@ function showDashboardError(error){
 }
 
 const PAGES=[
-  ['exec','Executive Summary','Command-center view of financial health and action signals','M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z'],
-  ['pl','Budget vs Actual Performance','Revenue, margin and EBITDA control against budget','M22 12h-4l-3 8L9 4l-3 8H2'],
-  ['revenue','Revenue Analysis','Channel, course and repeat revenue drivers over time','M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'],
-  ['costs','Cost & Margins','COGS, payroll and operating leverage','M4 19V5 M4 19h16 M9 16V9 M14 16V7 M19 16v-5'],
-  ['sales','Sales Team Efficiency','Sales productivity, ROI, headcount and package mix','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M23 21v-2a4 4 0 0 0-3-3.87'],
-  ['growth','Marketing & Growth Efficiency','Platform spend, actual spend and paid user activity','M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12 M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4'],
-  ['cash','Cash & Runway','Cash balance, burn and scenario risk','M1 4h22v16H1z M1 10h22']
+  ['exec','Executive Summary','Top metrics, risks and actions','M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z'],
+  ['pl','Budget vs Actual','Revenue, margin and EBITDA control','M22 12h-4l-3 8L9 4l-3 8H2'],
+  ['revenue','Revenue','Channel, course and repeat revenue mix','M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'],
+  ['costs','Cost & Margins','Cost intensity and operating leverage','M4 19V5 M4 19h16 M9 16V9 M14 16V7 M19 16v-5'],
+  ['sales','Sales Efficiency','Productivity, ROI and headcount','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M23 21v-2a4 4 0 0 0-3-3.87'],
+  ['growth','Marketing Efficiency','Spend, actual cost and paid activity','M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12 M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4'],
+  ['cash','Cash & Runway','Cash balance, burn and scenarios','M1 4h22v16H1z M1 10h22']
 ];
 const C={ navy:'#394E99', navy2:'#4B60B2', blueLight:'#8394D1', magenta:'#C02980', gold:'#E6A600', teal:'#39A8B8', green:'#2E8B66', red:'#E03350', redLight:'#F6B5BE', redSoft:'#FAD7DD', redMid:'#F09AA8', amber:'#B97818', grey:'#7E889A', grid:'#E8EDF5', fill:'#394E99', colors:['#394E99','#8394D1','#C02980','#39A8B8','#2E8B66','#E6A600','#E03350','#7E889A'] };
+const THEME_COLORS={
+  light:{navy:'#334487',navy2:'#5263B8',blueLight:'#98A2B3',magenta:'#C02980',gold:'#D79A16',teal:'#1F9EAD',green:'#16815D',red:'#D1435B',redLight:'#F6B5BE',redSoft:'#FCECEF',redMid:'#E67B8B',amber:'#B26A00',grey:'#667085',grid:'#EAECF0',fill:'#334487',axis:'#667085',tooltip:'#111827',colors:['#334487','#7F8DE8','#C02980','#1F9EAD','#16815D','#D79A16','#D1435B','#667085']},
+  dark:{navy:'#AAB6FF',navy2:'#7F8DE8',blueLight:'#768299',magenta:'#F06BB8',gold:'#F0B84D',teal:'#5BC7D2',green:'#67C89F',red:'#FF7B8E',redLight:'#4B1720',redSoft:'#4B1720',redMid:'#FF9CAA',amber:'#F3BD61',grey:'#A6B0C3',grid:'#26344A',fill:'#AAB6FF',axis:'#A6B0C3',tooltip:'#060A12',colors:['#AAB6FF','#7F8DE8','#F06BB8','#5BC7D2','#67C89F','#F0B84D','#FF7B8E','#A6B0C3']}
+};
 function makeVerticalGradient(chart,stops){
   const ctx=chart?.ctx, area=chart?.chartArea;
   if(!ctx || !area) return stops[stops.length-1]?.[1] || C.redLight;
@@ -630,9 +985,9 @@ function costGradient(chart,hover=false){
 function costBorder(hover=false){
   return hover ? '#C84F5E' : '#D77583';
 }
-let state={page:'exec',period:null,view:'monthly',execMargins:['GM%']};
+let state={page:'exec',period:null,view:'monthly',execMargins:['GM%'],theme:localStorage.getItem('dashboardTheme')==='dark'?'dark':'light'};
 const charts={};
-Chart.defaults.font.family="Gibson, Inter, sans-serif";
+Chart.defaults.font.family="Inter, Poppins, sans-serif";
 Chart.defaults.font.size=11;
 Chart.defaults.color='#5F6A7C';
 Chart.defaults.plugins.legend.position='bottom';
@@ -641,6 +996,28 @@ Chart.defaults.plugins.tooltip.titleColor='#fff';
 Chart.defaults.plugins.tooltip.bodyColor='#fff';
 Chart.defaults.plugins.tooltip.padding=12;
 Chart.defaults.plugins.tooltip.cornerRadius=12;
+function applyTheme(theme=state.theme,rerender=false){
+  state.theme=theme==='dark'?'dark':'light';
+  document.documentElement.setAttribute('data-theme',state.theme);
+  localStorage.setItem('dashboardTheme',state.theme);
+  Object.assign(C,THEME_COLORS[state.theme]);
+  Chart.defaults.color=C.axis;
+  Chart.defaults.plugins.tooltip.backgroundColor=C.tooltip;
+  Chart.defaults.plugins.tooltip.titleColor='#FFFFFF';
+  Chart.defaults.plugins.tooltip.bodyColor='#FFFFFF';
+  updateThemeToggle();
+  if(rerender && dashboardDataLoaded) render();
+}
+function updateThemeToggle(){
+  const btn=el('themeToggle');
+  if(!btn) return;
+  const dark=state.theme==='dark';
+  btn.setAttribute('aria-label',dark?'Switch to light theme':'Switch to dark theme');
+  btn.innerHTML=dark
+    ? `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v2 M12 19v2 M5.6 5.6 7 7 M17 17l1.4 1.4 M3 12h2 M19 12h2 M5.6 18.4 7 17 M17 7l1.4-1.4 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg><span>Light</span>`
+    : `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.5 6.5 0 0 0 21 12.8z"/></svg><span>Dark</span>`;
+}
+applyTheme(state.theme,false);
 
 function el(id){return document.getElementById(id)}
 function h(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
@@ -725,7 +1102,7 @@ const waterfallDataLabelPlugin={
     if(!labels.length) return;
     const meta=chart.getDatasetMeta(0);
     ctx.save();
-    ctx.font='800 11px Gibson, Inter, sans-serif';
+    ctx.font='800 11px Inter, Poppins, sans-serif';
     ctx.textAlign='center';
     meta.data.forEach((bar,i)=>{
       const raw=labels[i];
@@ -733,18 +1110,18 @@ const waterfallDataLabelPlugin={
       const p=bar.getProps(['x','y','base','width'],true);
       const top=Math.min(p.y,p.base), bottom=Math.max(p.y,p.base), height=Math.abs(p.base-p.y);
       const value=raw;
-      let y, fill='#17203B', baseline='bottom';
+      let y, fill=C.axis, baseline='bottom';
       const isCost=opts?.types?.[i]==='cost' || ds?._types?.[i]==='cost';
       const isNegative=value<0 && !isCost;
       if(isCost){
         if(height>30){ y=top+(height/2)+4; baseline='middle'; fill='#FFFFFF'; }
-        else { y=top-7; baseline='bottom'; fill='#17203B'; }
+        else { y=top-7; baseline='bottom'; fill=C.axis; }
       } else if(isNegative){
-        y=bottom+15; baseline='top'; fill='#17203B';
+        y=bottom+15; baseline='top'; fill=C.axis;
       } else if(height>46 && p.width>38){
         y=top+15; baseline='top'; fill='#FFFFFF';
       } else {
-        y=top-7; baseline='bottom'; fill='#17203B';
+        y=top-7; baseline='bottom'; fill=C.axis;
       }
       y=Math.max(chartArea.top+6, Math.min(chartArea.bottom-4, y));
       ctx.fillStyle=fill;
@@ -760,7 +1137,7 @@ const barDataLabelPlugin={
   afterDatasetsDraw(chart,args,opts){
     const {ctx,chartArea}=chart;
     ctx.save();
-    ctx.font='800 11px Gibson, Inter, sans-serif';
+    ctx.font='800 11px Inter, Poppins, sans-serif';
     ctx.textAlign='center';
     (chart.data.datasets||[]).forEach((ds,di)=>{
       const meta=chart.getDatasetMeta(di);
@@ -780,7 +1157,7 @@ const barDataLabelPlugin={
           baseline=isNegative?'bottom':'top';
           y=isNegative?bottom-8:top+8;
         }else{
-          fill=opts?.color || ds._labelColor || '#17203B';
+          fill=opts?.color || ds._labelColor || C.axis;
           baseline=isNegative?'top':'bottom';
           y=isNegative?bottom+7:top-7;
         }
@@ -806,7 +1183,7 @@ const stackedTotalDataLabelPlugin={
     const {ctx,chartArea}=chart;
     const labels=chart.data.labels||[];
     ctx.save();
-    ctx.font='800 11px Gibson, Inter, sans-serif';
+    ctx.font='800 11px Inter, Poppins, sans-serif';
     ctx.textAlign='center';
     ctx.textBaseline='bottom';
     labels.forEach((_,i)=>{
@@ -826,7 +1203,7 @@ const stackedTotalDataLabelPlugin={
       });
       if(!total || x==null || topY==null) return;
       const y=Math.max(chartArea.top+14, topY-7);
-      const color=Array.isArray(opts?.color)?(opts.color[i]||'#17203B'):(opts?.color||'#17203B');
+      const color=Array.isArray(opts?.color)?(opts.color[i]||C.axis):(opts?.color||C.axis);
       ctx.fillStyle=color;
       ctx.fillText(fUSDK(total), x, y);
     });
@@ -842,7 +1219,7 @@ function withBarDataLabels(options,opts={}){
 }
 
 function chart(id, cfg){destroy(id); const canvas=el(id); if(!canvas)return; charts[id]=new Chart(canvas,applyHonestAxes(cfg));}
-function baseOptions(kind='usd', stacked=false){return {responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{usePointStyle:true,boxWidth:8,padding:16,font:{weight:700}}},tooltip:{callbacks:{label:tooltipLabel(kind)}}},scales:{x:{stacked,grid:{display:false},ticks:{maxTicksLimit:12,font:{size:10,weight:700}}},y:{stacked,beginAtZero:false,min:0,grid:{color:C.grid},ticks:yTicks(kind)}}};}
+function baseOptions(kind='usd', stacked=false){return {responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{usePointStyle:true,boxWidth:8,padding:14,color:C.axis,font:{weight:700}}},tooltip:{callbacks:{label:tooltipLabel(kind)}}},scales:{x:{stacked,grid:{display:false},ticks:{color:C.axis,maxTicksLimit:12,font:{size:10,weight:700}}},y:{stacked,beginAtZero:false,min:0,grid:{color:C.grid},ticks:{...yTicks(kind),color:C.axis}}}};}
 function lineChart(id, labels, datasets, kind='usd'){chart(id,{type:'line',data:{labels,datasets},options:baseOptions(kind,false)})}
 function barChart(id, labels, datasets, kind='usd', stacked=false){chart(id,{type:'bar',data:{labels,datasets},options:baseOptions(kind,stacked)})}
 function comboChart(id, labels, datasets, kind='usd'){chart(id,{type:'bar',data:{labels,datasets},options:baseOptions(kind,false)})}
@@ -1060,6 +1437,25 @@ function insightText(){
 
   return {
     headlines:[
+      `${badgeHtml('bad','Watch')} Revenue ${fUSD(revCur)}. Down ${changeTxt(revCur,revJan)} from ${fUSD(revJan)}.`,
+      `${badgeHtml('bad','Watch')} Sales cost ${fUSD(salesCostCur)}. ${salesCostPctRev==null?'--':salesCostPctRev.toFixed(0)+'%'} of revenue.`,
+      `${badgeHtml('bad','Watch')} Cash ${fUSD(closeCur)}. Down ${changeTxt(closeCur,closeJan)} YTD.`
+    ],
+    risks:[
+      `${badgeHtml('bad','Risk')} Agent contribution ${fUSD(contribCur)}. Down ${changeTxt(contribCur,contribJan)}.`,
+      `${badgeHtml('watch','Risk')} Database & Server ${fUSD(dbCur)}. Up ${changeTxt(dbCur,dbJan)}.`,
+      `${badgeHtml('watch','Risk')} Marketing actual ${fUSD(actual)} vs platform ${fUSD(platform)}.`
+    ],
+    actions:[
+      `Lock ${monthLabelLong(nextActionPeriod)} revenue by course and channel.`,
+      `Review sales ROI by team before hiring.`,
+      `Cap server spend and audit usage.`,
+      `Use pessimistic cash case as trigger.`
+    ]
+  };
+
+  return {
+    headlines:[
       `${badgeHtml('bad','Red')} Revenue: ${fUSD(revJan)} → ${fUSD(revCur)}. Down ${changeTxt(revCur,revJan)}. EBITDA swing: ${fUSD(ebitdaCur-ebitdaJan)}.`,
       `${badgeHtml('bad','Red')} Sales cost: ${fUSD(salesCostJan)} → ${fUSD(salesCostCur)}. Now ${salesCostPctRev==null?'—':salesCostPctRev.toFixed(0)+'%'} of revenue.`,
       `${badgeHtml('bad','Red')} Cash: ${fUSD(closeJan)} → ${fUSD(closeCur)}. Down ${changeTxt(closeCur,closeJan)}.`
@@ -1080,12 +1476,12 @@ function insightText(){
 function execTrendCard(){
   const options=[['GM%','Gross Margin %'],['CM 1 %','CM 1 %'],['CM 2 %','CM 2 %'],['CM 3 %','CM 3 %'],['EBITDA %','EBITDA %']];
   const filters=options.map(([key,label])=>`<label class="${state.execMargins.includes(key)?'active':''}"><input type="checkbox" ${state.execMargins.includes(key)?'checked':''} onchange="toggleExecMargin('${key}',this.checked)">${label}</label>`).join('');
-  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">Margin Quality Trend</div><div class="chart-sub">Monthly margin path through the selected period; toggle lines to isolate EBITDA pressure.</div></div><div class="chart-filter" id="execMarginFilter">${filters}</div></div><div class="chart-body tall"><canvas id="execRev"></canvas></div></div>`;
+  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">Margin Quality Trend</div><div class="chart-sub">Monthly margin path through selected period.</div></div><div class="chart-filter" id="execMarginFilter">${filters}</div></div><div class="chart-body tall"><canvas id="execRev"></canvas></div></div>`;
 }
 function renderExec(){
   const metrics=execMetricSet(state.period,state.view);
-  const body=`<div class="kpi-grid">${execKpi('Gross Revenue',metrics.grossRevenue,metrics.grossRevenuePrior,fUSD)}${execKpi('Gross Margin %',metrics.gmPct,metrics.gmPctPrior,v=>fPct(v))}${execKpi('EBITDA',metrics.ebitda,metrics.ebitdaPrior,fUSD)}${execKpi('Net Cash Burn',metrics.netCashBurn,metrics.netCashBurnPrior,fUSD)}</div><div class="chart-grid">${execTrendCard()}<div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-title">Revenue & EBITDA vs Prior Year</div><div class="chart-sub">Compares selected period against the same period last year; click bars for detail</div></div><div class="drill-click-note">Click bars to drill down</div></div><div class="chart-body tall"><canvas id="execCompare"></canvas></div></div></div><div class="chart-grid full"><div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-title">Gross Revenue to EBITDA Bridge</div><div class="chart-sub">Shows how direct sales costs, operating costs and indirect costs bridge gross revenue to EBITDA</div></div><div class="drill-click-note">Click cost bars to drill down</div></div><div class="chart-body tall"><canvas id="execWaterfall"></canvas></div></div></div><div class="insight-grid"><div class="insight-card"><div class="insight-head"><span></span>Key Headlines</div><div class="insight-body"><ul id="insightHead"></ul></div></div><div class="insight-card"><div class="insight-head"><span></span>Risks & Watch Items</div><div class="insight-body"><ul id="insightRisk"></ul></div></div><div class="insight-card"><div class="insight-head"><span></span>Actions Required</div><div class="insight-body"><ul id="insightAction"></ul></div></div></div>`;
-  el('main').innerHTML=pageScaffold('exec','Executive Summary','Cash basis view of financial health, business health and immediate decisions',1,body);
+  const body=`<div class="kpi-grid">${execKpi('Gross Revenue',metrics.grossRevenue,metrics.grossRevenuePrior,fUSD)}${execKpi('Gross Margin %',metrics.gmPct,metrics.gmPctPrior,v=>fPct(v))}${execKpi('EBITDA',metrics.ebitda,metrics.ebitdaPrior,fUSD)}${execKpi('Net Cash Burn',metrics.netCashBurn,metrics.netCashBurnPrior,fUSD)}</div><div class="chart-grid">${execTrendCard()}<div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-title">Revenue & EBITDA vs Prior Year</div><div class="chart-sub">Selected period vs prior year.</div></div><div class="drill-click-note">Drill down</div></div><div class="chart-body tall"><canvas id="execCompare"></canvas></div></div></div><div class="chart-grid full"><div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-title">Gross Revenue to EBITDA Bridge</div><div class="chart-sub">Revenue, costs and EBITDA flow.</div></div><div class="drill-click-note">Drill down</div></div><div class="chart-body tall"><canvas id="execWaterfall"></canvas></div></div></div><div class="insight-grid"><div class="insight-card"><div class="insight-head"><span></span>Headlines</div><div class="insight-body"><ul id="insightHead"></ul></div></div><div class="insight-card"><div class="insight-head"><span></span>Risks</div><div class="insight-body"><ul id="insightRisk"></ul></div></div><div class="insight-card"><div class="insight-head"><span></span>Actions</div><div class="insight-body"><ul id="insightAction"></ul></div></div></div>`;
+  el('main').innerHTML=pageScaffold('exec','Executive Summary','Top metrics, risks and actions',1,body);
   setNote('exec');
   renderExecCharts();
   const ins=insightText();
@@ -1263,8 +1659,8 @@ function renderPL(){
   const actualHeader=`Actual (${plTablePeriodLabel(state.period,state.view)})`;
   const comparisonHeader=plComparisonHeader(compareMode);
   const compareSelect=`<select id="plCompareSelect" class="small-select" onchange="state.plCompare=this.value; renderPL();"><option value="budget" ${compareMode==='budget'?'selected':''}>Budget</option><option value="previous_month" ${compareMode==='previous_month'?'selected':''}>Previous Month</option><option value="same_month_last_year" ${compareMode==='same_month_last_year'?'selected':''}>Same Month Previous Year</option></select>`;
-  const body=`<div class="chart-grid">${chartCard('Gross Revenue vs Budget','Budget and actual gross revenue by month for the selected year; click bars for detail where data exists','plRev',false,true)}${plMarginCard()}</div><div class="table-wrap"><div class="pl-table-head"><div class="pl-table-title">Profit & Loss (${plTablePeriodLabel(state.period,state.view)})</div><div class="pl-controls">${compareSelect}<button class="pl-toggle-btn" onclick="toggleAllPL(true)">Expand All</button><button class="pl-toggle-btn" onclick="toggleAllPL(false)">Collapse All</button></div></div><table class="pl-table"><thead><tr><th>P&L Line Item</th><th>${actualHeader}</th><th>${comparisonHeader}</th><th>Variance</th><th>Var %</th></tr></thead><tbody id="plTable"></tbody></table></div>`;
-  el('main').innerHTML=pageScaffold('pl','Budget vs Actual Performance','Cash basis revenue, margin and EBITDA performance against budget',2,body);
+  const body=`<div class="chart-grid">${chartCard('Gross Revenue vs Budget','Monthly actuals vs budget.','plRev',false,true)}${plMarginCard()}</div><div class="table-wrap"><div class="pl-table-head"><div class="pl-table-title">Profit & Loss (${plTablePeriodLabel(state.period,state.view)})</div><div class="pl-controls">${compareSelect}<button class="pl-toggle-btn" onclick="toggleAllPL(true)">Expand All</button><button class="pl-toggle-btn" onclick="toggleAllPL(false)">Collapse All</button></div></div><table class="pl-table"><thead><tr><th>P&L Line Item</th><th>${actualHeader}</th><th>${comparisonHeader}</th><th>Variance</th><th>Var %</th></tr></thead><tbody id="plTable"></tbody></table></div>`;
+  el('main').innerHTML=pageScaffold('pl','Budget vs Actual','Revenue, margin and EBITDA control',2,body);
   setNote('pl'); renderPLCharts(); renderPLTable();
 }
 function budgetYear(){return Number(DASH?.periods?.budgetYear||DASH?.meta?.budgetYear)||currentYearLabel(state.period||latestActualPeriod());}
@@ -1446,8 +1842,8 @@ function revenueAovCard(){
 }
 
 function renderRevenue(){
-  const body=`<div class="metric-pills" id="revPills"></div><div class="chart-grid">${chartCard('Channel Revenue by Period','Compares channel revenue across the same period in each year; click bars for mix','revChannel',false,true)}${chartCard('Course Revenue by Period','Compares course revenue across the same period in each year; click bars for mix','revCourse',false,true)}</div><div class="chart-grid">${chartCard('New vs Repeat Revenue','Compares acquisition cohort revenue across the same period in each year','revNvr',false,true)}${revenueAovCard()}</div>`;
-  el('main').innerHTML=pageScaffold('revenue','Revenue Analysis','Revenue mix, acquisition quality and AOV by period',3,body);
+  const body=`<div class="metric-pills" id="revPills"></div><div class="chart-grid">${chartCard('Channel Revenue','Period mix by channel.','revChannel',false,true)}${chartCard('Course Revenue','Period mix by course.','revCourse',false,true)}</div><div class="chart-grid">${chartCard('New vs Repeat Revenue','Acquisition and repeat revenue.','revNvr',false,true)}${revenueAovCard()}</div>`;
+  el('main').innerHTML=pageScaffold('revenue','Revenue','Channel, course and repeat revenue mix',3,body);
   setNote('revenue');
   renderRevenueCharts();
 }
@@ -1750,8 +2146,8 @@ function renderRevenueCharts(){
 function renderCosts(){
   const layers=costLayers();
   const body=`<div class="metric-pills"><span class="pill"><strong>P&L Basis:</strong> selected-period revenue, cost intensity and margin snapshot</span><span class="pill"><strong>Accrual Basis:</strong> current period vs prior year with category drilldown</span></div>`+
-    layers.map(l=>`<div class="chart-grid">${costDriverCard(`${l.title} | P&L Basis`,`Gross revenue, ${l.plCostLabel.toLowerCase()} and resulting ${l.marginLabel}`,'plCost_'+l.id)}${chartCard(`${l.title} | Accrual Basis`,`Total accrual cost vs same period last year; click bars for cost breakdown`,'accCost_'+l.id,false,true)}</div>`).join('');
-  el('main').innerHTML=pageScaffold('costs','Cost & Margins','Cost intensity, contribution margins and accrual cost movement',4,body);
+    layers.map(l=>`<div class="chart-grid">${costDriverCard(`${l.title} | P&L Basis`,`${l.marginLabel} and cost intensity.`,'plCost_'+l.id)}${chartCard(`${l.title} | Accrual Basis`,`Accrual cost vs prior year.`,'accCost_'+l.id,false,true)}</div>`).join('');
+  el('main').innerHTML=pageScaffold('costs','Cost & Margins','Cost intensity and operating leverage',4,body);
   setNote('costs');
   renderCostCharts();
 }
@@ -2018,7 +2414,7 @@ function salesCard(title,sub,canvas,key=null,tall=true){
 }
 function renderSales(){
   const body=`<div class="chart-grid">${salesCard('Contribution per Agent','Revenue less salaries + incentives, divided by headcount; click bars for calculation','salesContributionBar',null,true)}${salesCard('Sales ROI','Sales ROI = revenue generated ÷ sales salaries and incentives.','salesRoiLine','salesRoiActive',true)}</div><div class="chart-grid">${salesCard('Contribution per Agent Trend','Contribution per agent = revenue per agent minus salary and incentive cost per agent.','salesContributionTrend','salesContributionActive',true)}${salesCard('Sales Volume per Agent by Team','Sales volume per agent = sales volume ÷ sales team headcount.','salesVolumeAgentLine','salesVolumeActive',true)}</div><div class="chart-grid full">${salesCard('Sales Team Headcount','Total headcount trend; selected month is highlighted; click any bar to see team breakdown','salesHeadcount',null,true)}</div><div class="table-wrap"><table><thead><tr><th>Team</th><th>Revenue</th><th>Sales Volume</th><th>AOV</th><th>Headcount</th><th>Salaries + Incentives</th><th>Sales ROI</th><th>Contribution/Agent</th></tr></thead><tbody id="salesTable"></tbody></table></div>`;
-  el('main').innerHTML=pageScaffold('sales','Sales Team Efficiency','Productivity, ROI and headcount for revenue execution',5,body);
+  el('main').innerHTML=pageScaffold('sales','Sales Efficiency','Productivity, ROI and headcount',5,body);
   setNote('sales'); renderSalesCharts(); renderSalesTable();
 }
 function renderSalesCharts(){
@@ -2132,7 +2528,7 @@ function openSalesHeadcountDrilldown(i){
   el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Team</th><th>Headcount</th><th>Share</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td>${fInt(r.amount)}</td><td>${fPct(total?r.amount/total*100:null)}</td></tr>`).join('')}<tr class="total-row"><td>Total</td><td>${fInt(total)}</td><td>100.0%</td></tr></tbody></table></div></div>`;
   barChart('execDrillChart',rows.map(r=>r.label),[dsBar('Headcount',rows.map(r=>r.amount),C.navy)],'num',false);
 }
-function renderUsers(){const body=`<div class="chart-grid">${chartCard('MAU vs Active Paid Users','Tracks total user base against active paid learning base','mauTrend',false,true)}${chartCard('Registration to Paid Funnel','Shows whether registration growth is converting into paying users','userFunnel',false,true)}</div><div class="chart-grid">${chartCard('Paid Conversion Rate','Unique paying users divided by new registrations','conversion',false,true)}${chartCard('Transaction Mix','New and repeat transaction count over time','txnMix',false,true)}</div>`; el('main').innerHTML=pageScaffold('users','Users & Growth','Understand whether user growth is translating to revenue',6,body); setNote('users'); renderUserCharts();}
+function renderUsers(){const body=`<div class="chart-grid">${chartCard('MAU vs Active Paid Users','User base vs paid base.','mauTrend',false,true)}${chartCard('Registration to Paid Funnel','Registrations converting to paid users.','userFunnel',false,true)}</div><div class="chart-grid">${chartCard('Paid Conversion Rate','Unique paid users / registrations.','conversion',false,true)}${chartCard('Transaction Mix','New and repeat transactions.','txnMix',false,true)}</div>`; el('main').innerHTML=pageScaffold('users','Users & Growth','Growth conversion view',6,body); setNote('users'); renderUserCharts();}
 function renderUserCharts(){const u=DASH.mau.data,m=DASH.mau.months,l=labelsFor(m); let mau=chartDataFor(u.MAU,m), paid=chartDataFor(u.Active_Paid_Users,m); if(state.view==='ytd'){mau=mau.current; paid=chartDataFor(u.Active_Paid_Users,m).current;} const kind=state.view==='mom'||state.view==='yoy'?'pct':'num'; chart('mauTrend',{type:'line',data:{labels:l,datasets:[{...dsArea('MAU',mau,C.navy),yAxisID:'y'},{...dsLine('Active Paid Users',paid,C.magenta,'y2'),type:'line'}]},options:{...baseOptions(kind,false),scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:C.grid},ticks:yTicks(kind)},y2:{position:'right',beginAtZero:false,grid:{display:false},ticks:yTicks(kind)}}}}); let regs=chartDataFor(u.New_Registrations,m), np=chartDataFor(u.New_Paying_Users,m), up=chartDataFor(u.Unique_Paying_Users,m); if(state.view==='ytd'){regs=regs.current;np=chartDataFor(u.New_Paying_Users,m).current;up=chartDataFor(u.Unique_Paying_Users,m).current;} barChart('userFunnel',l,[dsBar('New Registrations',regs,C.fill),dsBar('New Paying Users',np,C.magenta),dsBar('Unique Paying Users',up,C.gold)],kind,false); const conv=m.map((_,i)=>u.Unique_Paying_Users[i]&&u.New_Registrations[i]?u.Unique_Paying_Users[i]/u.New_Registrations[i]*100:null); let cd=chartDataFor(conv,m); if(state.view==='ytd')cd=cd.current; lineChart('conversion',l,[dsLine('Paid Conversion %',cd,C.navy),dsLine('5% Reference',l.map(()=>5),C.gold)],'pct'); let nt=chartDataFor(u.New_Transactions,m), rt=chartDataFor(u.Repeat_Transactions,m); if(state.view==='ytd'){nt=nt.current;rt=chartDataFor(u.Repeat_Transactions,m).current;} barChart('txnMix',l,[dsBar('New Transactions',nt,C.navy,'s'),dsBar('Repeat Transactions',rt,C.magenta,'s')],kind,state.view==='monthly');}
 function nonNullMonthData(months, arr){
   const labels=[], data=[];
@@ -2170,10 +2566,10 @@ function growthPeriodValue(months,arr,additive=true){
   return val(arr,growthPeriodIndex(months));
 }
 function renderGrowth(){
-  const body=`<div class="chart-grid">${chartCard('Platform Spend by Platform','Google + Facebook platform spend; selected month highlighted, all other months muted','mgAdSpend',false,true)}${chartCard('Platform Spend vs Actual Spend','Static monthly view of platform spend vs actual cash cost after Agency Commission and VAT/Tax impact','mgAdjustedSpend',false,true)}</div><div class="chart-grid">${chartCard('MAU vs % Active Paid Users','Static monthly view; MAU on the left axis and active paid users as % of MAU on the right axis','mgMauPaid',false,true)}${costDriverCard('Platform Spend Reconciliation','Platform spend, overpayment amount and resulting actual spend','mgOverpayment')}</div>`;
-  el('main').innerHTML=pageScaffold('growth','Marketing & Growth Efficiency','Connect platform spend, actual cost and paid user activity',6,body);
+  const body=`<div class="chart-grid">${chartCard('Platform Spend by Platform','Google and Facebook spend.','mgAdSpend',false,true)}${chartCard('Platform Spend vs Actual Spend','Platform spend to actual cash cost.','mgAdjustedSpend',false,true)}</div><div class="chart-grid">${chartCard('MAU vs % Active Paid Users','Scale vs paid activity.','mgMauPaid',false,true)}${costDriverCard('Platform Spend Reconciliation','Platform, overpayment and actual spend.','mgOverpayment')}</div>`;
+  el('main').innerHTML=pageScaffold('growth','Marketing Efficiency','Spend, actual cost and paid activity',6,body);
   setNote('growth');
-  const n=el('note-growth'); if(n)n.textContent='Static monthly trend view; charts are not converted by the Monthly/YTD toggle.';
+  const n=el('note-growth'); if(n)n.textContent='Monthly trend view; Monthly/YTD toggle does not change these charts.';
   renderGrowthCharts();
 }
 function renderGrowthCharts(){
@@ -2654,10 +3050,11 @@ function renderWaterfallStepDrilldown(cfg,ctx){
   }
 }
 
-function render(){renderNav(); el('topbarTitle').textContent='Shikho Finance Governance Dashboard'; Object.keys(charts).forEach(destroy); if(state.page==='exec')renderExec(); if(state.page==='pl')renderPL(); if(state.page==='revenue')renderRevenue(); if(state.page==='costs')renderCosts(); if(state.page==='sales')renderSales(); if(state.page==='growth')renderGrowth(); if(state.page==='cash')renderCash(); renderNav();}
+function render(){renderNav(); el('topbarTitle').textContent='Shikho Finance Governance Dashboard'; const current=PAGES.find(p=>p[0]===state.page); const subtitle=el('topbarSubtitle'); if(subtitle) subtitle.textContent=current?current[2]:'Finance control room'; Object.keys(charts).forEach(destroy); if(state.page==='exec')renderExec(); if(state.page==='pl')renderPL(); if(state.page==='revenue')renderRevenue(); if(state.page==='costs')renderCosts(); if(state.page==='sales')renderSales(); if(state.page==='growth')renderGrowth(); if(state.page==='cash')renderCash(); renderNav();}
 function goto(p){state.page=p; render();}
 el('viewGroup').addEventListener('click',e=>{if(e.target.tagName==='BUTTON'){[...el('viewGroup').querySelectorAll('button')].forEach(b=>b.classList.remove('active')); e.target.classList.add('active'); state.view=e.target.dataset.view; render();}});
 el('periodSelect').addEventListener('change',e=>{state.period=e.target.value; render();});
+el('themeToggle').addEventListener('click',()=>applyTheme(state.theme==='dark'?'light':'dark',true));
 async function startDashboard(){
   try{
     showDashboardLoading();
