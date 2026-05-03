@@ -1,0 +1,16 @@
+{
+  "name": "shikho-finance-dashboard-automated",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel deploy",
+    "deploy:prod": "vercel deploy --prod"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0"
+  },
+  "devDependencies": {
+    "vercel": "^41.0.0"
+  }
+}

@@ -1,0 +1,2675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shikho Finance Governance Dashboard</title>
+<link href="https://db.onlinewebfonts.com/c/41a37b5ce5c3e0b6200b09e4f6e8b5e5?family=Gibson" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#354894; --navy-2:#4659A6; --navy-deep:#101B4D;
+  --magenta:#CF278D; --gold:#E1A92E; --teal:#39A8B8;
+  --green:#2E8B66; --green-bg:#EAF6F0; --red:#C84F5E; --red-bg:#FBEDEF; --amber:#B97818; --amber-bg:#FFF5DD;
+  --bg:#F5F7FB; --card:#FFFFFF; --text:#17203B; --muted:#6D7689; --faint:#9AA4B5; --line:#E2E7F0;
+  --shadow:0 10px 28px rgba(17,32,77,.07); --shadow-soft:0 1px 4px rgba(17,32,77,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Gibson','Inter',Arial,sans-serif;font-size:14px;}
+.sidebar{position:fixed;inset:0 auto 0 0;width:78px;background:linear-gradient(180deg,var(--navy-deep),var(--navy));z-index:1000;transition:width .24s ease;box-shadow:8px 0 22px rgba(16,27,77,.16);overflow:hidden;}
+.sidebar:hover{width:260px}
+.logo-area{height:70px;display:flex;align-items:center;gap:13px;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.12)}
+.logo-mark{width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex:0 0 42px}
+.logo-mark img{width:42px;height:42px;object-fit:contain;display:block}
+.logo-copy{opacity:0;transition:opacity .16s ease;color:white;line-height:1.05;white-space:nowrap}
+.sidebar:hover .logo-copy{opacity:1}
+.logo-copy strong{display:block;font-size:16px;letter-spacing:-.2px}
+.logo-copy span{display:block;font-size:11px;color:rgba(255,255,255,.62);margin-top:4px}
+.nav-list{padding:14px 10px;display:flex;flex-direction:column;gap:7px}
+.nav-item{height:48px;display:flex;align-items:center;gap:15px;padding:0 15px;border-radius:14px;color:rgba(255,255,255,.68);cursor:pointer;transition:all .18s ease;white-space:nowrap;}
+.nav-item:hover{background:rgba(255,255,255,.09);color:#fff}
+.nav-item.active{background:rgba(207,39,141,.98);color:#fff;box-shadow:0 8px 20px rgba(207,39,141,.22)}
+.nav-icon{width:27px;height:27px;display:grid;place-items:center;flex:0 0 27px}
+.nav-icon svg{width:25px;height:25px;stroke-width:2.35}
+.nav-label{opacity:0;font-weight:700;font-size:13px;letter-spacing:-.1px;transition:opacity .16s ease}
+.sidebar:hover .nav-label{opacity:1}
+.topbar{position:fixed;top:0;left:78px;right:0;height:70px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);z-index:900;display:flex;align-items:center;gap:14px;padding:0 24px}
+.topbar-title{font-weight:900;font-size:18px;color:var(--navy);letter-spacing:-.45px;line-height:1.1}
+.topbar-subtitle{display:none}
+.spacer{flex:1}
+.period-select{height:38px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:0 14px;color:var(--text);font-family:inherit;font-weight:700;outline:none;box-shadow:var(--shadow-soft)}
+.btn-group{display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:13px;background:#F7F9FC;box-shadow:var(--shadow-soft)}
+.btn-group button{border:0;background:transparent;border-radius:10px;padding:8px 12px;font-family:inherit;font-weight:800;font-size:11px;color:var(--muted);cursor:pointer;transition:.16s ease}
+.btn-group button.active{background:var(--navy);color:white;box-shadow:0 5px 12px rgba(38,59,133,.22)}
+.icon-btn{height:38px;width:38px;border:1px solid var(--line);border-radius:12px;background:#fff;display:grid;place-items:center;color:var(--muted);cursor:pointer}
+.main{margin-left:78px;margin-top:70px;padding:24px;min-height:100vh}
+.page{display:none;animation:fadeIn .24s ease} .page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.section-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.section-left{display:flex;align-items:center;gap:13px}
+.section-num{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--navy),var(--navy-2));color:white;display:grid;place-items:center;box-shadow:0 10px 22px rgba(38,59,133,.18)}
+.section-num svg{width:22px;height:22px;stroke-width:2.35}
+.section-title{font-size:24px;font-weight:900;color:var(--navy);letter-spacing:-.7px}
+.section-sub{font-size:13px;color:var(--faint);font-weight:600;margin-top:4px}
+.view-note{font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 12px;box-shadow:var(--shadow-soft)}
+.data-status{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow-soft);color:var(--muted);font-size:12px;font-weight:800}
+.data-status strong{color:var(--navy)}
+.data-status.warning{border-color:#F2D28E;background:#FFFCF2;color:#8A5A13}
+.data-status.ok{border-color:#D7EBDD;background:#F7FCF9;color:#2E6E52}
+.data-status-message{flex-basis:100%;line-height:1.45}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}
+.kpi-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi-card:before{content:'';position:absolute;inset:0 auto 0 0;width:5px;background:var(--navy)}
+.kpi-card.good:before{background:var(--green)} .kpi-card.bad:before{background:var(--red)} .kpi-card.watch:before{background:var(--amber)}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.kpi-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;font-weight:900;color:var(--faint)}
+.kpi-status{font-size:10px;font-weight:900;padding:4px 8px;border-radius:999px}
+.kpi-status.good{color:var(--green);background:var(--green-bg)} .kpi-status.bad{color:var(--red);background:var(--red-bg)} .kpi-status.watch{color:var(--amber);background:var(--amber-bg)}
+.kpi-value{font-size:28px;line-height:1;font-weight:900;color:var(--navy);letter-spacing:-.8px;margin:16px 0 10px}
+.kpi-meta{display:flex;flex-wrap:wrap;gap:7px;font-size:11px;font-weight:800}
+.badge{display:inline-flex;gap:5px;align-items:center;padding:4px 8px;border-radius:999px;background:#F3F6FB;color:var(--muted)}
+.badge.good{background:var(--green-bg);color:var(--green)} .badge.bad{background:var(--red-bg);color:var(--red)} .badge.watch{background:var(--amber-bg);color:var(--amber)}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.chart-grid.full{grid-template-columns:1fr}
+.chart-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.chart-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:16px 18px 11px;border-bottom:1px solid var(--line)}
+.chart-title{font-size:12px;text-transform:uppercase;letter-spacing:.55px;font-weight:900;color:#34405C}
+.chart-sub{font-size:11px;color:var(--faint);font-weight:600;margin-top:4px;text-transform:none;letter-spacing:0}
+.chart-body{height:360px;padding:16px;position:relative}
+.chart-body.tall{height:430px} .chart-body.short{height:300px}
+.insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+.insight-card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.insight-head{padding:14px 18px;border-bottom:1px solid var(--line);font-weight:900;color:var(--navy);display:flex;align-items:center;gap:10px}
+.insight-head span{width:5px;height:22px;border-radius:10px;background:var(--magenta)}
+.insight-card:nth-child(2) .insight-head span{background:var(--amber)} .insight-card:nth-child(3) .insight-head span{background:var(--navy)}
+.insight-body{padding:14px 18px;color:var(--muted);font-size:12.5px;line-height:1.65}
+.insight-body ul{margin:0;padding-left:17px} .insight-body li{margin:6px 0}
+.table-wrap{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:auto;margin-bottom:20px}
+table{width:100%;border-collapse:collapse;font-size:12px} th{background:var(--navy);color:#fff;padding:11px 12px;text-align:right;font-weight:900;white-space:nowrap} th:first-child,td:first-child{text-align:left} td{padding:10px 12px;border-bottom:1px solid #F0F3F8;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums} tr.total-row td{font-weight:900;background:#F8FAFD;color:var(--navy)}
+.pos-var{color:var(--green)!important;font-weight:900} .neg-var{color:var(--red)!important;font-weight:900} .watch-var{color:var(--amber)!important;font-weight:900}
+.pl-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.pl-toggle-btn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:11px;padding:8px 12px;font-family:inherit;font-size:11px;font-weight:900;cursor:pointer;box-shadow:var(--shadow-soft)}
+.pl-toggle-btn:hover{background:#F7F9FC}
+.pl-table td:first-child{min-width:260px}
+.pl-row-main.expandable{cursor:pointer}
+.pl-row-main.expandable:hover td{background:#F8FAFD}
+.pl-expander{display:inline-grid;place-items:center;width:18px;height:18px;margin-right:8px;border-radius:6px;background:#EEF2FB;color:var(--navy);font-size:12px;font-weight:900;vertical-align:middle}
+.pl-placeholder{display:inline-block;width:26px}
+.pl-child-row td{background:#FCFDFF;color:var(--muted);font-size:11.5px}
+.pl-child-row td:first-child{padding-left:46px}
+.pl-subheader-row td{background:#F7F9FC!important;color:#273B78!important;font-weight:900!important;border-top:1px solid #E1E6EF}
+.pl-subheader-row td:first-child{padding-left:46px!important}
+.pl-nested-row td:first-child{padding-left:68px!important}
+.pl-nested-row td:first-child:before{content:'›';display:inline-block;margin-right:8px;color:var(--faint);font-weight:900}
+.pl-flow-row td,.pl-flow-row td:first-child{font-weight:900!important;color:var(--navy)!important;background:#F8FAFD}
+.pl-flow-row td.pos-var{color:var(--green)!important}
+.pl-flow-row td.neg-var{color:var(--red)!important}
+.pl-flow-row td.watch-var{color:var(--amber)!important}
+.pl-table-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px 10px;border-bottom:1px solid var(--line);background:#fff;position:sticky;left:0;z-index:2}
+.pl-table-title{font-weight:900;color:var(--navy);font-size:14px;margin:0}
+.pl-table-head .small-select{min-width:190px}
+.pl-table{font-size:13px}
+.pl-table th{font-size:12.5px;padding:13px 14px}
+.pl-table td{font-size:13px;padding:12px 14px}
+.pl-table .pl-child-row td{font-size:12.5px}
+.pl-table-title{font-size:15px}
+.pl-section-row td{font-weight:900;color:#34405C;background:#FBFCFF}
+.chart-control-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.small-select{height:34px;border:1px solid var(--line);border-radius:11px;background:#fff;padding:0 10px;color:var(--text);font-family:inherit;font-weight:800;font-size:11px;outline:none;box-shadow:var(--shadow-soft)}
+.line-toggle-box{display:flex;flex-wrap:wrap;gap:8px;padding:0 18px 12px}
+.line-toggle{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800;cursor:pointer;transition:.16s ease}
+.line-toggle.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.metric-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.pill{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800;color:var(--muted);box-shadow:var(--shadow-soft)}
+.pill strong{color:var(--navy)}
+.rev-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:22px}
+.rev-kpi-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:118px}
+.rev-kpi-card:before{content:'';position:absolute;inset:0 auto 0 0;width:5px;background:var(--navy)}
+.rev-kpi-card.good:before{background:var(--green)}
+.rev-kpi-card.bad:before{background:var(--red)}
+.rev-kpi-card.watch:before{background:var(--amber)}
+.rev-kpi-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;font-weight:900;color:var(--faint);margin-bottom:12px}
+.rev-kpi-value{font-size:25px;line-height:1.05;font-weight:900;color:var(--navy);letter-spacing:-.7px;margin-bottom:10px}
+.rev-kpi-meta{display:flex;flex-wrap:wrap;gap:7px;font-size:11px;font-weight:800}
+.rev-kpi-sub{display:block;color:var(--navy);font-size:11px;font-weight:800;margin-top:3px;line-height:1.35}
+.rev-kpi-card.period .rev-kpi-value{color:var(--navy);font-size:23px}
+.subline{display:block;font-size:10.5px;font-weight:800;margin-top:4px;color:var(--muted)}
+.pill .subline{display:block;margin-top:3px;color:var(--faint);font-size:10.5px;font-weight:700}
+
+.chart-filter{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center}
+.chart-filter label{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);font-size:10.5px;font-weight:900;cursor:pointer;box-shadow:var(--shadow-soft);user-select:none}
+.chart-filter input{accent-color:var(--magenta);width:13px;height:13px}
+.chart-filter label.active{border-color:rgba(207,39,141,.42);background:rgba(207,39,141,.07);color:var(--navy)}
+.chart-card.clickable canvas{cursor:pointer}
+.modal-backdrop{position:fixed;inset:0;background:rgba(16,27,77,.42);backdrop-filter:blur(6px);z-index:2200;display:none;align-items:center;justify-content:center;padding:24px}
+.modal-backdrop.open{display:flex}
+.modal-card{width:min(1080px,96vw);max-height:88vh;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 80px rgba(16,27,77,.28);display:flex;flex-direction:column}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.modal-title{font-size:19px;font-weight:900;color:var(--navy);letter-spacing:-.35px}
+.modal-sub{font-size:12px;color:var(--muted);font-weight:700;margin-top:4px}
+.modal-close{border:0;background:#F3F6FB;color:var(--muted);border-radius:12px;width:36px;height:36px;font-size:22px;line-height:1;cursor:pointer}
+.modal-body{padding:18px 22px 22px;overflow:auto}
+.modal-tabs{display:flex;gap:8px;margin-bottom:16px}
+.modal-tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-family:inherit;font-weight:900;font-size:11px;color:var(--muted);cursor:pointer}
+.modal-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.modal-chart-box{height:360px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.modal-table{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:auto}
+.modal-table table th{background:#F7F9FC;color:var(--navy)}
+.drill-click-note{font-size:10.5px;color:var(--magenta);font-weight:900;text-transform:uppercase;letter-spacing:.5px}
+@media(max-width:900px){.modal-grid{grid-template-columns:1fr}.modal-chart-box{height:300px}}
+
+@media(max-width:1180px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-grid{grid-template-columns:1fr}.insight-grid{grid-template-columns:1fr}.topbar{overflow:auto}}
+@media(max-width:760px){.sidebar{width:0}.topbar,.main{left:0;margin-left:0}.main{padding:16px}.kpi-grid{grid-template-columns:1fr}}
+
+
+.cost-driver-card{height:100%;min-height:330px;padding:0;background:#fff;border:0;border-radius:0;box-shadow:none;display:flex;flex-direction:column;overflow:hidden}
+.pl-basis-card .chart-title{color:var(--navy)}
+.cost-driver-inner{padding:18px 20px 14px;display:flex;flex-direction:column;gap:14px;min-height:260px}
+.cost-driver-tag{align-self:flex-start;background:#EEF2FB;color:var(--navy);border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;letter-spacing:.9px;text-transform:uppercase}
+.cost-driver-title{font-size:15px;line-height:1.35;font-weight:900;color:var(--navy);max-width:95%}
+.cost-driver-bars{display:flex;flex-direction:column;gap:13px;margin-top:4px}
+.cost-driver-row{display:grid;grid-template-columns:135px 1fr 104px;gap:12px;align-items:center}
+.cost-driver-label{font-size:12px;font-weight:800;color:#56617A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cost-driver-track{height:10px;background:#E7EBF3;border-radius:999px;position:relative;overflow:hidden}
+.cost-driver-fill{height:100%;border-radius:999px;min-width:0;transition:width .25s ease}
+.cost-driver-fill.revenue{background:linear-gradient(90deg,var(--navy),var(--navy-2))}
+.cost-driver-fill.cost{background:linear-gradient(90deg,#F59BAA,#D94B63)}
+.cost-driver-fill.margin{background:linear-gradient(90deg,#78C7AD,var(--green))}
+.cost-driver-fill.margin.negative{background:linear-gradient(90deg,#F59BAA,#C84F5E)}
+.cost-driver-fill.actual{background:linear-gradient(90deg,var(--magenta),#D94B9F)}
+.cost-driver-value{font-size:12px;font-weight:900;text-align:right;font-variant-numeric:tabular-nums;color:var(--navy)}
+.cost-driver-value small{display:block;font-size:10px;font-weight:800;color:var(--faint);margin-top:2px}
+.cost-driver-value.cost{color:var(--red)}
+.cost-driver-value.margin.good{color:var(--green)}
+.cost-driver-value.margin.bad{color:var(--red)}
+.cost-driver-value.actual{color:var(--magenta)}
+.cost-driver-footer{border-top:1px solid #E2E7F0;padding:13px 20px 15px;color:#616C84;font-size:12px;line-height:1.45;background:#fff}
+.cost-driver-footer strong{color:#2E3C65}
+.cost-driver-empty{display:grid;place-items:center;height:100%;color:var(--muted);font-weight:700}
+
+
+/* ===== Shikho Brand System Refresh =====
+   Based on the uploaded Shikho design template:
+   indigo-led surfaces, rounded cards, soft shadows, Poppins/Hind Siliguri typography,
+   restrained accents, and calmer product-style UI.
+*/
+:root{
+  --navy:#394E99;
+  --navy-2:#4B60B2;
+  --navy-deep:#111A4A;
+  --magenta:#C02980;
+  --gold:#E6A600;
+  --red:#E03350;
+  --red-bg:#FFF0F2;
+  --green:#2E8B66;
+  --green-bg:#EAF6F0;
+  --amber:#B97818;
+  --amber-bg:#FFF6DA;
+  --bg:#F4F6FB;
+  --card:#FFFFFF;
+  --text:#111827;
+  --muted:#667085;
+  --faint:#98A2B3;
+  --line:#E5E9F2;
+  --shadow:0 18px 46px rgba(17,26,74,.075);
+  --shadow-soft:0 8px 22px rgba(17,26,74,.06);
+  --radius-card:24px;
+  --radius-control:16px;
+}
+
+body{
+  background:
+    radial-gradient(circle at 0% 0%, rgba(57,78,153,.08), transparent 28%),
+    linear-gradient(180deg,#F8FAFE 0%,#F3F6FB 100%);
+  font-family:'Poppins','Hind Siliguri','Inter',Arial,sans-serif;
+  color:var(--text);
+  letter-spacing:-.01em;
+}
+
+.sidebar{
+  background:
+    radial-gradient(circle at 20% 8%, rgba(192,41,128,.28), transparent 28%),
+    linear-gradient(180deg,#111A4A 0%,#24347D 55%,#394E99 100%);
+  box-shadow:14px 0 34px rgba(17,26,74,.18);
+}
+.logo-area{
+  height:76px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.logo-mark{
+  width:44px;height:44px;flex-basis:44px;
+  background:rgba(255,255,255,.98);
+  border-radius:14px;
+  box-shadow:0 12px 28px rgba(0,0,0,.12);
+}
+.logo-mark img{width:34px;height:34px}
+.logo-copy strong{font-size:17px;font-weight:900}
+.logo-copy span{font-size:11px;opacity:.82}
+.nav-list{padding:16px 10px;gap:8px}
+.nav-item{
+  height:50px;
+  border-radius:18px;
+  color:rgba(255,255,255,.72);
+}
+.nav-item:hover{
+  background:rgba(255,255,255,.10);
+  color:#fff;
+}
+.nav-item.active{
+  background:linear-gradient(135deg,var(--magenta),#D83D93);
+  box-shadow:0 14px 30px rgba(192,41,128,.28);
+}
+
+.topbar{
+  height:76px;
+  background:rgba(255,255,255,.84);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(229,233,242,.88);
+  box-shadow:0 8px 22px rgba(17,26,74,.035);
+}
+.topbar-title{
+  color:var(--navy);
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:-.55px;
+}
+.main{margin-top:76px;padding:28px}
+
+.section-header{
+  margin-bottom:24px;
+  padding-bottom:18px;
+  border-bottom:1px solid rgba(229,233,242,.82);
+}
+.section-num{
+  width:46px;height:46px;
+  border-radius:18px;
+  background:linear-gradient(135deg,var(--navy),var(--navy-2));
+  box-shadow:0 14px 26px rgba(57,78,153,.18);
+}
+.section-title{
+  font-size:25px;
+  font-weight:900;
+  color:#111A4A;
+  letter-spacing:-.8px;
+}
+.section-sub{
+  color:var(--muted);
+  font-size:12.5px;
+  font-weight:600;
+}
+.view-note{
+  border-radius:999px;
+  padding:10px 14px;
+  color:#5D6680;
+  background:rgba(255,255,255,.88);
+  border:1px solid rgba(229,233,242,.95);
+  box-shadow:var(--shadow-soft);
+}
+
+.kpi-card,.rev-kpi-card,.chart-card,.insight-card,.table-wrap,.modal-card{
+  border-radius:var(--radius-card);
+  border:1px solid rgba(229,233,242,.92);
+  box-shadow:var(--shadow);
+}
+.kpi-card,.rev-kpi-card{
+  padding:20px;
+  background:
+    linear-gradient(180deg,#FFFFFF 0%,#FCFDFF 100%);
+}
+.kpi-card:before,.rev-kpi-card:before{
+  width:6px;
+  border-radius:0 12px 12px 0;
+  background:linear-gradient(180deg,var(--navy),var(--navy-2));
+}
+.kpi-label,.rev-kpi-label{
+  color:#7B8498;
+  letter-spacing:.75px;
+  font-weight:900;
+}
+.kpi-value,.rev-kpi-value{
+  color:var(--navy);
+  font-weight:900;
+  letter-spacing:-1px;
+}
+.kpi-status,.badge,.pill{
+  border-radius:999px;
+  font-weight:800;
+}
+.badge{
+  background:#F4F6FB;
+  color:#657089;
+}
+.badge.good{background:var(--green-bg);color:var(--green)}
+.badge.bad{background:var(--red-bg);color:var(--red)}
+.badge.watch{background:var(--amber-bg);color:var(--amber)}
+
+.chart-card{
+  background:#fff;
+  overflow:hidden;
+}
+.chart-card-header{
+  padding:18px 20px 13px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%);
+}
+.chart-title{
+  color:#17203B;
+  font-size:12.5px;
+  font-weight:900;
+  letter-spacing:.45px;
+}
+.chart-sub{
+  color:#7B8498;
+  font-size:11.5px;
+  line-height:1.45;
+  max-width:780px;
+}
+.chart-body{
+  padding:18px;
+}
+.drill-click-note{
+  color:var(--magenta);
+  background:rgba(192,41,128,.08);
+  border:1px solid rgba(192,41,128,.18);
+  padding:7px 10px;
+  border-radius:999px;
+}
+
+.period-select,.small-select,.icon-btn,.pl-toggle-btn{
+  border-radius:var(--radius-control);
+  border:1px solid rgba(229,233,242,.95);
+  box-shadow:var(--shadow-soft);
+}
+.btn-group{
+  border-radius:18px;
+  background:#F6F8FC;
+}
+.btn-group button{
+  border-radius:14px;
+  font-weight:900;
+}
+.btn-group button.active{
+  background:linear-gradient(135deg,var(--navy),var(--navy-2));
+  box-shadow:0 10px 20px rgba(57,78,153,.18);
+}
+.chart-filter label,.line-toggle{
+  border-radius:999px;
+  padding:8px 12px;
+  background:#fff;
+  border:1px solid rgba(229,233,242,.95);
+  box-shadow:var(--shadow-soft);
+}
+.chart-filter label.active,.line-toggle.active{
+  background:rgba(192,41,128,.08);
+  border-color:rgba(192,41,128,.34);
+  color:var(--navy);
+}
+.chart-filter input{accent-color:var(--magenta)}
+
+.insight-head{
+  color:var(--navy);
+  padding:16px 20px;
+}
+.insight-head span{
+  width:6px;height:24px;
+  background:linear-gradient(180deg,var(--magenta),#D83D93);
+}
+.insight-body{
+  padding:16px 20px 18px;
+  color:#56617A;
+  line-height:1.65;
+}
+
+table{font-size:12px}
+th{
+  background:linear-gradient(135deg,var(--navy),var(--navy-2));
+  font-weight:900;
+}
+td{
+  border-bottom:1px solid #EEF2F7;
+}
+tr.total-row td{
+  background:#F7F9FE;
+  color:var(--navy);
+}
+
+.modal-backdrop{
+  background:rgba(17,26,74,.44);
+}
+.modal-card{
+  border-radius:28px;
+}
+.modal-head{
+  padding:20px 24px;
+}
+.modal-title{
+  color:var(--navy);
+  font-weight:900;
+}
+.modal-close{
+  border-radius:14px;
+}
+.modal-tab{
+  border-radius:999px;
+  font-weight:900;
+}
+.modal-tab.active{
+  background:linear-gradient(135deg,var(--navy),var(--navy-2));
+}
+
+/* Cash forecast and below-zero treatment */
+.cash-negative-zone{
+  background:rgba(224,51,80,.08);
+  border-top:1px solid rgba(224,51,80,.18);
+}
+
+/* Keep chart legends and labels crisp */
+canvas{font-family:'Poppins','Hind Siliguri','Inter',Arial,sans-serif}
+
+
+/* Revenue KPI one-line split values */
+.rev-kpi-value{
+  white-space:nowrap;
+}
+.rev-kpi-card:nth-child(3) .rev-kpi-value,
+.rev-kpi-card:nth-child(5) .rev-kpi-value{
+  font-size:23px;
+  letter-spacing:-.8px;
+}
+
+
+/* Cash table notes refinement */
+.table-wrap table th:last-child{
+  text-align:center;
+}
+.cash-notes-cell{
+  text-align:left!important;
+  white-space:normal;
+  min-width:420px;
+}
+.cash-note-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin:2px 6px 2px 0;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+  line-height:1.25;
+  vertical-align:middle;
+  border:1px solid transparent;
+}
+.cash-note-chip strong{
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.35px;
+}
+.cash-note-inflow{
+  color:#176B4C;
+  background:#EAF6F0;
+  border-color:#CFECDD;
+}
+.cash-note-outflow{
+  color:#B4233A;
+  background:#FFF0F2;
+  border-color:#FFD3DA;
+}
+.cash-note-neutral{
+  color:#5D6680;
+  background:#F4F6FB;
+  border-color:#E5E9F2;
+}
+
+
+/* Sidebar label overflow fix */
+.sidebar:hover{
+  width:300px;
+}
+.logo-copy strong,
+.logo-copy span,
+.nav-label{
+  white-space:nowrap;
+}
+.nav-item{
+  gap:13px;
+  padding:0 14px;
+}
+.nav-label{
+  font-size:12.5px;
+  line-height:1.1;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:220px;
+}
+.sidebar:hover .nav-label{
+  opacity:1;
+}
+.nav-icon{
+  flex:0 0 28px;
+}
+
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="logo-area"><div class="logo-mark"><img src="data:image/png;base64,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" alt="Shikho"></div><div class="logo-copy"><strong>shikho</strong><span>Finance Governance Dashboard</span></div></div>
+  <div class="nav-list" id="navList"></div>
+</nav>
+<header class="topbar">
+  <div><div class="topbar-title" id="topbarTitle">Shikho Finance Governance Dashboard</div><div class="topbar-subtitle"></div></div>
+  <div class="spacer"></div>
+  <select class="period-select" id="periodSelect"></select>
+  <div class="btn-group" id="viewGroup"><button class="active" data-view="monthly">Monthly</button><button data-view="ytd">YTD</button></div>
+</header>
+<main class="main" id="main"></main>
+<script>
+let DASH=null;
+let dashboardDataLoaded=false;
+async function loadDashboardData(){
+  const response=await fetch('/api/dashboard-data',{cache:'no-store'});
+  if(!response.ok){
+    const txt=await response.text().catch(()=>'');
+    throw new Error(`Unable to load dashboard data. ${response.status} ${response.statusText} ${txt}`);
+  }
+  const data=await response.json();
+  if(data && data.ok===false){
+    throw new Error(data.error || 'Dashboard data API returned an error.');
+  }
+  DASH=data;
+  dashboardDataLoaded=true;
+}
+function showDashboardLoading(){
+  const main=document.getElementById('main');
+  if(!main) return;
+  main.innerHTML=`<section class="page active"><div style="min-height:calc(100vh - 140px);display:grid;place-items:center;">
+    <div style="width:min(460px,92vw);background:white;border:1px solid #E5E9F2;border-radius:24px;box-shadow:0 18px 46px rgba(17,26,74,.075);padding:30px;text-align:center;">
+      <div style="width:50px;height:50px;border-radius:18px;margin:0 auto 16px;background:linear-gradient(135deg,#394E99,#4B60B2);display:grid;place-items:center;color:#fff;font-weight:900;">S</div>
+      <div style="font-size:20px;font-weight:900;color:#111A4A;margin-bottom:8px;">Loading dashboard data</div>
+      <div style="font-size:13px;color:#667085;font-weight:600;line-height:1.5;">Fetching the latest data from Google Sheets...</div>
+    </div>
+  </div></section>`;
+}
+function showDashboardError(error){
+  const main=document.getElementById('main');
+  if(!main) return;
+  main.innerHTML=`<section class="page active"><div style="min-height:calc(100vh - 140px);display:grid;place-items:center;">
+    <div style="width:min(560px,92vw);background:white;border:1px solid #FFD3DA;border-radius:24px;box-shadow:0 18px 46px rgba(17,26,74,.075);padding:30px;text-align:center;">
+      <div style="width:50px;height:50px;border-radius:18px;margin:0 auto 16px;background:#FFF0F2;display:grid;place-items:center;color:#E03350;font-weight:900;">!</div>
+      <div style="font-size:20px;font-weight:900;color:#111A4A;margin-bottom:8px;">Could not load dashboard data</div>
+      <div style="font-size:13px;color:#667085;font-weight:600;line-height:1.5;margin-bottom:14px;">Please check the Google Sheet API connection and try refreshing the page.</div>
+      <pre style="white-space:pre-wrap;text-align:left;background:#F8FAFE;border:1px solid #E5E9F2;border-radius:14px;padding:12px;color:#B4233A;font-size:12px;line-height:1.5;">${String(error && error.message ? error.message : error)}</pre>
+    </div>
+  </div></section>`;
+}
+
+const PAGES=[
+  ['exec','Executive Summary','Command-center view of financial health and action signals','M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z'],
+  ['pl','Budget vs Actual Performance','Revenue, margin and EBITDA control against budget','M22 12h-4l-3 8L9 4l-3 8H2'],
+  ['revenue','Revenue Analysis','Channel, course and repeat revenue drivers over time','M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'],
+  ['costs','Cost & Margins','COGS, payroll and operating leverage','M4 19V5 M4 19h16 M9 16V9 M14 16V7 M19 16v-5'],
+  ['sales','Sales Team Efficiency','Sales productivity, ROI, headcount and package mix','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M23 21v-2a4 4 0 0 0-3-3.87'],
+  ['growth','Marketing & Growth Efficiency','Platform spend, actual spend and paid user activity','M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12 M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4'],
+  ['cash','Cash & Runway','Cash balance, burn and scenario risk','M1 4h22v16H1z M1 10h22']
+];
+const C={ navy:'#394E99', navy2:'#4B60B2', blueLight:'#8394D1', magenta:'#C02980', gold:'#E6A600', teal:'#39A8B8', green:'#2E8B66', red:'#E03350', redLight:'#F6B5BE', redSoft:'#FAD7DD', redMid:'#F09AA8', amber:'#B97818', grey:'#7E889A', grid:'#E8EDF5', fill:'#394E99', colors:['#394E99','#8394D1','#C02980','#39A8B8','#2E8B66','#E6A600','#E03350','#7E889A'] };
+function makeVerticalGradient(chart,stops){
+  const ctx=chart?.ctx, area=chart?.chartArea;
+  if(!ctx || !area) return stops[stops.length-1]?.[1] || C.redLight;
+  const g=ctx.createLinearGradient(0,area.top,0,area.bottom);
+  stops.forEach(([stop,color])=>g.addColorStop(stop,color));
+  return g;
+}
+function costGradient(chart,hover=false){
+  return makeVerticalGradient(chart, hover
+    ? [[0,'#F2A3AE'],[0.45,'#E27988'],[1,'#C84F5E']]
+    : [[0,'#F7C2C9'],[0.45,'#EFA1AB'],[1,'#D77583']]);
+}
+function costBorder(hover=false){
+  return hover ? '#C84F5E' : '#D77583';
+}
+let state={page:'exec',period:null,view:'monthly',execMargins:['GM%']};
+const charts={};
+Chart.defaults.font.family="Gibson, Inter, sans-serif";
+Chart.defaults.font.size=11;
+Chart.defaults.color='#5F6A7C';
+Chart.defaults.plugins.legend.position='bottom';
+Chart.defaults.plugins.tooltip.backgroundColor='#101B4D';
+Chart.defaults.plugins.tooltip.titleColor='#fff';
+Chart.defaults.plugins.tooltip.bodyColor='#fff';
+Chart.defaults.plugins.tooltip.padding=12;
+Chart.defaults.plugins.tooltip.cornerRadius=12;
+
+function el(id){return document.getElementById(id)}
+function h(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function jsArg(value){return h(JSON.stringify(String(value??'')))}
+function idx(months,m){return months.indexOf(m)}
+function val(arr,i){return Array.isArray(arr)&&i>=0&&i<arr.length?arr[i]:null}
+function safe(a){return a===undefined||Number.isNaN(a)?null:a}
+function sum(arr){return arr.reduce((a,b)=>a+(b||0),0)}
+function fUSD(v,compact=true){ if(v==null) return '—'; const neg=v<0; v=Math.abs(v); let s;if(compact&&v>=1000000)s='$'+(v/1000000).toFixed(1)+'M'; else if(compact&&v>=1000)s='$'+(v/1000).toFixed(1)+'K'; else s='$'+Math.round(v).toLocaleString(); return neg?'('+s+')':s; }
+function fUSDK(v){ if(v==null) return '—'; const neg=v<0; v=Math.abs(v); let s;if(v>=1000000)s='$'+Math.round(v/1000000).toLocaleString()+'M'; else if(v>=1000)s='$'+Math.round(v/1000).toLocaleString()+'K'; else s='$'+Math.round(v).toLocaleString(); return neg?'('+s+')':s; }
+function fUSDCompact(v){ if(v==null || !Number.isFinite(v)) return ''; const neg=v<0; v=Math.abs(v); const clean=n=>{ const x=Math.round(n*10)/10; return Number.isInteger(x)?String(x):x.toFixed(1); }; let s; if(v>=1000000)s='$'+clean(v/1000000)+'M'; else if(v>=1000)s='$'+clean(v/1000)+'K'; else s='$'+Math.round(v).toLocaleString(); return neg?'('+s+')':s; }
+function fInt(v){return v==null?'—':Math.round(v).toLocaleString()}
+function fPct(v,d=1){return v==null?'—':v.toFixed(d)+'%'}
+function fRatio(v){return v==null?'—':v.toFixed(2)+'x'}
+function pctChange(a,b){if(a==null||b==null||b===0)return null; return (a-b)/Math.abs(b)*100}
+function varianceClass(value, lowerBetter=false){
+  if(value==null || Number.isNaN(value) || Math.abs(value)<1e-9) return 'watch-var';
+  if(lowerBetter) return value<0?'pos-var':'neg-var';
+  return value>0?'pos-var':'neg-var';
+}
+function varianceCell(value, isPct=false, lowerBetter=false){
+  return `<td class="${varianceClass(value, lowerBetter)}">${isPct?fPct(value):fUSD(value,false)}</td>`;
+}
+function monthYear(m){const [mon,yy]=m.split('-'); return {mon,yr:2000+parseInt(yy)}}
+function prevYearMonth(m){let x=monthYear(m); return x.mon+'-'+String(x.yr-2001).padStart(2,'0')}
+function ytdRange(months,period){const p=idx(months,period); if(p<0)return []; const yr=period.split('-')[1]; let start=p; while(start>0 && months[start-1].split('-')[1]===yr) start--; return Array.from({length:p-start+1},(_,i)=>start+i)}
+function priorYtdRange(months,period){const m=monthYear(period); const start='Jan-'+String(m.yr-2001).padStart(2,'0'); const end=m.mon+'-'+String(m.yr-2001).padStart(2,'0'); const s=idx(months,start), e=idx(months,end); if(s<0||e<0)return []; return Array.from({length:e-s+1},(_,i)=>s+i)}
+function ytdValue(arr,months,period){return sum(ytdRange(months,period).map(i=>val(arr,i)))}
+function priorYtdValue(arr,months,period){let range=priorYtdRange(months,period); return range.length?sum(range.map(i=>val(arr,i))):null}
+function compareFor(arr,months,period,view){const i=idx(months,period); const current=view==='ytd'?ytdValue(arr,months,period):val(arr,i); let comp=null,label=''; if(view==='mom'){comp=val(arr,i-1);label='vs prior month'} else if(view==='yoy'){comp=val(arr,i-12);label='vs same month LY'} else if(view==='ytd'){comp=priorYtdValue(arr,months,period);label='vs LY YTD'} else {comp=null;label='current month'} return {current,comp,delta:comp!=null?current-comp:null,pct:pctChange(current,comp),label};}
+function seriesByView(arr,months,view,period){ if(view==='mom') return arr.map((v,i)=>pctChange(v,val(arr,i-1))); if(view==='yoy') return arr.map((v,i)=>pctChange(v,val(arr,i-12))); if(view==='ytd'){ const yr=period.split('-')[1], py=String(parseInt(yr)-1).padStart(2,'0'); const labels=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const pMonth=monthYear(period).mon; const cut=labels.indexOf(pMonth); const cur=labels.slice(0,cut+1).map((mon,k)=>ytdValue(arr,months,mon+'-'+yr)); const pri=labels.slice(0,cut+1).map((mon,k)=>ytdValue(arr,months,mon+'-'+py)); return {labels:labels.slice(0,cut+1), current:cur, prior:pri} } return arr; }
+function upTo(months, period){const p=idx(months,period); return p>=0?months.slice(0,p+1):months;}
+function trim(arr,months){const p=idx(months,state.period); return p>=0?arr.slice(0,p+1):arr;}
+function indicatorClass(metric,current,comp,lower=false){ if(comp==null||current==null)return 'watch'; const p=pctChange(current,comp); if(p==null)return 'watch'; const good=lower?p<0:p>0; if(Math.abs(p)<3)return 'watch'; return good?'good':'bad';}
+function badge(delta,pct,klass,label){ if(pct==null)return `<span class="badge watch">No comparison</span>`; const sign=delta>=0?'+':''; const arrow=delta>=0?'▲':'▼'; return `<span class="badge ${klass}">${arrow} ${sign}${fPct(pct)} ${label}</span>`; }
+function chartFmt(view){return view==='mom'||view==='yoy'?'pct':'usd'}
+function yTicks(kind){return {callback:v=>kind==='pct'?v.toFixed(0)+'%':kind==='num'?fInt(v):kind==='ratio'?v.toFixed(1)+'x':fUSD(v,true), font:{size:10}}}
+function tooltipLabel(kind){return (ctx)=>`${ctx.dataset.label||''}: ${kind==='pct'?fPct(ctx.parsed.y):kind==='num'?fInt(ctx.parsed.y):kind==='ratio'?fRatio(ctx.parsed.y):fUSD(ctx.parsed.y,true)}`;}
+function destroy(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+function numericValuesForAxis(cfg, axisId='y'){
+  const vals=[];
+  const datasets=(cfg?.data?.datasets)||[];
+  datasets.forEach(ds=>{
+    const dsAxis=ds.yAxisID||'y';
+    if(dsAxis!==axisId) return;
+    (ds.data||[]).forEach(v=>{
+      if(v==null) return;
+      if(typeof v==='number' && Number.isFinite(v)) vals.push(v);
+      else if(Array.isArray(v)) v.forEach(n=>{ if(typeof n==='number' && Number.isFinite(n)) vals.push(n); });
+      else if(typeof v==='object'){
+        const y=v.y;
+        if(typeof y==='number' && Number.isFinite(y)) vals.push(y);
+        else if(Array.isArray(y)) y.forEach(n=>{ if(typeof n==='number' && Number.isFinite(n)) vals.push(n); });
+      }
+    });
+  });
+  return vals;
+}
+function honestAxisMin(vals){
+  if(!vals.length) return 0;
+  const mn=Math.min(...vals);
+  if(mn<0) return Math.floor(mn*1.08);
+  return 0;
+}
+function applyHonestAxes(cfg){
+  cfg.options=cfg.options||{}; cfg.options.scales=cfg.options.scales||{};
+  ['y','y2'].forEach(axis=>{
+    if(!cfg.options.scales[axis]) return;
+    const vals=numericValuesForAxis(cfg,axis);
+    cfg.options.scales[axis].beginAtZero=false;
+    cfg.options.scales[axis].min=honestAxisMin(vals);
+  });
+  return cfg;
+}
+
+const waterfallDataLabelPlugin={
+  id:'waterfallDataLabelPlugin',
+  afterDatasetsDraw(chart,args,opts){
+    const {ctx,chartArea}=chart;
+    const ds=chart.data.datasets?.[0];
+    const labels=opts?.labels || ds?._labelValues || ds?._amounts || [];
+    if(!labels.length) return;
+    const meta=chart.getDatasetMeta(0);
+    ctx.save();
+    ctx.font='800 11px Gibson, Inter, sans-serif';
+    ctx.textAlign='center';
+    meta.data.forEach((bar,i)=>{
+      const raw=labels[i];
+      if(raw==null || !Number.isFinite(raw)) return;
+      const p=bar.getProps(['x','y','base','width'],true);
+      const top=Math.min(p.y,p.base), bottom=Math.max(p.y,p.base), height=Math.abs(p.base-p.y);
+      const value=raw;
+      let y, fill='#17203B', baseline='bottom';
+      const isCost=opts?.types?.[i]==='cost' || ds?._types?.[i]==='cost';
+      const isNegative=value<0 && !isCost;
+      if(isCost){
+        if(height>30){ y=top+(height/2)+4; baseline='middle'; fill='#FFFFFF'; }
+        else { y=top-7; baseline='bottom'; fill='#17203B'; }
+      } else if(isNegative){
+        y=bottom+15; baseline='top'; fill='#17203B';
+      } else if(height>46 && p.width>38){
+        y=top+15; baseline='top'; fill='#FFFFFF';
+      } else {
+        y=top-7; baseline='bottom'; fill='#17203B';
+      }
+      y=Math.max(chartArea.top+6, Math.min(chartArea.bottom-4, y));
+      ctx.fillStyle=fill;
+      ctx.textBaseline=baseline;
+      ctx.fillText(fUSDK(value), p.x, y);
+    });
+    ctx.restore();
+  }
+};
+
+const barDataLabelPlugin={
+  id:'barDataLabelPlugin',
+  afterDatasetsDraw(chart,args,opts){
+    const {ctx,chartArea}=chart;
+    ctx.save();
+    ctx.font='800 11px Gibson, Inter, sans-serif';
+    ctx.textAlign='center';
+    (chart.data.datasets||[]).forEach((ds,di)=>{
+      const meta=chart.getDatasetMeta(di);
+      if(meta.hidden) return;
+      meta.data.forEach((bar,i)=>{
+        let raw=(ds._labelValues&&ds._labelValues[i]!=null)?ds._labelValues[i]:(ds.data||[])[i];
+        if(Array.isArray(raw)) return;
+        if(raw==null || !Number.isFinite(raw)) return;
+        const p=bar.getProps(['x','y','base','width'],true);
+        const top=Math.min(p.y,p.base), bottom=Math.max(p.y,p.base), height=Math.abs(p.base-p.y);
+        const isNegative=raw<0;
+        const forceOutside=opts?.forceOutside || ds._labelForceOutside;
+        const enoughInside=!forceOutside && height>30 && p.width>34;
+        let y, fill, baseline;
+        if(enoughInside){
+          fill='#FFFFFF';
+          baseline=isNegative?'bottom':'top';
+          y=isNegative?bottom-8:top+8;
+        }else{
+          fill=opts?.color || ds._labelColor || '#17203B';
+          baseline=isNegative?'top':'bottom';
+          y=isNegative?bottom+7:top-7;
+        }
+        y=Math.max(chartArea.top+14, Math.min(chartArea.bottom-14, y));
+        const format=opts?.format || ds._labelFormat || 'usdCompact';
+        let text;
+        if(format==='num') text=fInt(raw);
+        else if(format==='usd') text=fUSD(raw,false);
+        else if(format==='pct') text=fPct(raw);
+        else text=fUSDCompact(raw);
+        ctx.fillStyle=fill;
+        ctx.textBaseline=baseline;
+        ctx.fillText(text, p.x, y);
+      });
+    });
+    ctx.restore();
+  }
+};
+
+const stackedTotalDataLabelPlugin={
+  id:'stackedTotalDataLabelPlugin',
+  afterDatasetsDraw(chart,args,opts){
+    const {ctx,chartArea}=chart;
+    const labels=chart.data.labels||[];
+    ctx.save();
+    ctx.font='800 11px Gibson, Inter, sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='bottom';
+    labels.forEach((_,i)=>{
+      let total=0, x=null, topY=null;
+      (chart.data.datasets||[]).forEach((ds,di)=>{
+        const meta=chart.getDatasetMeta(di);
+        if(meta.hidden) return;
+        if(opts?.stack && ds.stack!==opts.stack) return;
+        const raw=(ds.data||[])[i];
+        if(raw==null || !Number.isFinite(raw)) return;
+        total+=raw;
+        const bar=meta.data[i];
+        if(!bar) return;
+        const p=bar.getProps(['x','y','base'],true);
+        x=p.x;
+        topY=topY==null?Math.min(p.y,p.base):Math.min(topY,p.y,p.base);
+      });
+      if(!total || x==null || topY==null) return;
+      const y=Math.max(chartArea.top+14, topY-7);
+      const color=Array.isArray(opts?.color)?(opts.color[i]||'#17203B'):(opts?.color||'#17203B');
+      ctx.fillStyle=color;
+      ctx.fillText(fUSDK(total), x, y);
+    });
+    ctx.restore();
+  }
+};
+
+function withBarDataLabels(options,opts={}){
+  const out={...options};
+  out.layout={...(out.layout||{}),padding:{top:30,bottom:18,...((out.layout||{}).padding||{})}};
+  out.plugins={...(out.plugins||{}),barDataLabelPlugin:opts};
+  return out;
+}
+
+function chart(id, cfg){destroy(id); const canvas=el(id); if(!canvas)return; charts[id]=new Chart(canvas,applyHonestAxes(cfg));}
+function baseOptions(kind='usd', stacked=false){return {responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{usePointStyle:true,boxWidth:8,padding:16,font:{weight:700}}},tooltip:{callbacks:{label:tooltipLabel(kind)}}},scales:{x:{stacked,grid:{display:false},ticks:{maxTicksLimit:12,font:{size:10,weight:700}}},y:{stacked,beginAtZero:false,min:0,grid:{color:C.grid},ticks:yTicks(kind)}}};}
+function lineChart(id, labels, datasets, kind='usd'){chart(id,{type:'line',data:{labels,datasets},options:baseOptions(kind,false)})}
+function barChart(id, labels, datasets, kind='usd', stacked=false){chart(id,{type:'bar',data:{labels,datasets},options:baseOptions(kind,stacked)})}
+function comboChart(id, labels, datasets, kind='usd'){chart(id,{type:'bar',data:{labels,datasets},options:baseOptions(kind,false)})}
+function dsLine(label,data,color,axis){return {type:'line',label,data,borderColor:color,backgroundColor:color,pointRadius:2.5,pointHoverRadius:6,tension:0,borderWidth:2.75,fill:false,yAxisID:axis||'y'}}
+function dsBar(label,data,color,stack){return {type:'bar',label,data,backgroundColor:color,borderColor:color,borderWidth:1,borderRadius:6,borderSkipped:false,stack:stack||undefined,maxBarThickness:46}}
+function dsArea(label,data,color){return {type:'line',label,data,borderColor:color,backgroundColor:color+'24',pointRadius:2,pointHoverRadius:6,tension:0,borderWidth:2.75,fill:true}}
+function pageIcon(id){const p=PAGES.find(x=>x[0]===id); return p?p[3]:PAGES[0][3];}
+function dataStatusHtml(){
+  const meta=DASH?.meta||{}, periods=DASH?.periods||{}, validation=DASH?.validation||{};
+  const warnings=validation.warnings||[];
+  const statusClass=warnings.length?'warning':'ok';
+  const through=periods.displayActual||periods.actualsTo||meta.actualsTo||state.period||'';
+  const configured=periods.actualsTo||meta.actualsTo||'';
+  const updated=meta.fileLastUpdated?`<span><strong>Sheet updated:</strong> ${h(meta.fileLastUpdated)}</span>`:'';
+  const refreshed=DASH?.generatedAt?`<span><strong>API refreshed:</strong> ${h(new Date(DASH.generatedAt).toLocaleString())}</span>`:'';
+  const configuredText=configured&&configured!==through?`<span><strong>Config Actuals_To:</strong> ${h(configured)}</span>`:'';
+  const message=warnings.length?`<div class="data-status-message">${warnings.map(h).join('<br>')}</div>`:'';
+  return `<div class="data-status ${statusClass}"><span><strong>Data shown through:</strong> ${h(through)}</span>${configuredText}${updated}${refreshed}${message}</div>`;
+}
+function pageScaffold(id,title,sub,num,body){return `<section class="page ${state.page===id?'active':''}" id="page-${id}">${dataStatusHtml()}<div class="section-header"><div class="section-left"><div class="section-num"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="${pageIcon(id)}"/></svg></div><div><div class="section-title">${title}</div><div class="section-sub">${sub}</div></div></div><div class="view-note" id="note-${id}"></div></div>${body}</section>`}
+function chartCard(title,sub,canvas,full=false,tall=false){return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">${title}</div><div class="chart-sub">${sub||''}</div></div></div><div class="chart-body ${tall?'tall':''}"><canvas id="${canvas}"></canvas></div></div>`}
+function costDriverCard(title,sub,id){return `<div class="chart-card pl-basis-card"><div class="chart-card-header"><div><div class="chart-title">${title}</div><div class="chart-sub">${sub||''}</div></div></div><div class="chart-body tall" id="${id}"></div></div>`}
+function setNote(page){const notes={monthly:'Monthly values shown for the selected month; Executive Summary compares to same month last year',ytd:'YTD values shown from January through selected month; Executive Summary compares to prior-year YTD'}; const n=el('note-'+page); if(n)n.textContent=notes[state.view]||'';}
+function renderNav(){el('navList').innerHTML=PAGES.map((p,i)=>`<div class="nav-item ${state.page===p[0]?'active':''}" onclick="goto('${p[0]}')"><div class="nav-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="${p[3]}"/></svg></div><span class="nav-label">${p[1]}</span></div>`).join('');}
+
+const PERIOD_MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function periodSerial(m){
+  if(!m || typeof m!=='string' || !m.includes('-')) return -Infinity;
+  const [mon,yy]=m.split('-');
+  const mi=PERIOD_MONTHS.indexOf(mon);
+  const yr=2000+parseInt(yy,10);
+  if(mi<0 || !Number.isFinite(yr)) return -Infinity;
+  return yr*12+mi;
+}
+function hasDataAtIndex(obj,i){
+  if(obj==null) return false;
+  if(Array.isArray(obj)) return obj[i]!=null && Number.isFinite(obj[i]);
+  if(typeof obj==='object') return Object.values(obj).some(v=>hasDataAtIndex(v,i));
+  return false;
+}
+function latestMonthWithData(dataset){
+  const months=dataset?.months||[];
+  const data=dataset?.data||{};
+  for(let i=months.length-1;i>=0;i--){
+    if(hasDataAtIndex(data,i)) return months[i];
+  }
+  return null;
+}
+function latestActualPeriod(){
+  const configured=DASH?.periods?.displayActual||DASH?.periods?.actualsTo||DASH?.meta?.actualsTo;
+  if(configured) return configured;
+  const candidates=[
+    latestMonthWithData(DASH?.revChannel),
+    latestMonthWithData(DASH?.revCourse),
+    latestMonthWithData(DASH?.nvr),
+    latestMonthWithData(DASH?.mau),
+    latestMonthWithData(DASH?.sales)
+  ].filter(Boolean);
+  if(!candidates.length) return (DASH?.pl?.months||[]).filter(Boolean).pop()||'';
+  return candidates.sort((a,b)=>periodSerial(a)-periodSerial(b)).pop();
+}
+function selectablePeriods(){
+  if(DASH?.periods?.selectable?.length) return DASH.periods.selectable;
+  const latest=latestActualPeriod();
+  const latestSerial=periodSerial(latest);
+  return (DASH?.pl?.months||[]).filter(m=>periodSerial(m)<=latestSerial);
+}
+function initPeriod(){
+  const months=selectablePeriods();
+  const latest=months[months.length-1] || latestActualPeriod();
+  state.period=latest;
+  el('periodSelect').innerHTML=months.slice().reverse().map(m=>`<option value="${m}">${m}</option>`).join('');
+  el('periodSelect').value=state.period;
+}
+
+
+function monthLabelLong(m){ if(!m) return ''; const [mon,yy]=m.split('-'); const names={Jan:'January',Feb:'February',Mar:'March',Apr:'April',May:'May',Jun:'June',Jul:'July',Aug:'August',Sep:'September',Oct:'October',Nov:'November',Dec:'December'}; return `${names[mon]||mon} ${2000+parseInt(yy)}`; }
+function prevMonth(m){const order=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const x=monthYear(m); let mi=order.indexOf(x.mon); if(mi<=0) return 'Dec-'+String(x.yr-2001).padStart(2,'0'); return order[mi-1]+'-'+String(x.yr-2000).padStart(2,'0');}
+function plTablePeriodLabel(period=state.period,view=state.view){return view==='ytd'?`YTD ${monthLabelLong(period)}`:monthLabelLong(period);}
+function currentYearLabel(period){ if(!period||!String(period).includes('-')) return new Date().getFullYear(); return 2000+parseInt(period.split('-')[1]); }
+function firstPeriodOfYear(months,period){const yr=(period||'').split('-')[1]; return (months||[]).find(m=>m&&m.endsWith('-'+yr))||period;}
+function ytdAverage(arr,months,period){ const r=ytdRange(months,period).map(i=>val(arr,i)).filter(v=>v!=null); return r.length?sum(r)/r.length:null; }
+function priorYtdAverage(arr,months,period){ const r=priorYtdRange(months,period).map(i=>val(arr,i)).filter(v=>v!=null); return r.length?sum(r)/r.length:null; }
+function ytdGrossMarginPct(months, period){
+  const a=DASH.pl.actual;
+  const gm=ytdValue(a["Gross Margin"], months, period);
+  const nr=ytdValue(a["Net Revenue"], months, period);
+  return nr ? (gm / nr) * 100 : null;
+}
+function priorYtdGrossMarginPct(months, period){
+  const a=DASH.pl.actual;
+  const gm=priorYtdValue(a["Gross Margin"], months, period);
+  const nr=priorYtdValue(a["Net Revenue"], months, period);
+  return nr ? (gm / nr) * 100 : null;
+}
+function monthlyGrossMarginPct(months, period){
+  const a=DASH.pl.actual;
+  const i=idx(months, period);
+  const gm=val(a["Gross Margin"], i);
+  const nr=val(a["Net Revenue"], i);
+  return nr ? (gm / nr) * 100 : null;
+}
+function execMetricValue(metric,period,view){
+  const m=DASH.pl.months, a=DASH.pl.actual;
+  if(metric==="GM%") return view==="ytd"?ytdGrossMarginPct(m,period):monthlyGrossMarginPct(m,period);
+  return view==="ytd"?ytdValue(a[metric],m,period):val(a[metric],idx(m,period));
+}
+function execPriorMetricValue(metric,period,view){
+  const m=DASH.pl.months, a=DASH.pl.actual;
+  if(view==="ytd"){
+    if(metric==="GM%") return priorYtdGrossMarginPct(m,period);
+    return priorYtdValue(a[metric],m,period);
+  }
+  const py=idx(m,prevYearMonth(period));
+  if(py<0) return null;
+  if(metric==="GM%"){
+    const gm=val(a["Gross Margin"],py);
+    const nr=val(a["Net Revenue"],py);
+    return nr ? (gm/nr)*100 : null;
+  }
+  return val(a[metric],py);
+}
+function execCompareLabel(period,view){ return view==='ytd'?`YTD ${currentYearLabel(period)-1}`:monthLabelLong(prevYearMonth(period)); }
+function execCurrentLabel(period,view){ return view==='ytd'?`YTD ${currentYearLabel(period)}`:monthLabelLong(period); }
+function execMetricSet(period,view){
+  return {
+    grossRevenue:execMetricValue('Gross Revenue',period,view), grossRevenuePrior:execPriorMetricValue('Gross Revenue',period,view),
+    gmPct:execMetricValue('GM%',period,view), gmPctPrior:execPriorMetricValue('GM%',period,view),
+    ebitda:execMetricValue('EBITDA',period,view), ebitdaPrior:execPriorMetricValue('EBITDA',period,view),
+    netCashBurn:execMetricValue('Net Cash Burn',period,view), netCashBurnPrior:execPriorMetricValue('Net Cash Burn',period,view)
+  };
+}
+function execKpi(label,current,prior,fmt,opts={}){
+  const hasPrior=prior!=null;
+  let klass='watch';
+  if(label==='Net Cash Burn') klass=current>=0?'good':'bad';
+  else if(label==='EBITDA') klass=current>=0?'good':'bad';
+  else if(label==='Gross Margin %') klass=!hasPrior?'watch':(current>=prior?'good':'bad');
+  else klass=!hasPrior?'watch':(current>=prior?'good':'bad');
+  const delta=hasPrior?current-prior:null;
+  const pct=hasPrior?pctChange(current,prior):null;
+  const compareLabel=execCompareLabel(state.period,state.view);
+  const compareText=hasPrior?`${compareLabel}: ${fmt(prior)}`:'';
+  const deltaBadge=hasPrior?badge(delta,pct,klass,'vs '+compareLabel):'';
+  return `<div class="kpi-card ${klass}"><div class="kpi-top"><div class="kpi-label">${label}</div><div class="kpi-status ${klass}">${klass==='good'?'Good':klass==='bad'?'Watch':'No comp'}</div></div><div class="kpi-value">${fmt(current)}</div><div class="kpi-meta">${compareText?`<span class="badge">${compareText}</span>`:''}${deltaBadge}</div></div>`;
+}
+function waterfallAmounts(period,view){
+  const m=DASH.pl.months,a=DASH.pl.actual;
+  const get=(k)=>view==='ytd'?ytdValue(a[k],m,period):val(a[k],idx(m,period));
+  return {
+    netRevenue:get('Net Revenue'),
+    cogs:get('Total: COGS'),
+    academic:get('Total Academic Support Cost'),
+    sm:get('Total: S&M Cost'),
+    brand:get('Less: Brand Marketing Cost'),
+    indirect:get('Total: Indirect Cost'),
+    ebitda:get('EBITDA')
+  };
+}
+function waterfallMargins(period,view){
+  const getPct=(k)=>{
+    const raw=metricAmountFor(k,period,view);
+    return raw==null?0:raw*100;
+  };
+  return {
+    gm:getPct('GM%'),
+    cm1:getPct('CM 1 %'),
+    cm2:getPct('CM 2 %'),
+    cm3:getPct('CM 3 %'),
+    ebitda:getPct('EBITDA %')
+  };
+}
+
+function kpiCard(label, arr, months, fmt, lower=false, budgetArr=null){const c=compareFor(arr,months,state.period,state.view); let comp=c.comp; let labelText=c.label; if(state.view==='monthly'&&budgetArr){comp=val(budgetArr,idx(months,state.period)); labelText='vs budget';} const klass=indicatorClass(label,c.current,comp,lower); const delta=comp!=null?c.current-comp:null; const pct=pctChange(c.current,comp); return `<div class="kpi-card ${klass}"><div class="kpi-top"><div class="kpi-label">${label}</div><div class="kpi-status ${klass}">${klass==='good'?'Good':klass==='bad'?'Watch':'Flat'}</div></div><div class="kpi-value">${fmt(c.current)}</div><div class="kpi-meta">${badge(delta,pct,klass,labelText)}</div></div>`}
+function insightText(){
+  const plM=DASH.pl.months, plA=DASH.pl.actual;
+  const curPeriod=plM.includes(state.period)?state.period:latestActualPeriod();
+  const basePeriod=firstPeriodOfYear(plM,curPeriod);
+  const safeIdx=(months,period)=>{ const i=months.indexOf(period); if(i>=0)return i; const latest=months.indexOf(curPeriod); return latest>=0?latest:Math.max(0,months.length-1); };
+  const nextActionPeriod=nextPeriod(curPeriod)||DASH?.periods?.forecastFrom||curPeriod;
+  const iJan=safeIdx(plM,basePeriod), iCur=safeIdx(plM,curPeriod);
+  const getPL=(key,i)=>val(plA[key],i)||0;
+  const changeTxt=(cur,base)=>{ const p=pctChange(cur,base); return p==null?'—':Math.abs(p).toFixed(0)+'%'; };
+  const badgeHtml=(type,label)=>`<span class="badge ${type}">${label}</span>`;
+
+  const revJan=getPL('Gross Revenue',iJan), revCur=getPL('Gross Revenue',iCur);
+  const ebitdaJan=getPL('EBITDA',iJan), ebitdaCur=getPL('EBITDA',iCur);
+  const salesCostJan=getPL('Less: Sales Team Cost',iJan), salesCostCur=getPL('Less: Sales Team Cost',iCur);
+  const salesCostPctRev=revCur?salesCostCur/revCur*100:null;
+
+  const sM=DASH.sales.months, sA=DASH.sales.data;
+  const salesBase=firstPeriodOfYear(sM,curPeriod);
+  const siJan=safeIdx(sM,salesBase), siCur=safeIdx(sM,curPeriod);
+  const contribJan=val(sA.Contribution_per_Agent['Average Contribution/Agent'],siJan)||0;
+  const contribCur=val(sA.Contribution_per_Agent['Average Contribution/Agent'],siCur)||0;
+
+  const cM=DASH.accrualCosts.cogs.months, cA=DASH.accrualCosts.cogs.data;
+  const costBase=firstPeriodOfYear(cM,curPeriod);
+  const ciJan=safeIdx(cM,costBase), ciCur=safeIdx(cM,curPeriod);
+  const dbJan=val(cA['Database & Server Costs'],ciJan)||0;
+  const dbCur=val(cA['Database & Server Costs'],ciCur)||0;
+
+  const cashBase=DASH.cash.filter(x=>x.Scenario==='Base');
+  const cashStartPeriod=firstPeriodOfYear(cashBase.map(x=>x.Month),curPeriod);
+  const cashJan=cashBase.find(x=>x.Month===cashStartPeriod)||cashBase[0];
+  const cashCur=cashBase.find(x=>x.Month===curPeriod)||cashBase.find(x=>x.Month===latestActualPeriod())||cashBase[cashBase.length-1];
+  const closeJan=cashJan?cashJan.Closing_Balance:0;
+  const closeCur=cashCur?cashCur.Closing_Balance:0;
+
+  const dmM=DASH.dm.months, dmA=DASH.dm.data;
+  const diCur=safeIdx(dmM,curPeriod);
+  const platform=val(dmA.Total_Ad_Spend,diCur)||0;
+  const actual=val(dmA.Adjusted_Ad_Spend_Total,diCur)||0;
+  const adGapPct=platform?((actual-platform)/platform*100):null;
+
+  return {
+    headlines:[
+      `${badgeHtml('bad','Red')} Revenue: ${fUSD(revJan)} → ${fUSD(revCur)}. Down ${changeTxt(revCur,revJan)}. EBITDA swing: ${fUSD(ebitdaCur-ebitdaJan)}.`,
+      `${badgeHtml('bad','Red')} Sales cost: ${fUSD(salesCostJan)} → ${fUSD(salesCostCur)}. Now ${salesCostPctRev==null?'—':salesCostPctRev.toFixed(0)+'%'} of revenue.`,
+      `${badgeHtml('bad','Red')} Cash: ${fUSD(closeJan)} → ${fUSD(closeCur)}. Down ${changeTxt(closeCur,closeJan)}.`
+    ],
+    risks:[
+      `${badgeHtml('bad','Red')} Agent contribution: ${fUSD(contribJan)} → ${fUSD(contribCur)}. Down ${changeTxt(contribCur,contribJan)}.`,
+      `${badgeHtml('watch','Amber')} Database & Server: ${fUSD(dbJan)} → ${fUSD(dbCur)}. Up ${changeTxt(dbCur,dbJan)}.`,
+      `${badgeHtml('watch','Amber')} Marketing cash gap: ${fUSD(platform)} platform vs ${fUSD(actual)} actual. +${adGapPct==null?'—':adGapPct.toFixed(0)+'%'} real cost.`
+    ],
+    actions:[
+      `Lock ${monthLabelLong(nextActionPeriod)} revenue budget by course and channel.`,
+      `Freeze sales hiring. Review ROI by team.`,
+      `Cap server spend. Audit vendor and usage this week.`,
+      `Review cash weekly. Use pessimistic case as trigger.`
+    ]
+  };
+}
+function execTrendCard(){
+  const options=[['GM%','Gross Margin %'],['CM 1 %','CM 1 %'],['CM 2 %','CM 2 %'],['CM 3 %','CM 3 %'],['EBITDA %','EBITDA %']];
+  const filters=options.map(([key,label])=>`<label class="${state.execMargins.includes(key)?'active':''}"><input type="checkbox" ${state.execMargins.includes(key)?'checked':''} onchange="toggleExecMargin('${key}',this.checked)">${label}</label>`).join('');
+  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">Margin Quality Trend</div><div class="chart-sub">Monthly margin path through the selected period; toggle lines to isolate EBITDA pressure.</div></div><div class="chart-filter" id="execMarginFilter">${filters}</div></div><div class="chart-body tall"><canvas id="execRev"></canvas></div></div>`;
+}
+function renderExec(){
+  const metrics=execMetricSet(state.period,state.view);
+  const body=`<div class="kpi-grid">${execKpi('Gross Revenue',metrics.grossRevenue,metrics.grossRevenuePrior,fUSD)}${execKpi('Gross Margin %',metrics.gmPct,metrics.gmPctPrior,v=>fPct(v))}${execKpi('EBITDA',metrics.ebitda,metrics.ebitdaPrior,fUSD)}${execKpi('Net Cash Burn',metrics.netCashBurn,metrics.netCashBurnPrior,fUSD)}</div><div class="chart-grid">${execTrendCard()}<div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-title">Revenue & EBITDA vs Prior Year</div><div class="chart-sub">Compares selected period against the same period last year; click bars for detail</div></div><div class="drill-click-note">Click bars to drill down</div></div><div class="chart-body tall"><canvas id="execCompare"></canvas></div></div></div><div class="chart-grid full"><div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-title">Gross Revenue to EBITDA Bridge</div><div class="chart-sub">Shows how direct sales costs, operating costs and indirect costs bridge gross revenue to EBITDA</div></div><div class="drill-click-note">Click cost bars to drill down</div></div><div class="chart-body tall"><canvas id="execWaterfall"></canvas></div></div></div><div class="insight-grid"><div class="insight-card"><div class="insight-head"><span></span>Key Headlines</div><div class="insight-body"><ul id="insightHead"></ul></div></div><div class="insight-card"><div class="insight-head"><span></span>Risks & Watch Items</div><div class="insight-body"><ul id="insightRisk"></ul></div></div><div class="insight-card"><div class="insight-head"><span></span>Actions Required</div><div class="insight-body"><ul id="insightAction"></ul></div></div></div>`;
+  el('main').innerHTML=pageScaffold('exec','Executive Summary','Cash basis view of financial health, business health and immediate decisions',1,body);
+  setNote('exec');
+  renderExecCharts();
+  const ins=insightText();
+  el('insightHead').innerHTML=ins.headlines.map(x=>`<li>${x}</li>`).join('');
+  el('insightRisk').innerHTML=ins.risks.map(x=>`<li>${x}</li>`).join('');
+  el('insightAction').innerHTML=ins.actions.map(x=>`<li>${x}</li>`).join('');
+}
+function toggleExecMargin(metric,checked){
+  const all=['GM%','CM 1 %','CM 2 %','CM 3 %','EBITDA %'];
+  if(checked){ if(!state.execMargins.includes(metric)) state.execMargins.push(metric); }
+  else { state.execMargins=state.execMargins.filter(x=>x!==metric); }
+  if(!state.execMargins.length) state.execMargins=[metric];
+  state.execMargins=all.filter(x=>state.execMargins.includes(x));
+  const holder=el('execMarginFilter');
+  if(holder){ [...holder.querySelectorAll('label')].forEach(label=>{ const input=label.querySelector('input'); label.classList.toggle('active', input.checked); }); }
+  renderExecCharts();
+}
+function chartDataFor(arr,months){ if(state.view==='ytd') return seriesByView(arr,months,'ytd',state.period); return trim(seriesByView(arr,months,state.view,state.period),months); }
+function labelsFor(months){ if(state.view==='ytd') return seriesByView([0],months,'ytd',state.period).labels; return upTo(months,state.period); }
+
+function monthListBetween(startPeriod,endPeriod){
+  const out=[];
+  if(!startPeriod || !endPeriod) return out;
+  const start=periodSerial(startPeriod), end=periodSerial(endPeriod);
+  if(!Number.isFinite(start) || !Number.isFinite(end) || start>end) return out;
+  for(let s=start;s<=end;s++){
+    const yr=Math.floor(s/12);
+    const mi=s%12;
+    out.push(PERIOD_MONTHS[mi]+'-'+String(yr-2000).padStart(2,'0'));
+  }
+  return out;
+}
+function chartMonthsFromSource(sourceMonths){
+  const first=(sourceMonths||[]).find(Boolean) || state.period;
+  return monthListBetween(first,state.period);
+}
+function alignedSeries(arr,sourceMonths,targetMonths,fill=0){
+  return (targetMonths||[]).map(m=>{
+    const i=idx(sourceMonths,m);
+    const v=val(arr,i);
+    return v==null?fill:v;
+  });
+}
+function alignedObjectSeries(obj,key,sourceMonths,targetMonths,fill=0){
+  return alignedSeries((obj||{})[key]||[],sourceMonths,targetMonths,fill);
+}
+function renderExecCharts(){
+  const m=DASH.pl.months,a=DASH.pl.actual;
+  const selectedIdx=idx(m,state.period);
+  const labels=m.slice(0,selectedIdx+1);
+  const marginColors={'GM%':C.navy,'CM 1 %':C.magenta,'CM 2 %':C.teal,'CM 3 %':C.green,'EBITDA %':C.red};
+  const marginFill={'GM%':'rgba(53,72,148,0.10)','CM 1 %':'rgba(207,39,141,0.09)','CM 2 %':'rgba(57,168,184,0.09)','CM 3 %':'rgba(46,139,102,0.08)','EBITDA %':'rgba(200,79,94,0.12)'};
+  const selected=state.execMargins&&state.execMargins.length?state.execMargins:['GM%'];
+  const datasets=selected.map(k=>({
+    label:k==='GM%'?'Gross Margin %':k,
+    data:(a[k]||[]).slice(0,selectedIdx+1).map(v=>v==null?null:v*100),
+    borderColor:marginColors[k]||C.navy,
+    backgroundColor:marginFill[k]||'rgba(53,72,148,0.10)',
+    pointRadius:2.5,
+    pointHoverRadius:6,
+    tension:0,
+    borderWidth:2.7,
+    fill:k==='EBITDA %'?{target:'origin',above:'rgba(200,79,94,0.08)',below:'rgba(200,79,94,0.20)'}:{target:'origin'},
+    order:k==='EBITDA %'?2:1
+  }));
+  lineChart('execRev',labels,datasets,'pct');
+
+  const cur=execMetricSet(state.period,state.view);
+  const currentLabel=execCurrentLabel(state.period,state.view);
+  const priorLabel=execCompareLabel(state.period,state.view);
+  chart('execCompare',{
+    type:'bar',
+    data:{labels:['Gross Revenue','EBITDA'],datasets:[
+      dsBar(currentLabel,[cur.grossRevenue,cur.ebitda],C.navy),
+      dsBar(priorLabel,[cur.grossRevenuePrior,cur.ebitdaPrior],C.magenta)
+    ]},
+    options:withBarDataLabels({
+      ...baseOptions('usd',false),
+      interaction:{mode:'nearest',intersect:true},
+      onHover:(event,elements,chartObj)=>{
+        const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+        event.native.target.style.cursor=active.length?'pointer':'default';
+      },
+      onClick:(event,elements,chartObj)=>{
+        const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+        if(!active.length) return;
+        const point=active[0];
+        const metric=point.index===0?'Gross Revenue':'EBITDA';
+        const isPrior=point.datasetIndex===1;
+        openExecDrilldown(metric,isPrior);
+      }
+    }),
+    plugins:[barDataLabelPlugin]
+  });
+
+  const getAmt=(k)=>metricAmountFor(k,state.period,state.view)||0;
+  const gross=getAmt('Gross Revenue');
+  const net=getAmt('Net Revenue');
+  const revenueDeductions=Math.max(0,gross-net);
+  const steps=[
+    {label:'Gross Revenue', kind:'checkpoint', display:gross},
+    {label:'Direct Sales Costs', kind:'cost', amount:-Math.abs(revenueDeductions), drill:'Direct Sales Costs'},
+    {label:'Net Revenue', kind:'checkpoint', display:net},
+    {label:'COGS', kind:'cost', amount:-Math.abs(getAmt('Total: COGS')), drill:'COGS'},
+    {label:'Gross Margin', kind:'checkpoint', display:getAmt('Gross Margin')},
+    {label:'Academic Support', kind:'cost', amount:-Math.abs(getAmt('Total Academic Support Cost')), drill:'Academic Support'},
+    {label:'CM 1', kind:'checkpoint', display:getAmt('Profit Contribution 1')},
+    {label:'S&M Cost', kind:'cost', amount:-Math.abs(getAmt('Total: S&M Cost')), drill:'S&M Cost'},
+    {label:'CM 2', kind:'checkpoint', display:getAmt('Profit Contribution 2')},
+    {label:'Brand Marketing', kind:'cost', amount:-Math.abs(getAmt('Less: Brand Marketing Cost')), drill:'Brand Marketing'},
+    {label:'CM 3', kind:'checkpoint', display:getAmt('Profit Contribution 3')},
+    {label:'Indirect Cost', kind:'cost', amount:-Math.abs(getAmt('Total: Indirect Cost')), drill:'Indirect Cost'},
+    {label:'EBITDA', kind:'ebitda', display:getAmt('EBITDA'), drill:'EBITDA'}
+  ];
+  let running=gross||0;
+  const ranges=steps.map((s,i)=>{
+    if(s.kind==='checkpoint' || s.kind==='ebitda'){
+      if(s.kind==='checkpoint') running=s.display||0;
+      return [0,s.display||0];
+    }
+    const start=running;
+    running += s.amount||0;
+    return [Math.min(start,running),Math.max(start,running)];
+  });
+  chart('execWaterfall',{
+    type:'bar',
+    data:{labels:steps.map(s=>s.label),datasets:[{
+      label:'Amount',
+      data:ranges,
+      _amounts:steps.map(s=>s.kind==='cost'?s.amount:s.display),
+      _display:steps.map(s=>s.display),
+      _labelValues:steps.map(s=>s.kind==='cost'?s.amount:s.display),
+      _types:steps.map(s=>s.kind),
+      backgroundColor:(context)=>{const s=steps[context.dataIndex]; return s.kind==='checkpoint'?C.navy:(s.kind==='cost'?costGradient(context.chart,false):((s.display||0)>=0?C.green:C.red));},
+      borderColor:(context)=>{const s=steps[context.dataIndex]; return s.kind==='checkpoint'?C.navy:(s.kind==='cost'?costBorder(false):((s.display||0)>=0?C.green:C.red));},
+      hoverBackgroundColor:(context)=>{const s=steps[context.dataIndex]; return s.kind==='checkpoint'?C.navy2:(s.kind==='cost'?costGradient(context.chart,true):((s.display||0)>=0?C.green:C.red));},
+      hoverBorderColor:(context)=>{const s=steps[context.dataIndex]; return s.kind==='checkpoint'?C.navy2:(s.kind==='cost'?costBorder(true):((s.display||0)>=0?C.green:C.red));},
+      borderWidth:1,
+      borderRadius:6,
+      borderSkipped:false,
+      maxBarThickness:62
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,layout:{padding:{top:28,bottom:16}},interaction:{mode:'nearest',intersect:true},
+      onHover:(event,elements,chartObj)=>{
+        const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+        if(!active.length){event.native.target.style.cursor='default';return;}
+        const step=steps[active[0].index];
+        event.native.target.style.cursor=(step.kind==='cost'||step.kind==='ebitda')?'pointer':'default';
+      },
+      onClick:(event,elements,chartObj)=>{
+        const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+        if(!active.length) return;
+        const step=steps[active[0].index];
+        if(step.kind==='cost' || step.kind==='ebitda') openWaterfallDrilldown(step.drill||step.label);
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${fUSD(ctx.dataset._amounts[ctx.dataIndex],false)}`}}
+      },
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10,weight:700},maxRotation:0,minRotation:0}},
+        y:{beginAtZero:false,grid:{color:C.grid},ticks:yTicks('usd')}
+      }
+    },
+    plugins:[waterfallDataLabelPlugin]
+  });
+}
+function plMarginCard(){
+  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">Margin vs Budget</div><div class="chart-sub">GM% and EBITDA% trend for the selected year; budget lines appear only where budget exists</div></div><div class="chart-filter" id="plMarginToggles"></div></div><div class="chart-body tall"><canvas id="plMargin"></canvas></div></div>`;
+}
+function renderPL(){
+  state.plExpanded=state.plExpanded||{};
+  const compareMode=state.plCompare||'budget';
+  const actualHeader=`Actual (${plTablePeriodLabel(state.period,state.view)})`;
+  const comparisonHeader=plComparisonHeader(compareMode);
+  const compareSelect=`<select id="plCompareSelect" class="small-select" onchange="state.plCompare=this.value; renderPL();"><option value="budget" ${compareMode==='budget'?'selected':''}>Budget</option><option value="previous_month" ${compareMode==='previous_month'?'selected':''}>Previous Month</option><option value="same_month_last_year" ${compareMode==='same_month_last_year'?'selected':''}>Same Month Previous Year</option></select>`;
+  const body=`<div class="chart-grid">${chartCard('Gross Revenue vs Budget','Budget and actual gross revenue by month for the selected year; click bars for detail where data exists','plRev',false,true)}${plMarginCard()}</div><div class="table-wrap"><div class="pl-table-head"><div class="pl-table-title">Profit & Loss (${plTablePeriodLabel(state.period,state.view)})</div><div class="pl-controls">${compareSelect}<button class="pl-toggle-btn" onclick="toggleAllPL(true)">Expand All</button><button class="pl-toggle-btn" onclick="toggleAllPL(false)">Collapse All</button></div></div><table class="pl-table"><thead><tr><th>P&L Line Item</th><th>${actualHeader}</th><th>${comparisonHeader}</th><th>Variance</th><th>Var %</th></tr></thead><tbody id="plTable"></tbody></table></div>`;
+  el('main').innerHTML=pageScaffold('pl','Budget vs Actual Performance','Cash basis revenue, margin and EBITDA performance against budget',2,body);
+  setNote('pl'); renderPLCharts(); renderPLTable();
+}
+function budgetYear(){return Number(DASH?.periods?.budgetYear||DASH?.meta?.budgetYear)||currentYearLabel(state.period||latestActualPeriod());}
+function isBudgetYear(period=state.period){return currentYearLabel(period||latestActualPeriod())===budgetYear();}
+function plTrendMonths(){
+  const m=DASH.pl.months, end=idx(m,state.period);
+  if(end<0) return [];
+  const yr=state.period.split('-')[1];
+  return m.filter((x,i)=>x && x.endsWith('-'+yr) && i<=end);
+}
+function hasSeriesData(values){return (values||[]).some(v=>v!=null && Number.isFinite(v));}
+function plValue(source,key,period=state.period,view=state.view){
+  const obj=DASH.pl[source]||{}, arr=obj[key], months=DASH.pl.months;
+  if(!arr) return null;
+  const v=view==='ytd'?'ytd':'monthly';
+  if(source==='budget' && !isBudgetYear(period)) return null;
+  if(v==='ytd'){
+    const inds=ytdRange(months,period);
+    const vals=inds.map(i=>val(arr,i)).filter(x=>x!=null);
+    return vals.length?sum(vals):null;
+  }
+  const x=val(arr,idx(months,period));
+  return x==null?null:x;
+}
+function plPctValue(source,pctKey,numeratorKey,period=state.period,view=state.view){
+  const v=view==='ytd'?'ytd':'monthly';
+  if(source==='budget' && !isBudgetYear(period)) return null;
+  if(v==='ytd'){
+    const num=plValue(source,numeratorKey,period,'ytd');
+    const den=plValue(source,'Net Revenue',period,'ytd');
+    return (num!=null && den)?num/den*100:null;
+  }
+  const raw=val((DASH.pl[source]||{})[pctKey],idx(DASH.pl.months,period));
+  return raw==null?null:raw*100;
+}
+function plMetric(row,source,period=state.period,view=state.view){
+  if(row.pct) return plPctValue(source,row.key,row.numerator,period,view);
+  if(row.details && !row.key) return row.details.reduce((a,k)=>a+(plValue(source,k,period,view)||0),0);
+  return plValue(source,row.key,period,view);
+}
+function plSeriesValue(source,key,period){return plValue(source,key,period,state.view==='ytd'?'ytd':'monthly');}
+function plPctSeriesValue(source,pctKey,numKey,period){return plPctValue(source,pctKey,numKey,period,state.view==='ytd'?'ytd':'monthly');}
+function renderPLMarginToggles(){
+  state.plMarginVisible=state.plMarginVisible||{gm:true,ebitda:true};
+  const holder=el('plMarginToggles');
+  if(!holder) return;
+  const opts=[['gm','GM%'],['ebitda','EBITDA%']];
+  holder.innerHTML=opts.map(([key,label])=>`<label class="${state.plMarginVisible[key]!==false?'active':''}"><input type="checkbox" ${state.plMarginVisible[key]!==false?'checked':''} onchange="togglePLMargin('${key}',this.checked)">${label}</label>`).join('');
+}
+function togglePLMargin(key,checked){
+  state.plMarginVisible=state.plMarginVisible||{gm:true,ebitda:true};
+  state.plMarginVisible[key]=checked;
+  renderPLCharts();
+}
+function renderPLCharts(){
+  const months=plTrendMonths();
+  const labels=months;
+  const actualGR=months.map(m=>plSeriesValue('actual','Gross Revenue',m));
+  const budgetGR=months.map(m=>plSeriesValue('budget','Gross Revenue',m));
+  const hasBudgetGR=hasSeriesData(budgetGR);
+  const revDatasets=[];
+  if(hasBudgetGR) revDatasets.push(dsBar('Budget Gross Revenue',budgetGR,C.magenta));
+  revDatasets.push(dsBar('Actual Gross Revenue',actualGR,C.navy));
+  chart('plRev',{type:'bar',data:{labels,datasets:revDatasets},options:withBarDataLabels({...baseOptions('usd',false),onHover:(event,elements)=>{event.native.target.style.cursor=(hasBudgetGR&&elements.length)?'pointer':'default';},onClick:(event,elements)=>{if(!hasBudgetGR||!elements.length)return; const p=months[elements[0].index]; if(p) openPLGrossRevenueBudgetDrilldown(p,'channel');}}),plugins:[barDataLabelPlugin]});
+  renderPLMarginToggles();
+  state.plMarginVisible=state.plMarginVisible||{gm:true,ebitda:true};
+  const gm=months.map(m=>plPctSeriesValue('actual','GM%','Gross Margin',m));
+  const bgm=months.map(m=>plPctSeriesValue('budget','GM%','Gross Margin',m));
+  const eb=months.map(m=>plPctSeriesValue('actual','EBITDA %','EBITDA',m));
+  const beb=months.map(m=>plPctSeriesValue('budget','EBITDA %','EBITDA',m));
+  const marginDatasets=[];
+  if(state.plMarginVisible.gm!==false){
+    marginDatasets.push(dsLine('GM%',gm,C.navy));
+    if(hasSeriesData(bgm)) marginDatasets.push({...dsLine('Budget GM%',bgm,C.navy2),borderDash:[6,4]});
+  }
+  if(state.plMarginVisible.ebitda!==false){
+    marginDatasets.push(dsLine('EBITDA %',eb,C.magenta));
+    if(hasSeriesData(beb)) marginDatasets.push({...dsLine('Budget EBITDA %',beb,'#E37BBA'),borderDash:[6,4]});
+  }
+  chart('plMargin',{type:'line',data:{labels,datasets:marginDatasets},options:baseOptions('pct',false)});
+}
+const PL_ROWS=[
+  {label:'Gross Revenue',key:'Gross Revenue',flow:true},
+  {id:'revenueDeductions',label:'Direct Sales Costs',details:['Less: Sales VAT','Less: Refunds','Less: Gateway Discounts','Less: Payment Gateway Charge'],lower:true,expandable:true},
+  {label:'Net Revenue',key:'Net Revenue',flow:true},
+  {id:'cogs',label:'COGS',key:'Total: COGS',details:['Less: Teachers Team','Less: Legacy Live Class Teachers','Less: Instructor Fees','Less: Rev Sharing','Less: Streaming Costs','Less: Database & Server Costs','Less: Shikho Shop','Less: Book Production'],lower:true,expandable:true},
+  {label:'Gross Margin',key:'Gross Margin',flow:true},
+  {label:'GM%',key:'GM%',pct:true,numerator:'Gross Margin',flow:true},
+  {id:'academic',label:'Academic Support Costs',key:'Total Academic Support Cost',details:['Less: Program Management','Less: Live Class Operations'],lower:true,expandable:true},
+  {label:'Profit Contribution 1',key:'Profit Contribution 1',flow:true},
+  {label:'CM 1 %',key:'CM 1 %',pct:true,numerator:'Profit Contribution 1',flow:true},
+  {id:'sm',label:'S&M Cost',key:'Total: S&M Cost',details:['Less: Sales Team Cost','Telesales Salaries','Telesales Incentives','Telesales Management','Franchise Partner Payment','Less: Acquisition Marketing Cost','Acquisition Marketing','Marketing Team Salaries','Less: Laptop Rental'],lower:true,expandable:true},
+  {label:'Profit Contribution 2',key:'Profit Contribution 2',flow:true},
+  {label:'CM 2 %',key:'CM 2 %',pct:true,numerator:'Profit Contribution 2',flow:true},
+  {id:'brand',label:'Brand Marketing Cost',key:'Less: Brand Marketing Cost',details:['Below the Line','Above the Line'],lower:true,expandable:true},
+  {label:'Profit Contribution 3',key:'Profit Contribution 3',flow:true},
+  {label:'CM 3 %',key:'CM 3 %',pct:true,numerator:'Profit Contribution 3',flow:true},
+  {id:'indirect',label:'Indirect Cost',key:'Total: Indirect Cost',details:['Less: G&A','Less: Infrastructure Salaries','Less: Engineering & Product Salaries','Less: Bonus','Less: Technology OpEx','Less: Vendors VDS & TDS','Less: Salary Tax'],lower:true,expandable:true},
+  {label:'Non Operating Income',key:'Add: Non Operating Income'},
+  {label:'Interest Income',key:'Add: Interest Income'},
+  {label:'EBITDA',key:'EBITDA',flow:true},
+  {label:'EBITDA %',key:'EBITDA %',pct:true,numerator:'EBITDA',flow:true}
+];
+function togglePLRow(id){state.plExpanded=state.plExpanded||{}; state.plExpanded[id]=!state.plExpanded[id]; renderPLTable();}
+function toggleAllPL(open){state.plExpanded=state.plExpanded||{}; PL_ROWS.filter(r=>r.expandable).forEach(r=>state.plExpanded[r.id]=open); renderPLTable();}
+function plComparisonPeriod(mode){
+  if(mode==='previous_month') return prevMonth(state.period);
+  if(mode==='same_month_last_year') return prevYearMonth(state.period);
+  return state.period;
+}
+function plComparisonHeader(mode=state.plCompare||'budget'){
+  if(mode==='budget') return `Budget (${plTablePeriodLabel(state.period,state.view)})`;
+  return plTablePeriodLabel(plComparisonPeriod(mode),state.view);
+}
+function plComparisonValue(row,mode=state.plCompare||'budget'){
+  if(mode==='budget') return plMetric(row,'budget',state.period,state.view);
+  return plMetric(row,'actual',plComparisonPeriod(mode),state.view);
+}
+function plFormat(v,row){if(v==null)return ''; return row.pct?fPct(v):fUSD(v,false);}
+const PL_VAR_PCT_DASH_ROWS=new Set(['GM%','CM 1 %','CM 2 %','CM 3 %','EBITDA %']);
+function plVarianceCells(actual,budget,row){const delta=(actual!=null&&budget!=null)?actual-budget:null; const pct=pctChange(actual,budget); const pctCell=PL_VAR_PCT_DASH_ROWS.has(row.key||'')?'<td class="watch-var">—</td>':varianceCell(pct,true,!!row.lower); return `${varianceCell(delta,!!row.pct,!!row.lower)}${pctCell}`;}
+function plHistoryValue(row,period){
+  const view=state.view==='ytd'?'ytd':'monthly';
+  return plMetric(row,'actual',period,view);
+}
+function plHistoryCell(v,row){return `<td>${plFormat(v,row)}</td>`;}
+const PL_SUBHEADER_KEYS=new Set(['Less: Sales Team Cost','Less: Acquisition Marketing Cost']);
+function plDetailClass(parentId,key){
+  if(parentId==='sm' && PL_SUBHEADER_KEYS.has(key)) return 'pl-child-row pl-subheader-row';
+  if(parentId==='sm') return 'pl-child-row pl-nested-row';
+  return 'pl-child-row';
+}
+function renderPLTable(){
+  state.plExpanded=state.plExpanded||{};
+  const html=[];
+  const compareMode=state.plCompare||'budget';
+  PL_ROWS.forEach(row=>{
+    const actual=plMetric(row,'actual');
+    const comp=plComparisonValue(row,compareMode);
+    const isOpen=row.expandable && state.plExpanded[row.id];
+    const icon=row.expandable?`<span class="pl-expander">${isOpen?'−':'+'}</span>`:'<span class="pl-placeholder"></span>';
+    const cls=`${row.flow?'pl-flow-row ':''}${row.expandable?'pl-row-main expandable pl-section-row':'pl-row-main'}`;
+    const click=row.expandable?` onclick="togglePLRow('${row.id}')"`:'';
+    html.push(`<tr class="${cls}"${click}><td>${icon}${row.label}</td><td>${plFormat(actual,row)}</td><td>${plFormat(comp,row)}</td>${plVarianceCells(actual,comp,row)}</tr>`);
+    if(row.expandable && isOpen){
+      row.details.forEach(k=>{
+        const drow={label:cleanLineLabel(k),key:k,lower:row.lower};
+        const da=plMetric(drow,'actual'), dc=plComparisonValue(drow,compareMode);
+        html.push(`<tr class="${plDetailClass(row.id,k)}"><td>${drow.label}</td><td>${fUSD(da,false)}</td><td>${fUSD(dc,false)}</td>${plVarianceCells(da,dc,drow)}</tr>`);
+      });
+    }
+  });
+  el('plTable').innerHTML=html.join('');
+}
+function openPLGrossRevenueBudgetDrilldown(period,tab='channel'){
+  if(!isBudgetYear(period)) return;
+  const modal=ensureModal();
+  modal.classList.add('open');
+  el('drillTitle').textContent='Gross Revenue: Actual vs Budget';
+  el('drillSub').textContent=`${period} | Actual vs Budget | ${state.view==='ytd'?'Cumulative YTD':'Selected month'} view`;
+  renderPLGrossRevenueBudgetDrilldown(period,tab);
+}
+function renderPLGrossRevenueBudgetDrilldown(period,tab='channel'){
+  const channelKeys=['Telesales','Installment Recovery','Inbound','Retention'];
+  const courseKeys=['Class 6 to 8','Class 9 to 12','Board Exam Prep','Uni Admission','Skills','Other'];
+  const keys=tab==='course'?courseKeys:channelKeys;
+  const view=state.view==='ytd'?'ytd':'monthly';
+  const rows=keys.map(k=>{const actual=plValue('actual',k,period,view)||0; const budget=plValue('budget',k,period,view)||0; return {label:cleanLineLabel(k),actual,budget,delta:actual-budget,pct:pctChange(actual,budget)};}).filter(r=>r.actual!==0||r.budget!==0);
+  const actualTotal=sum(rows.map(r=>r.actual)), budgetTotal=sum(rows.map(r=>r.budget));
+  const deltaTotal=actualTotal-budgetTotal, pctTotal=pctChange(actualTotal,budgetTotal);
+  const tableRows=rows.map(r=>`<tr><td>${r.label}</td><td>${fUSD(r.actual,false)}</td><td>${fUSD(r.budget,false)}</td>${varianceCell(r.delta,false,false)}${varianceCell(r.pct,true,false)}</tr>`).join('');
+  el('drillBody').innerHTML=`<div class="modal-tabs"><button class="modal-tab ${tab==='channel'?'active':''}" onclick="renderPLGrossRevenueBudgetDrilldown('${period}','channel')">By Channel</button><button class="modal-tab ${tab==='course'?'active':''}" onclick="renderPLGrossRevenueBudgetDrilldown('${period}','course')">By Course</button></div><div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>${tab==='course'?'Course':'Channel'}</th><th>Actual</th><th>Budget</th><th>Variance</th><th>Var %</th></tr></thead><tbody>${tableRows}<tr class="total-row"><td>Total</td><td>${fUSD(actualTotal,false)}</td><td>${fUSD(budgetTotal,false)}</td>${varianceCell(deltaTotal,false,false)}${varianceCell(pctTotal,true,false)}</tr></tbody></table></div></div>`;
+  chart('execDrillChart',{type:'bar',data:{labels:rows.map(r=>r.label),datasets:[dsBar('Actual Gross Revenue',rows.map(r=>r.actual),C.navy),dsBar('Budget Gross Revenue',rows.map(r=>r.budget),C.magenta)]},options:baseOptions('usd',false)});
+}
+
+function revenueAovCard(){
+  const mode=state.aovMode||'channel';
+  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">AOV by Period</div><div class="chart-sub">Compares average order value across the same period in each year</div><div class="chart-control-row"><select id="aovModeSelect" class="small-select" onchange="state.aovMode=this.value; renderRevenueCharts();"><option value="channel" ${mode==='channel'?'selected':''}>AOV by Channel</option><option value="course" ${mode==='course'?'selected':''}>AOV by Course</option><option value="newrepeat" ${mode==='newrepeat'?'selected':''}>AOV by New vs Repeat</option></select></div></div><div id="aovPills" class="chart-filter"></div></div><div class="chart-body tall"><canvas id="revAov"></canvas></div></div>`;
+}
+
+function renderRevenue(){
+  const body=`<div class="metric-pills" id="revPills"></div><div class="chart-grid">${chartCard('Channel Revenue by Period','Compares channel revenue across the same period in each year; click bars for mix','revChannel',false,true)}${chartCard('Course Revenue by Period','Compares course revenue across the same period in each year; click bars for mix','revCourse',false,true)}</div><div class="chart-grid">${chartCard('New vs Repeat Revenue','Compares acquisition cohort revenue across the same period in each year','revNvr',false,true)}${revenueAovCard()}</div>`;
+  el('main').innerHTML=pageScaffold('revenue','Revenue Analysis','Revenue mix, acquisition quality and AOV by period',3,body);
+  setNote('revenue');
+  renderRevenueCharts();
+}
+function multiSeries(obj, excludeTotals=true){return Object.keys(obj||{}).filter(k=>!(excludeTotals&&k.toLowerCase().includes('total')));}
+function revenueDataSource(kind){
+  if(kind==='channel') return {months:DASH.revChannel.months, data:DASH.revChannel.data};
+  if(kind==='course') return {months:DASH.revCourse.months, data:DASH.revCourse.data};
+  if(kind==='newrepeat') return {months:DASH.nvr.months, data:DASH.nvr.data};
+  return {months:DASH.revChannel.months, data:DASH.revChannel.data};
+}
+function orderedMetricKeys(obj,preferred=[]){
+  const keys=Object.keys(obj||{}).filter(k=>k&&!k.toLowerCase().includes('total'));
+  return [...preferred.filter(k=>keys.includes(k)),...keys.filter(k=>!preferred.includes(k))];
+}
+function revenueChannelItems(){
+  const rev=DASH.revChannel.data.Revenue||{};
+  const keys=orderedMetricKeys(rev,['Telesales','CX - Outbound','CX - Inbound','CX','Retention','Other']);
+  const used=new Set();
+  const cxKeys=keys.filter(k=>k.toLowerCase().startsWith('cx'));
+  if(!cxKeys.length && rev['CX']) cxKeys.push('CX');
+  const items=[];
+  if(rev.Telesales){items.push({label:'Telesales',keys:['Telesales']}); used.add('Telesales');}
+  if(cxKeys.length){items.push({label:'CX',keys:cxKeys}); cxKeys.forEach(k=>used.add(k));}
+  if(rev.Retention){items.push({label:'Retention',keys:['Retention']}); used.add('Retention');}
+  keys.filter(k=>!used.has(k)).forEach(k=>items.push({label:cleanLineLabel(k),keys:[k]}));
+  return items.filter(x=>x.keys.some(k=>rev[k]));
+}
+function revenueCourseItems(){
+  const rev=DASH.revCourse.data.Revenue||{};
+  return orderedMetricKeys(rev,['Class 6 to 8','Class 9 to 12','Board Exam Prep','Uni Admission','Skills','Other']).map(k=>({label:cleanLineLabel(k),keys:[k]}));
+}
+function revenueNewRepeatItems(){
+  return [{label:'New',keys:['New']},{label:'Repeat',keys:['Repeat']}];
+}
+function periodExists(months,period){return idx(months,period)>=0;}
+function samePeriodForYear(period,year){
+  const mon=period.split('-')[0];
+  return `${mon}-${String(year-2000).padStart(2,'0')}`;
+}
+function comparisonPeriods(period=state.period){
+  const x=monthYear(period);
+  return [x.yr-2,x.yr-1,x.yr].map(year=>{
+    const p=samePeriodForYear(period,year);
+    return {year,period:p,label:state.view==='ytd'?`YTD ${year}`:monthLabelLong(p)};
+  });
+}
+function revenuePeriodColor(index){
+  return [C.blueLight,C.magenta,C.navy][index] || C.navy;
+}
+function revValFromKeys(source, metric, keys, period, view=state.view){
+  const months=source.months, data=source.data[metric]||{};
+  if(!periodExists(months,period)) return null;
+  let found=false,total=0;
+  keys.forEach(k=>{
+    const arr=data[k];
+    if(!arr) return;
+    const v=view==='ytd'?ytdValue(arr,months,period):val(arr,idx(months,period));
+    if(v!=null){found=true; total+=v;}
+  });
+  return found?total:null;
+}
+function revRows(kind,period,view=state.view){
+  const source=revenueDataSource(kind);
+  const items=kind==='channel'?revenueChannelItems():kind==='course'?revenueCourseItems():revenueNewRepeatItems();
+  return items.map(it=>({label:it.label, amount:revValFromKeys(source,'Revenue',it.keys,period,view)})).filter(r=>r.amount!=null);
+}
+function revenueComparisonDatasets(kind){
+  const items=kind==='channel'?revenueChannelItems():revenueCourseItems();
+  const source=revenueDataSource(kind);
+  const comps=comparisonPeriods();
+  const datasets=comps.map((c,i)=>({...dsBar(c.label,items.map(it=>revValFromKeys(source,'Revenue',it.keys,c.period,state.view)),revenuePeriodColor(i)),_period:c.period,_year:c.year}));
+  return {items,comps,datasets};
+}
+
+function renderRevenueComparisonChart(canvasId,kind){
+  const cfg=revenueComparisonDatasets(kind);
+  chart(canvasId,{
+    type:'bar',
+    data:{labels:cfg.items.map(x=>x.label),datasets:cfg.datasets},
+    options:withBarDataLabels({...baseOptions('usd',false),interaction:{mode:'nearest',intersect:true},onHover:(event,elements,chartObj)=>{
+      const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+      event.native.target.style.cursor=active.length?'pointer':'default';
+    },onClick:(event,elements,chartObj)=>{
+      const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+      if(!active.length)return;
+      const hit=active[0];
+      const ds=chartObj.data.datasets[hit.datasetIndex];
+      if(ds&&ds._period) openRevenueBreakdownDrilldown(kind,ds._period,ds.backgroundColor||ds.borderColor);
+    }},{format:'usdCompact'}),
+    plugins:[barDataLabelPlugin]
+  });
+}
+
+function renderNewRepeatComparisonChart(){
+  const comps=comparisonPeriods();
+  const source=revenueDataSource('newrepeat');
+  const items=revenueNewRepeatItems();
+  const datasets=comps.map((c,i)=>({...dsBar(c.label,items.map(it=>revValFromKeys(source,'Revenue',it.keys,c.period,state.view)),revenuePeriodColor(i)),_period:c.period,_year:c.year}));
+  chart('revNvr',{
+    type:'bar',
+    data:{labels:items.map(it=>`${it.label} Revenue`),datasets},
+    options:withBarDataLabels({...baseOptions('usd',false),interaction:{mode:'nearest',intersect:true},onHover:(event,elements,chartObj)=>{
+      const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+      event.native.target.style.cursor=active.length?'pointer':'default';
+    },onClick:(event,elements,chartObj)=>{
+      const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+      if(!active.length)return;
+      const hit=active[0];
+      const ds=chartObj.data.datasets[hit.datasetIndex];
+      if(ds&&ds._period) openRevenueBreakdownDrilldown('newrepeat',ds._period,ds.backgroundColor||ds.borderColor);
+    }},{format:'usdCompact'}),
+    plugins:[barDataLabelPlugin]
+  });
+}
+
+function openRevenueBreakdownDrilldown(kind,period,clickedColor){
+  const source=revenueDataSource(kind);
+  if(!periodExists(source.months,period)) return;
+  const modal=ensureModal();
+  modal.classList.add('open');
+  const title=kind==='channel'?'Revenue by Channel Drilldown':kind==='course'?'Revenue by Course Drilldown':'New vs Repeat Revenue Drilldown';
+  const firstCol=kind==='channel'?'Channel':kind==='course'?'Course':'Revenue Type';
+  el('drillTitle').textContent=title;
+  el('drillSub').textContent=`${state.view==='ytd'?`YTD ${monthYear(period).yr}`:monthLabelLong(period)} | ${state.view==='ytd'?'Cumulative YTD':'Selected month'} view`;
+  const rows=revRows(kind,period,state.view);
+  const total=rows.reduce((a,b)=>a+(b.amount||0),0);
+  const tableRows=rows.map(r=>`<tr><td>${r.label}</td><td>${fUSD(r.amount,false)}</td><td>${fPct(total?Math.abs(r.amount)/Math.abs(total)*100:null)}</td></tr>`).join('');
+  el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>${firstCol}</th><th>Amount</th><th>Share of Total</th></tr></thead><tbody>${tableRows || `<tr><td colspan="3">No data available</td></tr>`}<tr class="total-row"><td>Total</td><td>${fUSD(total,false)}</td><td>${rows.length?'100.0%':'—'}</td></tr></tbody></table></div></div>`;
+  const drillColor=clickedColor||C.navy;
+  barChart('execDrillChart',rows.map(r=>r.label),[dsBar('Revenue',rows.map(r=>r.amount),drillColor)],'usd',false);
+}
+
+function aovItems(mode=state.aovMode||'channel'){
+  if(mode==='course'){
+    return revenueCourseItems().map(x=>({...x,source:'course'}));
+  }
+  if(mode==='newrepeat') return revenueNewRepeatItems().map(x=>({...x,source:'newrepeat'}));
+  return revenueChannelItems().map(x=>({...x,source:'channel'}));
+}
+function aovValueForItem(item,period,viewMode='monthly'){
+  const source=revenueDataSource(item.source||'channel');
+  if(!periodExists(source.months,period)) return null;
+  const rev=revValFromKeys(source,'Revenue',item.keys,period,viewMode);
+  const volMetric=item.source==='newrepeat'?'Orders':'Sales_Volume';
+  const volume=revValFromKeys(source,volMetric,item.keys,period,viewMode);
+  return volume?rev/volume:null;
+}
+function aovMonthsForTrend(){
+  const source=revenueDataSource(state.aovMode||'channel');
+  const p=idx(source.months,state.period);
+  return p>=0?source.months.slice(0,p+1):source.months;
+}
+function ensureAovVisible(items){
+  const mode=state.aovMode||'channel';
+  state.aovVisible=state.aovVisible||{};
+  state.aovVisible[mode]=state.aovVisible[mode]||{};
+  items.forEach(it=>{if(state.aovVisible[mode][it.label]===undefined) state.aovVisible[mode][it.label]=true;});
+}
+function toggleAovLine(label){
+  const mode=state.aovMode||'channel';
+  state.aovVisible=state.aovVisible||{};
+  state.aovVisible[mode]=state.aovVisible[mode]||{};
+  state.aovVisible[mode][label]=!state.aovVisible[mode][label];
+  if(Object.values(state.aovVisible[mode]).every(v=>v===false)) state.aovVisible[mode][label]=true;
+  renderRevenueCharts();
+}
+function renderAovPills(items){
+  const box=el('aovPills');
+  if(!box) return;
+  const mode=state.aovMode||'channel';
+  ensureAovVisible(items);
+  box.innerHTML=items.map(it=>`<label class="${state.aovVisible[mode][it.label]!==false?'active':''}"><input type="checkbox" ${state.aovVisible[mode][it.label]!==false?'checked':''} onchange="toggleAovLine(${jsArg(it.label)})">${h(it.label)}</label>`).join('');
+}
+
+
+function aovStaticColor(mode,label,index=0){
+  const maps={
+    channel:{'Telesales':C.navy,'CX':C.magenta,'Retention':C.gold,'Other':C.teal},
+    course:{'Class 6 to 8':C.navy,'Class 9 to 12':C.magenta,'Board Exam Prep':C.gold,'Uni Admission':C.teal,'Skills':C.green,'Other':C.amber},
+    newrepeat:{'New':C.navy,'Repeat':C.magenta}
+  };
+  const fallback=[C.navy,C.magenta,C.gold,C.teal,C.green,C.amber,C.red,C.grey];
+  return (maps[mode]&&maps[mode][label])||fallback[index%fallback.length];
+}
+function renderAovChart(){
+  const mode=state.aovMode||'channel';
+  const items=aovItems(mode);
+  ensureAovVisible(items);
+  renderAovPills(items);
+  const visibleItems=items.filter(it=>state.aovVisible?.[mode]?.[it.label]!==false);
+  const comps=comparisonPeriods();
+  const viewMode=state.view==='ytd'?'ytd':'monthly';
+  const datasets=comps.map((c,i)=>({...dsBar(c.label,visibleItems.map(it=>aovValueForItem(it,c.period,viewMode)),revenuePeriodColor(i)),_period:c.period,_year:c.year}));
+  chart('revAov',{
+    type:'bar',
+    data:{labels:visibleItems.map(it=>it.label),datasets},
+    options:withBarDataLabels({...baseOptions('usd',false),interaction:{mode:'nearest',intersect:true}},{format:'usdCompact'}),
+    plugins:[barDataLabelPlugin]
+  });
+}
+function revenueTotalByChannel(period=state.period,view=state.view){
+  return sum(revRows('channel',period,view).map(r=>r.amount||0));
+}
+function revenueSalesByChannel(period=state.period,view=state.view){
+  const source=revenueDataSource('channel');
+  return sum(revenueChannelItems().map(it=>revValFromKeys(source,'Sales_Volume',it.keys,period,view)||0));
+}
+function topRevenueShare(kind,period=state.period,view=state.view){
+  const rows=revRows(kind,period,view);
+  const total=sum(rows.map(r=>r.amount||0));
+  if(!rows.length||!total) return null;
+  const top=rows.slice().sort((a,b)=>(b.amount||0)-(a.amount||0))[0];
+  return {label:top.label,share:top.amount/total*100,amount:top.amount};
+}
+function revenueYoY(metricFn){
+  const current=metricFn(state.period,state.view);
+  const priorPeriod=prevYearMonth(state.period);
+  const prior=metricFn(priorPeriod,state.view);
+  return {current,prior,pct:pctChange(current,prior),delta:current!=null&&prior!=null?current-prior:null};
+}
+function revenuePrevMonth(metricFn){
+  if(state.view==='ytd') return {current:null,prior:null,pct:null,delta:null,label:null};
+  const pm=prevMonth(state.period);
+  const current=metricFn(state.period,'monthly');
+  const prior=metricFn(pm,'monthly');
+  return {current,prior,pct:pctChange(current,prior),delta:current!=null&&prior!=null?current-prior:null,label:monthLabelLong(pm)};
+}
+function revBadge(text,value,lower=false){
+  const cls=value==null?'watch':(lower?(value<0?'good':'bad'):(value>=0?'good':'bad'));
+  if(value==null) return `<span class="badge watch">${text}: —</span>`;
+  return `<span class="badge ${cls}">${text}: ${value>=0?'▲':'▼'} ${fPct(value)}</span>`;
+}
+function revValueBadge(text,value,lower=false){
+  const cls=value==null?'watch':(lower?(value<0?'good':'bad'):(value>=0?'good':'bad'));
+  if(value==null) return `<span class="badge watch">${text}: —</span>`;
+  return `<span class="badge ${cls}">${text}: ${value>=0?'▲':'▼'} ${fUSD(value,false)}</span>`;
+}
+function revenueCard(label,value,meta='',klass='watch',extraClass=''){
+  return `<div class="rev-kpi-card ${klass} ${extraClass}"><div class="rev-kpi-label">${label}</div><div class="rev-kpi-value">${value}</div><div class="rev-kpi-meta">${meta}</div></div>`;
+}
+function topRevenueCompare(kind){
+  const cur=topRevenueShare(kind,state.period,state.view);
+  const ly=topRevenueShare(kind,prevYearMonth(state.period),state.view);
+  const delta=(cur&&ly&&cur.label===ly.label)?cur.share-ly.share:null;
+  return {cur,ly,delta};
+}
+function pointChangeText(delta){
+  if(delta==null) return 'Share change: —';
+  return `${delta>=0?'+':''}${delta.toFixed(1)}pp vs LY`;
+}
+function channelSplit(period=state.period,view=state.view){
+  const source=revenueDataSource('channel');
+  const ts=revValFromKeys(source,'Revenue',['Telesales'],period,view);
+  const total=revenueTotalByChannel(period,view);
+  const nonTs=(total!=null&&ts!=null)?total-ts:null;
+  return {ts,nonTs,total,tsPct:total?ts/total*100:null,nonTsPct:total?nonTs/total*100:null};
+}
+function renderRevenuePills(){
+  const salesYoy=revenueYoY(revenueSalesByChannel);
+  const salesPm=revenuePrevMonth(revenueSalesByChannel);
+  const aovMetric=(period,view)=>{const rev=revenueTotalByChannel(period,view); const sales=revenueSalesByChannel(period,view); return sales?rev/sales:null;};
+  const aovYoy=revenueYoY(aovMetric);
+  const aovPm=revenuePrevMonth(aovMetric);
+  const currentSplit=channelSplit(state.period,state.view);
+  const lySplit=channelSplit(prevYearMonth(state.period),state.view);
+  const source=revenueDataSource('newrepeat');
+  const newVal=revValFromKeys(source,'Revenue',['New'],state.period,state.view);
+  const repeatVal=revValFromKeys(source,'Revenue',['Repeat'],state.period,state.view);
+  const lyPeriod=prevYearMonth(state.period);
+  const newLy=revValFromKeys(source,'Revenue',['New'],lyPeriod,state.view);
+  const repeatLy=revValFromKeys(source,'Revenue',['Repeat'],lyPeriod,state.view);
+  const total=(newVal||0)+(repeatVal||0);
+  const lyTotal=(newLy||0)+(repeatLy||0);
+  const newPct=total?newVal/total*100:null;
+  const repeatPct=total?repeatVal/total*100:null;
+  const newPctLy=lyTotal?newLy/lyTotal*100:null;
+  const repeatPctLy=lyTotal?repeatLy/lyTotal*100:null;
+  const salesMeta=`${revBadge('YoY',salesYoy.pct)}${state.view==='monthly'?revBadge('MoM',salesPm.pct):''}`;
+  const aovMeta=`${revBadge('YoY',aovYoy.pct)}${state.view==='monthly'?revBadge('MoM',aovPm.pct):''}`;
+  const tsMeta=`<span class="badge">LY: TS ${fPct(lySplit.tsPct)} / Non-TS ${fPct(lySplit.nonTsPct)}</span>`;
+  const mixMeta=`<span class="badge">LY: ${fPct(newPctLy)} / ${fPct(repeatPctLy)}</span>`;
+  const valueMeta=`<span class="badge">LY New: ${fUSD(newLy)}</span><span class="badge">LY Repeat: ${fUSD(repeatLy)}</span>`;
+  el('revPills').className='rev-kpi-grid';
+  el('revPills').innerHTML=
+    revenueCard('AOV',fUSD(aovYoy.current,false),aovMeta,aovYoy.pct==null?'watch':aovYoy.pct>=0?'good':'bad')+
+    revenueCard('Sales',fInt(salesYoy.current),salesMeta,salesYoy.pct==null?'watch':salesYoy.pct>=0?'good':'bad')+
+    revenueCard('TS vs Non-TS Split',`TS ${fPct(currentSplit.tsPct)} / Non-TS ${fPct(currentSplit.nonTsPct)}`,tsMeta,'watch')+
+    revenueCard('New vs Repeat %',`${fPct(newPct)} / ${fPct(repeatPct)}`,mixMeta,'watch')+
+    revenueCard('New vs Repeat Revenue',`New ${fUSD(newVal)} / Repeat ${fUSD(repeatVal)}`,valueMeta,'watch');
+}
+function renderRevenueCharts(){
+  if(!state.aovMode) state.aovMode='channel';
+  renderRevenueComparisonChart('revChannel','channel');
+  renderRevenueComparisonChart('revCourse','course');
+  renderNewRepeatComparisonChart();
+  renderAovChart();
+  renderRevenuePills();
+}
+
+function renderCosts(){
+  const layers=costLayers();
+  const body=`<div class="metric-pills"><span class="pill"><strong>P&L Basis:</strong> selected-period revenue, cost intensity and margin snapshot</span><span class="pill"><strong>Accrual Basis:</strong> current period vs prior year with category drilldown</span></div>`+
+    layers.map(l=>`<div class="chart-grid">${costDriverCard(`${l.title} | P&L Basis`,`Gross revenue, ${l.plCostLabel.toLowerCase()} and resulting ${l.marginLabel}`,'plCost_'+l.id)}${chartCard(`${l.title} | Accrual Basis`,`Total accrual cost vs same period last year; click bars for cost breakdown`,'accCost_'+l.id,false,true)}</div>`).join('');
+  el('main').innerHTML=pageScaffold('costs','Cost & Margins','Cost intensity, contribution margins and accrual cost movement',4,body);
+  setNote('costs');
+  renderCostCharts();
+}
+function costLayers(){return [
+  {id:'cogs',title:'COGS',plCost:'Total: COGS',plCostLabel:'COGS Total',margin:'GM%',marginLabel:'Gross Margin %',sheet:'cogs',sheetLabel:'COGS_Accrual',total:'Total COGS'},
+  {id:'academic',title:'Academic Support',plCost:'Total Academic Support Cost',plCostLabel:'Academic Support',margin:'CM 1 %',marginLabel:'CM1 %',sheet:'academic',sheetLabel:'Academic Support_Accrual',total:'Total Academic Support Cost'},
+  {id:'sm',title:'S&M Cost',plCost:'Total: S&M Cost',plCostLabel:'S&M Cost',margin:'CM 2 %',marginLabel:'CM2 %',sheet:'sm',sheetLabel:'S&M Cost_Accrual',total:'Total Sales Team Cost'},
+  {id:'brand',title:'Brand Marketing Cost',plCost:'Less: Brand Marketing Cost',plCostLabel:'Brand Marketing',margin:'CM 3 %',marginLabel:'CM3 %',sheet:'brand',sheetLabel:'Brand Marketing Cost_Accrual',total:'Total Brand Marketing Cost'},
+  {id:'indirect',title:'Indirect Cost',plCost:'Total: Indirect Cost',plCostLabel:'Indirect Cost',margin:'EBITDA %',marginLabel:'EBITDA %',sheet:'indirect',sheetLabel:'Indirect Cost_Accrual',total:'Total Indirect Cost'}
+];}
+function renderCostCharts(){costLayers().forEach(renderCostLayerCharts);}
+function renderCostLayerCharts(layer){
+  renderPLCostDriverCard(layer);
+  renderAccrualCostChart(layer);
+}
+function pctSeriesFor(metric){
+  const m=DASH.pl.months,a=DASH.pl.actual;
+  if(metric==='GM%') return m.map((_,i)=>a['Gross Margin']&&a['Net Revenue']&&a['Net Revenue'][i]?a['Gross Margin'][i]/a['Net Revenue'][i]*100:null);
+  return (a[metric]||[]).map(v=>v==null?null:v*100);
+}
+function costCleanLabel(name){
+  return String(name||'')
+    .replace(/^Less:\s*/,'')
+    .replace(/^Total:\s*/,'')
+    .replace(/%$/,' %')
+    .trim();
+}
+function plMetricNumerator(metric){
+  const map={'GM%':'Gross Margin','CM 1 %':'Profit Contribution 1','CM 2 %':'Profit Contribution 2','CM 3 %':'Profit Contribution 3','EBITDA %':'EBITDA'};
+  return map[metric]||null;
+}
+function plPeriodValue(key, period, view=state.view){
+  const months=DASH.pl.months, a=DASH.pl.actual, arr=a[key];
+  if(!arr) return null;
+  return view==='ytd' ? ytdValue(arr, months, period) : val(arr, idx(months, period));
+}
+function plMarginValue(metric, period, view=state.view){
+  const numeratorKey=plMetricNumerator(metric);
+  const revenue=plPeriodValue('Net Revenue', period, view);
+  const numerator=numeratorKey ? plPeriodValue(numeratorKey, period, view) : null;
+  return revenue ? numerator/revenue*100 : null;
+}
+function periodFriendlyLabel(){ return state.view==='ytd'?`YTD ${monthLabelLong(state.period)}`:monthLabelLong(state.period); }
+function clampPct(v){ return Math.max(0, Math.min(100, Number.isFinite(v)?v:0)); }
+function barWidth(v){ const x=clampPct(v); return x>0 && x<3 ? 3 : x; }
+function costIntensityLabel(v){ return v==null ? '—' : `${v.toFixed(1)}% of revenue`; }
+function marginAmountLabel(key){
+  if(key==='Gross Margin') return 'gross margin';
+  if(key==='Profit Contribution 1') return 'CM1';
+  if(key==='Profit Contribution 2') return 'CM2';
+  if(key==='Profit Contribution 3') return 'CM3';
+  if(key==='EBITDA') return 'EBITDA';
+  return String(key||'margin').toLowerCase();
+}
+function renderPLCostDriverCard(layer){
+  const host=el('plCost_'+layer.id); if(!host) return;
+  const revenue=plPeriodValue('Gross Revenue',state.period,state.view)||0;
+  const cost=Math.abs(plPeriodValue(layer.plCost,state.period,state.view)||0);
+  const marginPct=plMarginValue(layer.margin,state.period,state.view);
+  const marginKey=plMetricNumerator(layer.margin);
+  const marginAmount=marginKey?plPeriodValue(marginKey,state.period,state.view):null;
+  const costPct=revenue?cost/revenue*100:null;
+  const costWidth=barWidth(costPct||0);
+  const marginWidth=marginPct==null?0:barWidth(Math.abs(marginPct));
+  const marginState=(marginPct||0)>=0?'good':'bad';
+  const headline=`${layer.plCostLabel} consumed ${costPct==null?'—':fPct(costPct)} of Gross Revenue; ${layer.marginLabel} was ${fPct(marginPct)}.`;
+  const footer=`For <strong>${periodFriendlyLabel()}</strong>, ${fUSD(revenue)} Gross Revenue and ${fUSD(cost)} ${layer.plCostLabel.toLowerCase()} left ${marginAmount==null?'—':fUSD(marginAmount)} in ${marginAmountLabel(marginKey)}.`;
+  host.innerHTML=`<div class="cost-driver-card"><div class="cost-driver-inner"><div class="cost-driver-title">${headline}</div><div class="cost-driver-bars"><div class="cost-driver-row"><div class="cost-driver-label">Gross Revenue</div><div class="cost-driver-track"><div class="cost-driver-fill revenue" style="width:100%"></div></div><div class="cost-driver-value">${fUSD(revenue)}<small>100%</small></div></div><div class="cost-driver-row"><div class="cost-driver-label">${layer.plCostLabel}</div><div class="cost-driver-track"><div class="cost-driver-fill cost" style="width:${costWidth}%"></div></div><div class="cost-driver-value cost">${fUSD(cost)}<small>${costIntensityLabel(costPct)}</small></div></div><div class="cost-driver-row"><div class="cost-driver-label">${layer.marginLabel}</div><div class="cost-driver-track"><div class="cost-driver-fill margin ${marginState==='bad'?'negative':''}" style="width:${marginWidth}%"></div></div><div class="cost-driver-value margin ${marginState}">${fPct(marginPct)}<small>${marginAmount==null?'—':fUSD(marginAmount)}</small></div></div></div></div><div class="cost-driver-footer">${footer}</div></div>`;
+}
+function accTotalKey(layer, data){
+  if(layer.id==='sm') return null;
+  if(data[layer.total]) return layer.total;
+  return Object.keys(data).find(k=>k.toLowerCase().includes('total')) || null;
+}
+function accBreakdownKeys(layer, data){
+  if(layer.id==='sm') return Object.keys(data).filter(k=>!k.toLowerCase().includes('total'));
+  return Object.keys(data).filter(k=>!k.toLowerCase().includes('total'));
+}
+function accValue(arr,months,period,view){
+  if(view==='ytd') return ytdValue(arr,months,period);
+  return val(arr,idx(months,period));
+}
+function accPriorPeriod(period){return prevYearMonth(period);}
+function yearColor(period){
+  const yr=currentYearLabel(period);
+  if(yr===2024) return C.blueLight;
+  if(yr===2025) return C.magenta;
+  if(yr===2026) return C.navy;
+  return C.grey;
+}
+function yearHoverColor(period){
+  const yr=currentYearLabel(period);
+  if(yr===2024) return '#7EA6F3';
+  if(yr===2025) return '#DB48A2';
+  if(yr===2026) return C.navy2;
+  return '#9BA4B4';
+}
+function accTotalFromBreakdown(layer,data,months,period,view){
+  const totalKey=accTotalKey(layer,data);
+  if(totalKey) return accValue(data[totalKey],months,period,view)||0;
+  return accBreakdownKeys(layer,data).reduce((sum,key)=>sum+(accValue(data[key],months,period,view)||0),0);
+}
+function cleanAccrualBarOptions(){
+  const opts={...baseOptions('usd',false)};
+  opts.interaction={mode:'nearest',intersect:true};
+  opts.layout={padding:{top:32,right:16,left:4,bottom:14}};
+  opts.plugins={
+    ...opts.plugins,
+    legend:{display:false},
+    tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${fUSD(ctx.parsed.y,true)}`}},
+    barDataLabelPlugin:{}
+  };
+  opts.scales={
+    x:{grid:{display:false,drawBorder:false},ticks:{font:{size:11,weight:800},color:'#56617A'}},
+    y:{beginAtZero:true,min:0,grid:{color:C.grid,drawBorder:false},ticks:{...yTicks('usd'),padding:8}}
+  };
+  return opts;
+}
+function renderAccrualCostChart(layer){
+  const src=DASH.accrualCosts[layer.sheet]; if(!src) return;
+  const months=src.months, data=src.data;
+  const currentPeriod=state.period, priorPeriod=accPriorPeriod(state.period);
+  const labels=[state.view==='ytd'?`YTD ${currentYearLabel(currentPeriod)-1}`:monthLabelLong(priorPeriod), state.view==='ytd'?`YTD ${currentYearLabel(currentPeriod)}`:monthLabelLong(currentPeriod)];
+  const totals=[accTotalFromBreakdown(layer,data,months,priorPeriod,state.view),accTotalFromBreakdown(layer,data,months,currentPeriod,state.view)];
+  const bg=[yearColor(priorPeriod),yearColor(currentPeriod)];
+  const hover=[yearHoverColor(priorPeriod),yearHoverColor(currentPeriod)];
+  const chartId='accCost_'+layer.id;
+  chart(chartId,{type:'bar',data:{labels,datasets:[{label:'Total Accrual Cost',data:totals,_labelValues:totals,backgroundColor:bg,borderColor:bg,hoverBackgroundColor:hover,hoverBorderColor:hover,borderRadius:8,borderSkipped:false,maxBarThickness:74,barPercentage:.55,categoryPercentage:.55}]},options:{...cleanAccrualBarOptions(),onHover:(event,elements)=>{event.native.target.style.cursor=elements.length?'pointer':'default';},onClick:(evt,elements)=>{ if(elements.length){ openAccrualDrilldown(layer.id, elements[0].index===0); } }},plugins:[barDataLabelPlugin]});
+}
+function getAccrualContext(isPrior){
+  const current=state.period, prior=accPriorPeriod(state.period);
+  const period=isPrior?prior:current;
+  return {period,view:state.view,color:yearColor(period),label:isPrior?(state.view==='ytd'?`YTD ${currentYearLabel(current)-1}`:monthLabelLong(prior)):(state.view==='ytd'?`YTD ${currentYearLabel(current)}`:monthLabelLong(current))};
+}
+function openAccrualDrilldown(layerId,isPrior){
+  const layer=costLayers().find(l=>l.id===layerId); if(!layer) return;
+  const src=DASH.accrualCosts[layer.sheet]; if(!src) return;
+  const ctx=getAccrualContext(isPrior);
+  const rows=accBreakdownKeys(layer,src.data).map(k=>({label:k,amount:accValue(src.data[k],src.months,ctx.period,ctx.view)||0})).filter(r=>Math.abs(r.amount)>0.0001);
+  const total=rows.reduce((a,b)=>a+b.amount,0);
+  const modal=ensureModal();
+  modal.classList.add('open');
+  el('drillTitle').textContent=`${layer.title} Accrual Drilldown`;
+  el('drillSub').textContent=`${ctx.label} | ${layer.sheetLabel}`;
+  el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Cost Item</th><th>Amount</th><th>Share</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td>${fUSD(r.amount,false)}</td><td>${fPct(total?r.amount/total*100:null)}</td></tr>`).join('')}<tr class="total-row"><td>Total</td><td>${fUSD(total,false)}</td><td>100.0%</td></tr></tbody></table></div></div>`;
+  barChart('execDrillChart',rows.map(r=>r.label),[dsBar(layer.title,rows.map(r=>r.amount),ctx.color||C.navy)],'usd',false);
+}
+function salesTeams(){return [
+  {id:'dhaka',label:'Dhaka Telesales',color:C.navy},
+  {id:'jessore',label:'Jessore Telesales',color:C.magenta},
+  {id:'cx',label:'CX',color:C.gold},
+  {id:'retention',label:'Retention',color:C.teal}
+];}
+function sArr(group,key){return (DASH.sales.data[group]&&DASH.sales.data[group][key])||[];}
+function addAt(group,key,i){return val(sArr(group,key),i)||0;}
+function salesTeamRevenue(id,i){
+  if(id==='cx') return addAt('Revenue','CX - Outbound',i)+addAt('Revenue','CX - Inbound',i);
+  if(id==='retention') return addAt('Revenue','Retention',i);
+  if(id==='dhaka') return addAt('Revenue','Dhaka Telesales',i);
+  if(id==='jessore') return addAt('Revenue','Jessore Telesales',i);
+  return 0;
+}
+function salesTeamVolume(id,i){
+  if(id==='cx') return addAt('Sales_Volume','CX - Outbound',i)+addAt('Sales_Volume','CX - Inbound',i);
+  if(id==='retention') return addAt('Sales_Volume','Retention',i);
+  if(id==='dhaka') return addAt('Sales_Volume','Dhaka Telesales',i);
+  if(id==='jessore') return addAt('Sales_Volume','Jessore Telesales',i);
+  return 0;
+}
+function salesTeamSalary(id,i){
+  if(id==='cx') return addAt('Salary','Customer Experience',i);
+  if(id==='retention') return addAt('Salary','Retention',i);
+  if(id==='dhaka') return addAt('Salary','Dhaka Agents',i)+addAt('Salary','Dhaka Management',i);
+  if(id==='jessore') return addAt('Salary','Jessore Agents',i)+addAt('Salary','Jessore Management',i);
+  return 0;
+}
+function salesTeamIncentive(id,i){
+  if(id==='cx') return addAt('Incentives','Customer Experience',i);
+  if(id==='retention') return addAt('Incentives','Retention',i);
+  if(id==='dhaka') return addAt('Incentives','Dhaka Agents',i)+addAt('Incentives','Dhaka Management',i);
+  if(id==='jessore') return addAt('Incentives','Jessore Agents',i)+addAt('Incentives','Jessore Management',i);
+  return 0;
+}
+function salesTeamCost(id,i){return salesTeamSalary(id,i)+salesTeamIncentive(id,i);}
+function salesTeamHeadcount(id,i){
+  if(id==='cx') return addAt('Headcount','CX - Outbound',i)+addAt('Headcount','CX - Inbound',i);
+  if(id==='retention') return addAt('Headcount','Retention',i);
+  if(id==='dhaka') return addAt('Headcount','Dhaka Telesales',i)+addAt('Headcount','Dhaka Management',i);
+  if(id==='jessore') return addAt('Headcount','Jessore Telesales',i)+addAt('Headcount','Jessore Management',i);
+  return 0;
+}
+function salesContributionPerAgent(id,i){
+  const hc=salesTeamHeadcount(id,i); if(!hc) return null;
+  return (salesTeamRevenue(id,i)/hc)-(salesTeamCost(id,i)/hc);
+}
+function salesContributionMetric(id){
+  const ix=selectedSalesIndexes();
+  const revenue=sum(ix.map(i=>salesTeamRevenue(id,i)));
+  const cost=sum(ix.map(i=>salesTeamCost(id,i)));
+  const headcount=sum(ix.map(i=>salesTeamHeadcount(id,i)));
+  return headcount?(revenue-cost)/headcount:null;
+}
+function salesRoi(id,i){const cost=salesTeamCost(id,i); return cost?salesTeamRevenue(id,i)/cost:null;}
+function salesAverageRoi(i){
+  const teams=salesTeams();
+  const revenue=sum(teams.map(t=>salesTeamRevenue(t.id,i)));
+  const cost=sum(teams.map(t=>salesTeamCost(t.id,i)));
+  return cost?revenue/cost:null;
+}
+function salesAverageContributionPerAgent(i){
+  const teams=salesTeams();
+  const revenue=sum(teams.map(t=>salesTeamRevenue(t.id,i)));
+  const cost=sum(teams.map(t=>salesTeamCost(t.id,i)));
+  const headcount=sum(teams.map(t=>salesTeamHeadcount(t.id,i)));
+  return headcount?(revenue-cost)/headcount:null;
+}
+function salesVolumePerAgent(id,i){
+  const headcount=salesTeamHeadcount(id,i);
+  return headcount?salesTeamVolume(id,i)/headcount:null;
+}
+function salesAverageVolumePerAgent(i){
+  const teams=salesTeams();
+  const volume=sum(teams.map(t=>salesTeamVolume(t.id,i)));
+  const headcount=sum(teams.map(t=>salesTeamHeadcount(t.id,i)));
+  return headcount?volume/headcount:null;
+}
+function salesTrendTeams(){return [
+  {id:'dhaka',label:'Dhaka Telesales',color:C.blueLight},
+  {id:'jessore',label:'Jessore Telesales',color:C.magenta},
+  {id:'cx',label:'CX',color:C.gold},
+  {id:'retention',label:'Retention',color:C.teal}
+];}
+function salesSeriesOptions(key){
+  const teams=salesTrendTeams();
+  if(key==='salesRoiActive') return [{id:'avg',label:'Average Sales ROI',color:C.navy},...teams];
+  if(key==='salesContributionActive') return [{id:'avg',label:'Average Contribution/Agent',color:C.navy},...teams];
+  if(key==='salesVolumeActive') return [{id:'avg',label:'Average Sales Volume/Agent',color:C.navy},...teams];
+  return salesTeams();
+}
+function salesActiveSet(key){
+  const ids=salesSeriesOptions(key).map(t=>t.id);
+  if(!state[key]){
+    state[key]=(key==='salesRoiActive'||key==='salesContributionActive'||key==='salesVolumeActive')?['avg']:ids.slice();
+  }
+  state[key]=state[key].filter(id=>ids.includes(id));
+  if(!state[key].length) state[key]=[(key==='salesRoiActive'||key==='salesContributionActive'||key==='salesVolumeActive')?'avg':ids[0]];
+  return state[key];
+}
+function toggleSalesSeries(key,id,checked){
+  const active=salesActiveSet(key); const pos=active.indexOf(id);
+  if(checked){ if(pos<0) active.push(id); }
+  else if(pos>=0 && active.length>1){ active.splice(pos,1); }
+  const valid=salesSeriesOptions(key).map(t=>t.id);
+  state[key]=valid.filter(id=>active.includes(id));
+  renderSales();
+}
+function salesFilterHtml(key){
+  const active=salesActiveSet(key);
+  const options=salesSeriesOptions(key);
+  return `<div class="chart-filter">${options.map(t=>`<label class="${active.includes(t.id)?'active':''}"><input type="checkbox" ${active.includes(t.id)?'checked':''} onchange="toggleSalesSeries('${key}','${t.id}',this.checked)">${t.label}</label>`).join('')}</div>`;
+}
+function salesCard(title,sub,canvas,key=null,tall=true){
+  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">${title}</div><div class="chart-sub">${sub||''}</div></div>${key?salesFilterHtml(key):''}</div><div class="chart-body ${tall?'tall':''}"><canvas id="${canvas}"></canvas></div></div>`;
+}
+function renderSales(){
+  const body=`<div class="chart-grid">${salesCard('Contribution per Agent','Revenue less salaries + incentives, divided by headcount; click bars for calculation','salesContributionBar',null,true)}${salesCard('Sales ROI','Sales ROI = revenue generated ÷ sales salaries and incentives.','salesRoiLine','salesRoiActive',true)}</div><div class="chart-grid">${salesCard('Contribution per Agent Trend','Contribution per agent = revenue per agent minus salary and incentive cost per agent.','salesContributionTrend','salesContributionActive',true)}${salesCard('Sales Volume per Agent by Team','Sales volume per agent = sales volume ÷ sales team headcount.','salesVolumeAgentLine','salesVolumeActive',true)}</div><div class="chart-grid full">${salesCard('Sales Team Headcount','Total headcount trend; selected month is highlighted; click any bar to see team breakdown','salesHeadcount',null,true)}</div><div class="table-wrap"><table><thead><tr><th>Team</th><th>Revenue</th><th>Sales Volume</th><th>AOV</th><th>Headcount</th><th>Salaries + Incentives</th><th>Sales ROI</th><th>Contribution/Agent</th></tr></thead><tbody id="salesTable"></tbody></table></div>`;
+  el('main').innerHTML=pageScaffold('sales','Sales Team Efficiency','Productivity, ROI and headcount for revenue execution',5,body);
+  setNote('sales'); renderSalesCharts(); renderSalesTable();
+}
+function renderSalesCharts(){
+  const m=DASH.sales.months, teams=salesTeams(), labels=chartMonthsFromSource(m);
+  const selectedIndexForSales=idx(m,state.period);
+  const contribValues=teams.map(t=>salesContributionMetric(t.id));
+  chart('salesContributionBar',{
+    type:'bar',
+    data:{labels:teams.map(t=>t.label),datasets:[dsBar('Contribution per Agent',contribValues,C.navy)]},
+    options:withBarDataLabels({
+      ...baseOptions('usd',false),
+      interaction:{mode:'nearest',intersect:true},
+      onHover:(event,elements,chartObj)=>{
+        const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+        event.native.target.style.cursor=active.length?'pointer':'default';
+      },
+      onClick:(event,elements,chartObj)=>{
+        const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
+        if(!active.length) return;
+        openSalesContributionDrilldown(teams[active[0].index].id);
+      }
+    }),
+    plugins:[barDataLabelPlugin]
+  });
+
+  const roiActive=salesActiveSet('salesRoiActive');
+  const roiOptions=salesSeriesOptions('salesRoiActive');
+  const roiDatasets=roiOptions.filter(t=>roiActive.includes(t.id)).map(t=>{
+    const data=labels.map(month=>{const i=idx(m,month); return i<0?0:(t.id==='avg'?salesAverageRoi(i):salesRoi(t.id,i));});
+    return dsLine(t.label,data,t.color);
+  });
+  lineChart('salesRoiLine',labels,roiDatasets,'ratio');
+
+  const trendActive=salesActiveSet('salesContributionActive');
+  const trendOptions=salesSeriesOptions('salesContributionActive');
+  const trendDatasets=trendOptions.filter(t=>trendActive.includes(t.id)).map(t=>{
+    const data=labels.map(month=>{const i=idx(m,month); return i<0?0:(t.id==='avg'?salesAverageContributionPerAgent(i):salesContributionPerAgent(t.id,i));});
+    return dsLine(t.label,data,t.color);
+  });
+  lineChart('salesContributionTrend',labels,trendDatasets,'usd');
+
+  const volumeActive=salesActiveSet('salesVolumeActive');
+  const volumeOptions=salesSeriesOptions('salesVolumeActive');
+  const volumeDatasets=volumeOptions.filter(t=>volumeActive.includes(t.id)).map(t=>{
+    const data=labels.map(month=>{const i=idx(m,month); return i<0?0:(t.id==='avg'?salesAverageVolumePerAgent(i):salesVolumePerAgent(t.id,i));});
+    return dsLine(t.label,data,t.color);
+  });
+  lineChart('salesVolumeAgentLine',labels,volumeDatasets,'num');
+
+  const totalHc=m.map((_,i)=>teams.reduce((a,t)=>a+salesTeamHeadcount(t.id,i),0));
+  const selectedIx=idx(m,state.period);
+  const headcountColors=m.map((_,i)=>i===selectedIx?C.navy:'rgba(53,72,148,.28)');
+  chart('salesHeadcount',{
+    type:'bar',
+    data:{labels,datasets:[{...dsBar('Total Sales Team Headcount',totalHc,C.navy),backgroundColor:headcountColors,borderColor:C.navy}]},
+    options:withBarDataLabels({...baseOptions('num',false),onClick:(evt,elements)=>{ if(elements.length) openSalesHeadcountDrilldown(elements[0].index); }},{format:'num',forceOutside:true,color:C.navy}),
+    plugins:[barDataLabelPlugin]
+  });
+}
+function selectedSalesIndexes(){const m=DASH.sales.months; if(state.view==='ytd'){const r=ytdRange(m,state.period).filter(i=>i>=0); return r.length?r:[m.length-1];} const i=idx(m,state.period); return i>=0?[i]:[m.length-1];}
+function salesPeriodAgg(id){
+  const ix=selectedSalesIndexes(); const rev=sum(ix.map(i=>salesTeamRevenue(id,i))); const vol=sum(ix.map(i=>salesTeamVolume(id,i))); const aov=vol?rev/vol:null;
+  return {rev,vol,aov};
+}
+function renderSalesBubble(){
+  const teams=salesTeams(); const maxRev=Math.max(...teams.map(t=>salesPeriodAgg(t.id).rev),1);
+  const datasets=teams.map(t=>{const a=salesPeriodAgg(t.id); return {type:'bubble',label:t.label,backgroundColor:t.color+'99',borderColor:t.color,borderWidth:2,data:[{x:a.vol,y:a.aov,r:8+Math.sqrt(a.rev/maxRev)*26,revenue:a.rev}]};});
+  chart('salesBubble',{type:'bubble',data:{datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,boxWidth:8,padding:16,font:{weight:700}}},tooltip:{callbacks:{label:(ctx)=>`${ctx.dataset.label}: Volume ${fInt(ctx.raw.x)}, AOV ${fUSD(ctx.raw.y,false)}, Revenue ${fUSD(ctx.raw.revenue,false)}`}}},scales:{x:{title:{display:true,text:'Sales Volume'},beginAtZero:true,min:0,grid:{color:C.grid},ticks:yTicks('num')},y:{title:{display:true,text:'AOV'},beginAtZero:false,min:0,grid:{color:C.grid},ticks:yTicks('usd')}}}});
+}
+function salesTableValue(id,fn){const ix=selectedSalesIndexes(); return state.view==='ytd'?sum(ix.map(i=>fn(id,i))):fn(id,ix[0]);}
+function renderSalesTable(){
+  const teams=salesTeams();
+  const rows=teams.map(t=>{const revenue=salesTableValue(t.id,salesTeamRevenue); const volume=salesTableValue(t.id,salesTeamVolume); const salary=salesTableValue(t.id,salesTeamSalary); const incentive=salesTableValue(t.id,salesTeamIncentive); const cost=salary+incentive; const hc=state.view==='ytd'?salesTableValue(t.id,salesTeamHeadcount):salesTeamHeadcount(t.id,selectedSalesIndexes()[0]); const aov=volume?revenue/volume:null; const roi=cost?revenue/cost:null; const contrib=hc?(revenue-cost)/hc:null; return {t,revenue,volume,cost,hc,aov,roi,contrib};});
+  const totals={revenue:sum(rows.map(r=>r.revenue)),volume:sum(rows.map(r=>r.volume)),cost:sum(rows.map(r=>r.cost)),hc:sum(rows.map(r=>r.hc))}; totals.aov=totals.volume?totals.revenue/totals.volume:null; totals.roi=totals.cost?totals.revenue/totals.cost:null; totals.contrib=totals.hc?(totals.revenue-totals.cost)/totals.hc:null;
+  el('salesTable').innerHTML=rows.map(r=>`<tr><td>${r.t.label}</td><td>${fUSD(r.revenue,false)}</td><td>${fInt(r.volume)}</td><td>${fUSD(r.aov,false)}</td><td>${fInt(r.hc)}</td><td>${fUSD(r.cost,false)}</td><td>${fRatio(r.roi)}</td><td>${fUSD(r.contrib,false)}</td></tr>`).join('')+`<tr class="total-row"><td>Total</td><td>${fUSD(totals.revenue,false)}</td><td>${fInt(totals.volume)}</td><td>${fUSD(totals.aov,false)}</td><td>${fInt(totals.hc)}</td><td>${fUSD(totals.cost,false)}</td><td>${fRatio(totals.roi)}</td><td>${fUSD(totals.contrib,false)}</td></tr>`;
+}
+function openSalesContributionDrilldown(teamId){
+  const teams=salesTeams(); const team=teams.find(t=>t.id===teamId)||teams[0];
+  const ix=selectedSalesIndexes();
+  const revenue=sum(ix.map(i=>salesTeamRevenue(teamId,i)));
+  const salary=sum(ix.map(i=>salesTeamSalary(teamId,i)));
+  const incentive=sum(ix.map(i=>salesTeamIncentive(teamId,i)));
+  const headcount=sum(ix.map(i=>salesTeamHeadcount(teamId,i)));
+  const contribution=revenue-salary-incentive;
+  const contributionPerAgent=headcount?contribution/headcount:null;
+  const modal=ensureModal(); modal.classList.add('open');
+  el('drillTitle').textContent='Contribution per Agent Calculation';
+  el('drillSub').textContent=`${team.label} | ${state.view==='ytd'?'YTD '+monthLabelLong(state.period):monthLabelLong(state.period)}`;
+  const rows=[
+    {label:'Revenue',amount:revenue,type:'positive'},
+    {label:'Less: Salaries',amount:-salary,type:'negative'},
+    {label:'Less: Incentives',amount:-incentive,type:'negative'},
+    {label:'Contribution',amount:contribution,type:'total'},
+    {label:'Headcount',amount:headcount,type:'count'},
+    {label:'Contribution per Agent',amount:contributionPerAgent,type:'perAgent'}
+  ];
+  el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Calculation Step</th><th>Value</th></tr></thead><tbody>${rows.map(r=>`<tr class="${r.type==='total'||r.type==='perAgent'?'total-row':''}"><td>${r.label}</td><td>${r.type==='count'?fInt(r.amount):fUSD(r.amount,false)}</td></tr>`).join('')}</tbody></table></div></div>`;
+  const chartRows=rows.filter(r=>['positive','negative','total','perAgent'].includes(r.type));
+  chart('execDrillChart',{
+    type:'bar',
+    data:{labels:chartRows.map(r=>r.label),datasets:[{...dsBar('Calculation',chartRows.map(r=>r.amount),C.navy),backgroundColor:chartRows.map(r=>r.type==='negative'?C.redLight:(r.type==='perAgent'?C.green:C.navy)),borderColor:chartRows.map(r=>r.type==='negative'?C.red:(r.type==='perAgent'?C.green:C.navy))}]},
+    options:withBarDataLabels({...baseOptions('usd',false),plugins:{legend:{display:false},tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${fUSD(ctx.parsed.y,false)}`}}}}),
+    plugins:[barDataLabelPlugin]
+  });
+}
+function openSalesHeadcountDrilldown(i){
+  const m=DASH.sales.months, teams=salesTeams(); const rows=teams.map(t=>({label:t.label,amount:salesTeamHeadcount(t.id,i)})); const total=sum(rows.map(r=>r.amount));
+  const modal=ensureModal(); modal.classList.add('open');
+  el('drillTitle').textContent='Sales Team Headcount Drilldown';
+  el('drillSub').textContent=`${monthLabelLong(m[i])} | CX excludes management`;
+  el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Team</th><th>Headcount</th><th>Share</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td>${fInt(r.amount)}</td><td>${fPct(total?r.amount/total*100:null)}</td></tr>`).join('')}<tr class="total-row"><td>Total</td><td>${fInt(total)}</td><td>100.0%</td></tr></tbody></table></div></div>`;
+  barChart('execDrillChart',rows.map(r=>r.label),[dsBar('Headcount',rows.map(r=>r.amount),C.navy)],'num',false);
+}
+function renderUsers(){const body=`<div class="chart-grid">${chartCard('MAU vs Active Paid Users','Tracks total user base against active paid learning base','mauTrend',false,true)}${chartCard('Registration to Paid Funnel','Shows whether registration growth is converting into paying users','userFunnel',false,true)}</div><div class="chart-grid">${chartCard('Paid Conversion Rate','Unique paying users divided by new registrations','conversion',false,true)}${chartCard('Transaction Mix','New and repeat transaction count over time','txnMix',false,true)}</div>`; el('main').innerHTML=pageScaffold('users','Users & Growth','Understand whether user growth is translating to revenue',6,body); setNote('users'); renderUserCharts();}
+function renderUserCharts(){const u=DASH.mau.data,m=DASH.mau.months,l=labelsFor(m); let mau=chartDataFor(u.MAU,m), paid=chartDataFor(u.Active_Paid_Users,m); if(state.view==='ytd'){mau=mau.current; paid=chartDataFor(u.Active_Paid_Users,m).current;} const kind=state.view==='mom'||state.view==='yoy'?'pct':'num'; chart('mauTrend',{type:'line',data:{labels:l,datasets:[{...dsArea('MAU',mau,C.navy),yAxisID:'y'},{...dsLine('Active Paid Users',paid,C.magenta,'y2'),type:'line'}]},options:{...baseOptions(kind,false),scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:C.grid},ticks:yTicks(kind)},y2:{position:'right',beginAtZero:false,grid:{display:false},ticks:yTicks(kind)}}}}); let regs=chartDataFor(u.New_Registrations,m), np=chartDataFor(u.New_Paying_Users,m), up=chartDataFor(u.Unique_Paying_Users,m); if(state.view==='ytd'){regs=regs.current;np=chartDataFor(u.New_Paying_Users,m).current;up=chartDataFor(u.Unique_Paying_Users,m).current;} barChart('userFunnel',l,[dsBar('New Registrations',regs,C.fill),dsBar('New Paying Users',np,C.magenta),dsBar('Unique Paying Users',up,C.gold)],kind,false); const conv=m.map((_,i)=>u.Unique_Paying_Users[i]&&u.New_Registrations[i]?u.Unique_Paying_Users[i]/u.New_Registrations[i]*100:null); let cd=chartDataFor(conv,m); if(state.view==='ytd')cd=cd.current; lineChart('conversion',l,[dsLine('Paid Conversion %',cd,C.navy),dsLine('5% Reference',l.map(()=>5),C.gold)],'pct'); let nt=chartDataFor(u.New_Transactions,m), rt=chartDataFor(u.Repeat_Transactions,m); if(state.view==='ytd'){nt=nt.current;rt=chartDataFor(u.Repeat_Transactions,m).current;} barChart('txnMix',l,[dsBar('New Transactions',nt,C.navy,'s'),dsBar('Repeat Transactions',rt,C.magenta,'s')],kind,state.view==='monthly');}
+function nonNullMonthData(months, arr){
+  const labels=[], data=[];
+  months.forEach((m,i)=>{ if(m && arr[i]!=null){ labels.push(m); data.push(arr[i]); } });
+  return {labels,data};
+}
+function selectedMonthColors(months, activeColor, mutedColor){
+  return months.map(m=>m===state.period?activeColor:mutedColor);
+}
+function growthPeriodIndex(months){
+  const i=idx(months,state.period);
+  return i>=0?i:months.length-1;
+}
+function growthMonthlySeries(months,arr){
+  const end=growthPeriodIndex(months);
+  return {labels:months.slice(0,end+1),periods:months.slice(0,end+1),data:arr.slice(0,end+1)};
+}
+function growthYtdLabels(){
+  const labels=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const cut=labels.indexOf(monthYear(state.period).mon);
+  return labels.slice(0,cut+1);
+}
+function growthYtdSeries(months,arr,additive=true){
+  const yr=state.period.split('-')[1];
+  const labels=growthYtdLabels();
+  const periods=labels.map(mon=>mon+'-'+yr);
+  const data=periods.map(p=>additive?ytdValue(arr,months,p):val(arr,idx(months,p)));
+  return {labels,periods,data};
+}
+function growthSeries(months,arr,additive=true){
+  return state.view==='ytd'?growthYtdSeries(months,arr,additive):growthMonthlySeries(months,arr);
+}
+function growthPeriodValue(months,arr,additive=true){
+  if(state.view==='ytd') return ytdValue(arr,months,state.period);
+  return val(arr,growthPeriodIndex(months));
+}
+function renderGrowth(){
+  const body=`<div class="chart-grid">${chartCard('Platform Spend by Platform','Google + Facebook platform spend; selected month highlighted, all other months muted','mgAdSpend',false,true)}${chartCard('Platform Spend vs Actual Spend','Static monthly view of platform spend vs actual cash cost after Agency Commission and VAT/Tax impact','mgAdjustedSpend',false,true)}</div><div class="chart-grid">${chartCard('MAU vs % Active Paid Users','Static monthly view; MAU on the left axis and active paid users as % of MAU on the right axis','mgMauPaid',false,true)}${costDriverCard('Platform Spend Reconciliation','Platform spend, overpayment amount and resulting actual spend','mgOverpayment')}</div>`;
+  el('main').innerHTML=pageScaffold('growth','Marketing & Growth Efficiency','Connect platform spend, actual cost and paid user activity',6,body);
+  setNote('growth');
+  const n=el('note-growth'); if(n)n.textContent='Static monthly trend view; charts are not converted by the Monthly/YTD toggle.';
+  renderGrowthCharts();
+}
+function renderGrowthCharts(){
+  const dm=DASH.dm.data, dmMonths=DASH.dm.months;
+  const labels=chartMonthsFromSource(dmMonths);
+  const selectedIdx=labels.indexOf(state.period);
+  const googleData=alignedObjectSeries(dm,'Google_Ads_Spend',dmMonths,labels,0);
+  const facebookData=alignedObjectSeries(dm,'Facebook_Ads_Spend',dmMonths,labels,0);
+  const googleBg=labels.map((_,i)=>i===selectedIdx?C.navy:'rgba(53,72,148,.26)');
+  const facebookBg=labels.map((_,i)=>i===selectedIdx?C.magenta:'rgba(207,39,141,.28)');
+  const totalLabelColors=labels.map((_,i)=>i===selectedIdx?C.navy:'rgba(53,72,148,.62)');
+  const adOptions=baseOptions('usd',true);
+  adOptions.layout={padding:{top:34,bottom:18}};
+  adOptions.plugins={...adOptions.plugins,stackedTotalDataLabelPlugin:{stack:'platform',color:totalLabelColors}};
+  chart('mgAdSpend',{
+    type:'bar',
+    data:{labels,datasets:[
+      {...dsBar('Google Platform Spend',googleData,C.navy,'platform'),backgroundColor:googleBg,borderColor:googleBg,maxBarThickness:48},
+      {...dsBar('Facebook Platform Spend',facebookData,C.magenta,'platform'),backgroundColor:facebookBg,borderColor:facebookBg,maxBarThickness:48}
+    ]},
+    options:adOptions,
+    plugins:[stackedTotalDataLabelPlugin]
+  });
+
+  const platformData=alignedObjectSeries(dm,'Total_Ad_Spend',dmMonths,labels,0);
+  const actualData=alignedObjectSeries(dm,'Adjusted_Ad_Spend_Total',dmMonths,labels,0);
+  lineChart('mgAdjustedSpend',labels,[dsLine('Platform Spend',platformData,C.navy),dsLine('Actual Spend',actualData,C.magenta)],'usd');
+
+  const u=DASH.mau.data, m=DASH.mau.months;
+  const mauLabels=chartMonthsFromSource(m), mauData=[], activePct=[];
+  mauLabels.forEach((month)=>{
+    const i=idx(m,month);
+    const mauVal=i<0?0:(val(u.MAU,i)||0);
+    mauData.push(mauVal);
+    const active=i<0?0:(val(u.Active_Paid_Users,i)||0);
+    activePct.push(mauVal?active/mauVal*100:0);
+  });
+  const mauBase=baseOptions('num',false);
+  const mauOptions={...mauBase,plugins:{...mauBase.plugins,tooltip:{callbacks:{label:(ctx)=>ctx.dataset.yAxisID==='y2'?`${ctx.dataset.label}: ${fPct(ctx.parsed.y)}`:`${ctx.dataset.label}: ${fInt(ctx.parsed.y)}`}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:12,font:{size:10,weight:700}}},y:{beginAtZero:false,grid:{color:C.grid},ticks:yTicks('num')},y2:{position:'right',beginAtZero:true,grid:{display:false},ticks:yTicks('pct')}}};
+  chart('mgMauPaid',{type:'line',data:{labels:mauLabels,datasets:[{...dsArea('MAU',mauData,C.navy),yAxisID:'y'},{...dsLine('% Active Paid Users',activePct,C.magenta,'y2'),type:'line'}]},options:mauOptions});
+  renderGrowthOverpaymentCard();
+}
+function renderGrowthOverpaymentCard(){
+  const host=el('mgOverpayment'); if(!host) return;
+  const dm=DASH.dm.data, m=DASH.dm.months;
+  const platform=growthPeriodValue(m,dm.Total_Ad_Spend,true)||0;
+  const overpayment=growthPeriodValue(m,dm.Total_Overpayment,true)||0;
+  const actual=growthPeriodValue(m,dm.Adjusted_Ad_Spend_Total,true)||0;
+  const overPct=platform?overpayment/platform*100:null;
+  const actualPct=platform?actual/platform*100:null;
+  const maxVal=Math.max(platform,overpayment,actual,1);
+  const platformWidth=barWidth(platform/maxVal*100);
+  const overWidth=barWidth(overpayment/maxVal*100);
+  const actualWidth=barWidth(actual/maxVal*100);
+  const overLabel=overPct==null?'—':`${overPct.toFixed(1)}% of platform`;
+  const actualLabel=actualPct==null?'—':`${actualPct.toFixed(1)}% of platform`;
+  const headline=`Actual Spend was ${actualPct==null?'—':fPct(actualPct)} of Platform Spend; Overpayment added ${overpayment?fUSDK(overpayment):'$0'}.`;
+  const footer=`For <strong>${periodFriendlyLabel()}</strong>, ${fUSDK(platform)} platform spend plus ${fUSDK(overpayment)} overpayment resulted in ${fUSDK(actual)} actual spend.`;
+  host.innerHTML=`<div class="cost-driver-card"><div class="cost-driver-inner"><div class="cost-driver-title">${headline}</div><div class="cost-driver-bars"><div class="cost-driver-row"><div class="cost-driver-label">Platform Spend</div><div class="cost-driver-track"><div class="cost-driver-fill revenue" style="width:${platformWidth}%"></div></div><div class="cost-driver-value">${fUSDK(platform)}<small>100%</small></div></div><div class="cost-driver-row"><div class="cost-driver-label">Overpayment Amount</div><div class="cost-driver-track"><div class="cost-driver-fill cost" style="width:${overWidth}%"></div></div><div class="cost-driver-value cost">${fUSDK(overpayment)}<small>${overLabel}</small></div></div><div class="cost-driver-row"><div class="cost-driver-label">Actual Spend</div><div class="cost-driver-track"><div class="cost-driver-fill actual" style="width:${actualWidth}%"></div></div><div class="cost-driver-value actual">${fUSDK(actual)}<small>${actualLabel}</small></div></div></div></div><div class="cost-driver-footer">${footer}</div></div>`;
+}
+function openPaidConversionDrilldown(i){
+  const meta=(window.__paidConversionMeta||[])[i];
+  if(!meta) return;
+  const modal=ensureModal(); modal.classList.add('open');
+  el('drillTitle').textContent='Paid Conversion Rate Drilldown';
+  el('drillSub').textContent=`${monthLabelLong(meta.month)} | Unique paying users / new registrations`;
+  el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Unique Paying Users</td><td>${fInt(meta.unique)}</td></tr><tr><td>New Registrations</td><td>${fInt(meta.registrations)}</td></tr><tr class="total-row"><td>Paid Conversion Rate</td><td>${fPct(meta.rate)}</td></tr></tbody></table></div></div>`;
+  barChart('execDrillChart',['Unique Paying Users','New Registrations'],[dsBar('Users',[meta.unique,meta.registrations],C.navy)],'num',false);
+}
+
+function renderCash(){
+  if(!window.cashBalanceMetric) window.cashBalanceMetric='Closing_Balance';
+  if(!window.cashScenarioSelected) window.cashScenarioSelected='Base';
+  const scenarioOptions=['Base','Optimistic','Pessimistic'].filter(sc=>DASH.cash.some(r=>r.Scenario===sc)).map(sc=>`<option value="${sc}" ${window.cashScenarioSelected===sc?'selected':''}>${sc}</option>`).join('');
+  const body=`
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div><div class="chart-control-row" style="margin-top:0;margin-bottom:8px"><select class="small-select" id="cashScenarioSelector">${scenarioOptions}</select></div><div class="chart-title">Net Revenue, Gross Cash Burn & Net Cash Burn</div><div class="chart-sub" id="cashBurnSub">${window.cashScenarioSelected} scenario; ${cashForecastLabel()} shaded as forecast</div></div>
+        </div>
+        <div class="chart-body tall"><canvas id="cashBurn"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div><div class="chart-title">Cash Balance Outlook</div><div class="chart-sub" id="cashScenarioSub">All scenarios shown together; ${cashForecastLabel()} shaded as forecast</div></div>
+          <div class="btn-group" id="cashMetricToggle"><button data-metric="Opening_Balance" class="${window.cashBalanceMetric==='Opening_Balance'?'active':''}">Opening</button><button data-metric="Closing_Balance" class="${window.cashBalanceMetric==='Closing_Balance'?'active':''}">Closing</button></div>
+        </div>
+        <div class="chart-body tall"><canvas id="cashScenario"></canvas></div>
+      </div>
+    </div>
+    <div class="metric-pills"><span class="pill"><strong>Actuals:</strong> ${cashActualLabel()} shown once only</span><span class="pill"><strong>Forecast:</strong> ${cashForecastRangeLabel()} shaded in the charts</span><span class="pill"><strong>Table scenario:</strong> Forecast rows update using the selector above</span></div>
+    <div class="table-wrap"><table><thead><tr><th>Month</th><th>Type</th><th>Scenario</th><th>Net Revenue</th><th>Gross Cash Burn</th><th>Net Cash Burn</th><th>Opening</th><th>Closing</th><th>Notes</th></tr></thead><tbody id="cashTable"></tbody></table></div>`;
+  el('main').innerHTML=pageScaffold('cash','Cash & Runway','Liquidity pressure and scenario planning for management decisions',7,body);
+  setNote('cash');
+  const n=el('note-cash'); if(n)n.textContent=`Static monthly scenario view; forecast starts from ${cashForecastStart()||'the next forecast month'}. Monthly/YTD toggle does not change these charts.`;
+  renderCashCharts();
+  const selector=el('cashScenarioSelector');
+  if(selector) selector.onchange=()=>{window.cashScenarioSelected=selector.value; renderCashBurnChart(); renderCashTable(); const sub=el('cashBurnSub'); if(sub) sub.textContent=`${window.cashScenarioSelected} scenario; ${cashForecastLabel()} shaded as forecast`;};
+  const tog=el('cashMetricToggle');
+  if(tog) tog.querySelectorAll('button').forEach(btn=>btn.onclick=()=>{window.cashBalanceMetric=btn.dataset.metric; tog.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn)); renderCashScenarioChart();});
+}
+function nextPeriod(m){
+  if(!m) return null;
+  const [mon,yy]=m.split('-');
+  const mi=PERIOD_MONTHS.indexOf(mon);
+  let yr=2000+parseInt(yy,10);
+  if(mi<0 || !Number.isFinite(yr)) return null;
+  const nextMi=(mi+1)%12;
+  if(nextMi===0) yr+=1;
+  return PERIOD_MONTHS[nextMi]+'-'+String(yr-2000).padStart(2,'0');
+}
+function cashForecastStart(){
+  return DASH?.periods?.forecastFrom||DASH?.meta?.forecastFrom||nextPeriod(latestActualPeriod());
+}
+function cashActualMonths(){
+  const latest=latestActualPeriod();
+  const latestSerial=periodSerial(latest);
+  return new Set((DASH.cash||[])
+    .filter(r=>r.Scenario==='Base' && periodSerial(r.Month)<=latestSerial)
+    .map(r=>r.Month));
+}
+function cashForecastLabel(){
+  const start=cashForecastStart();
+  return start?`${start} onward`:'forecast period';
+}
+function cashActualLabel(){
+  const actuals=[...cashActualMonths()].sort((a,b)=>periodSerial(a)-periodSerial(b));
+  return actuals.length?`${actuals[0]} to ${actuals[actuals.length-1]}`:`up to ${latestActualPeriod()}`;
+}
+function cashForecastRangeLabel(){
+  const start=cashForecastStart();
+  const months=(DASH.cash||[]).filter(r=>r.Scenario==='Base').map(r=>r.Month).sort((a,b)=>periodSerial(a)-periodSerial(b));
+  const future=months.filter(m=>start && periodSerial(m)>=periodSerial(start));
+  return future.length?`${future[0]} to ${future[future.length-1]}`:(start?`${start} onward`:'forecast period');
+}
+function cashBalanceClass(v){ if(v==null) return 'watch-var'; if(v<0) return 'neg-var'; if(v<100000) return 'watch-var'; return 'pos-var'; }
+function cashScenarioColors(){ return {Base:C.navy,Optimistic:C.gold,Pessimistic:C.magenta}; }
+function cashForecastShadePlugin(labels, forecastStart=null){
+  const start=forecastStart||cashForecastStart();
+  return {
+    id:'cashForecastShade_'+String(start||'none').replace(/[^a-zA-Z0-9]/g,''),
+    beforeDatasetsDraw(chart,args,opts){
+      const x=chart.scales.x; if(!x) return;
+      const chartLabels=labels||chart.data.labels||[];
+      const startIndex=chartLabels.indexOf(start);
+      if(startIndex<0) return;
+      const {ctx,chartArea}=chart;
+      const tickGap=(chartLabels.length>1)?(x.getPixelForTick(1)-x.getPixelForTick(0)):36;
+      const left=x.getPixelForTick(startIndex)-(Number.isFinite(tickGap)?tickGap/2:18);
+      const shadeLeft=Math.max(chartArea.left,left);
+      ctx.save();
+      ctx.fillStyle='rgba(225,169,46,0.10)';
+      ctx.fillRect(shadeLeft, chartArea.top, chartArea.right-shadeLeft, chartArea.bottom-chartArea.top);
+      ctx.fillStyle='rgba(185,120,24,0.92)';
+      ctx.font='700 11px Gibson, Inter, Arial, sans-serif';
+      ctx.textAlign='center';
+      ctx.fillText('Forecast', shadeLeft+(chartArea.right-shadeLeft)/2, chartArea.top+16);
+      ctx.restore();
+    }
+  };
+}
+function cashNegativeZonePlugin(){
+  return {
+    id:'cashNegativeZone',
+    beforeDatasetsDraw(chart,args,opts){
+      const y=chart.scales.y; if(!y) return;
+      if(y.min>=0 || y.max<=0) return;
+      const {ctx,chartArea}=chart;
+      const zeroY=Math.max(chartArea.top, Math.min(chartArea.bottom, y.getPixelForValue(0)));
+      ctx.save();
+      ctx.fillStyle='rgba(200,79,94,0.09)';
+      ctx.fillRect(chartArea.left, zeroY, chartArea.right-chartArea.left, chartArea.bottom-zeroY);
+      ctx.strokeStyle='rgba(200,79,94,0.28)';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.moveTo(chartArea.left, zeroY);
+      ctx.lineTo(chartArea.right, zeroY);
+      ctx.stroke();
+      ctx.restore();
+    }
+  };
+}
+function renderCashCharts(){
+  renderCashBurnChart();
+  renderCashScenarioChart();
+  renderCashTable();
+}
+function cashRowsForSelectedScenario(){
+  const selected=window.cashScenarioSelected||'Base';
+  const rows=DASH.cash.filter(r=>r.Scenario===selected);
+  return rows.length?rows:DASH.cash.filter(r=>r.Scenario==='Base');
+}
+function renderCashBurnChart(){
+  const selected=window.cashScenarioSelected||'Base';
+  const rows=cashRowsForSelectedScenario();
+  const months=rows.map(r=>r.Month);
+  const netRevenue=rows.map(r=>r.Net_Revenue||0);
+  const grossBurn=rows.map(r=>r.Gross_Cash_Burn!=null?r.Gross_Cash_Burn:(r.Total_Costs||0));
+  const netBurn=rows.map(r=>r.Net_Cash_Burn!=null?r.Net_Cash_Burn:(r.Cash_Burn||0));
+  const datasets=[
+    {...dsBar('Net Revenue',netRevenue,C.navy,'cashflow'),order:2,maxBarThickness:34},
+    {...dsBar('Gross Cash Burn',grossBurn,'rgba(200,79,94,0.68)','cashflow'),borderColor:'rgba(200,79,94,0.68)',order:2,maxBarThickness:34},
+    {...dsLine('Net Cash Burn',netBurn,C.magenta),order:1,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:netBurn.map(v=>v<0?C.red:C.green),pointBorderColor:'#fff',pointBorderWidth:2,borderWidth:2.75,segment:{borderColor:ctx=>(ctx.p0.parsed.y<0||ctx.p1.parsed.y<0)?C.red:C.green}}
+  ];
+  const opts=baseOptions('usd',false);
+  opts.plugins={...opts.plugins,tooltip:{callbacks:{label:(ctx)=>`${ctx.dataset.label}: ${fUSD(ctx.parsed.y,true)}`}}};
+  opts.scales={x:{grid:{display:false},ticks:{font:{size:10,weight:700}},stacked:true},y:{beginAtZero:false,grid:{color:C.grid},ticks:yTicks('usd'),stacked:true}};
+  chart('cashBurn',{type:'bar',data:{labels:months,datasets},options:opts,plugins:[cashForecastShadePlugin(months,cashForecastStart())]});
+  const sub=el('cashBurnSub'); if(sub) sub.textContent=`${selected} scenario; ${cashForecastLabel()} shaded as forecast`;
+}
+function renderCashScenarioChart(){
+  const scenarios=['Base','Optimistic','Pessimistic'].filter(s=>DASH.cash.some(r=>r.Scenario===s));
+  const baseRows=DASH.cash.filter(r=>r.Scenario==='Base');
+  const months=baseRows.map(r=>r.Month);
+  const metric=window.cashBalanceMetric||'Closing_Balance';
+  const label=metric==='Opening_Balance'?'Opening Balance':'Closing Balance';
+  const sub=el('cashScenarioSub'); if(sub) sub.textContent=`${label} across Base, Optimistic and Pessimistic scenarios; ${cashForecastLabel()} shaded as forecast`;
+  const colorMap=cashScenarioColors();
+  const datasets=scenarios.map(scenario=>{
+    const rows=DASH.cash.filter(r=>r.Scenario===scenario);
+    const lookup=Object.fromEntries(rows.map(r=>[r.Month,r]));
+    const data=months.map(m=>lookup[m]?(lookup[m][metric]||0):null);
+    const baseColor=colorMap[scenario]||C.navy;
+    return {...dsLine(`${scenario} ${label}`,data,baseColor),pointBackgroundColor:baseColor,pointBorderColor:baseColor,segment:{borderColor:baseColor}};
+  });
+  const opts=baseOptions('usd',false);
+  opts.plugins={...opts.plugins,tooltip:{callbacks:{label:(ctx)=>`${ctx.dataset.label}: ${fUSD(ctx.parsed.y,true)}`}}};
+  opts.scales={x:{grid:{display:false},ticks:{font:{size:10,weight:700}}},y:{beginAtZero:false,grid:{color:C.grid},ticks:yTicks('usd')}};
+  chart('cashScenario',{type:'line',data:{labels:months,datasets},options:opts,plugins:[cashNegativeZonePlugin(),cashForecastShadePlugin(months,cashForecastStart())]});
+}
+function cashNoteHtml(note){
+  if(!note) return '';
+  return String(note).split('|').map(part=>{
+    const raw=part.trim();
+    if(!raw) return '';
+    const lower=raw.toLowerCase();
+    let klass='cash-note-neutral', label='Note', body=raw;
+    if(lower.startsWith('inflow:')){
+      klass='cash-note-inflow';
+      label='Inflow';
+      body=raw.replace(/^inflow:\s*/i,'');
+    } else if(lower.startsWith('outflow:')){
+      klass='cash-note-outflow';
+      label='Outflow';
+      body=raw.replace(/^outflow:\s*/i,'');
+    }
+    return `<span class="cash-note-chip ${klass}"><strong>${label}</strong><span>${body}</span></span>`;
+  }).join('');
+}
+function renderCashTable(){
+  const selected=window.cashScenarioSelected||'Base';
+  const actuals=cashActualMonths();
+  const rows=DASH.cash.filter(r=>actuals.has(r.Month)?r.Scenario==='Base':r.Scenario===selected);
+  const tb=el('cashTable'); if(!tb) return;
+  tb.innerHTML=rows.map(r=>{
+    const type=actuals.has(r.Month)?'Actual':'Forecast';
+    const scenarioLabel=type==='Actual'?'Actual':r.Scenario;
+    const rowShade=type==='Actual'?'background:#F8FBFF;':'background:#FFFCF2;';
+    const netBurn=r.Net_Cash_Burn!=null?r.Net_Cash_Burn:r.Cash_Burn;
+    const grossBurn=r.Gross_Cash_Burn!=null?r.Gross_Cash_Burn:r.Total_Costs;
+    return `<tr style="${rowShade}"><td>${r.Month}</td><td><span class="badge ${type==='Actual'?'good':'watch'}">${type}</span></td><td>${scenarioLabel}</td><td>${fUSD(r.Net_Revenue,false)}</td><td>${fUSD(grossBurn,false)}</td><td class="${netBurn>=0?'pos-var':'neg-var'}">${fUSD(netBurn,false)}</td><td class="${cashBalanceClass(r.Opening_Balance)}">${fUSD(r.Opening_Balance,false)}</td><td class="${cashBalanceClass(r.Closing_Balance)}">${fUSD(r.Closing_Balance,false)}</td><td class="cash-notes-cell">${cashNoteHtml(r.Notes)}</td></tr>`;
+  }).join('');
+}
+
+function renderMarketing(){const body=`<div class="chart-grid">${chartCard('Ad Spend by Platform','Google and Facebook spend trend','adSpend',false,true)}${chartCard('ROAS Trend','Actual and adjusted ROAS against benchmark','roasTrend',false,true)}</div><div class="chart-grid full">${chartCard('Attributed Revenue Mix','Revenue attributed to telesales, inbound, digital and third-party channels','attrRev',true,true)}</div>`; el('main').innerHTML=pageScaffold('marketing','Marketing','Efficiency and revenue attribution view for growth investment',8,body); setNote('marketing'); renderMarketingCharts();}
+function renderMarketingCharts(){const d=DASH.dm.data,m=DASH.dm.months,l=labelsFor(m); let g=chartDataFor(d.Google_Ads_Spend,m), f=chartDataFor(d.Facebook_Ads_Spend,m), total=chartDataFor(d.Total_Ad_Spend,m); if(state.view==='ytd'){g=g.current;f=chartDataFor(d.Facebook_Ads_Spend,m).current;total=chartDataFor(d.Total_Ad_Spend,m).current;} const kind=state.view==='mom'||state.view==='yoy'?'pct':'usd'; barChart('adSpend',l,[dsBar('Google Ads',g,C.navy,'s'),dsBar('Facebook Ads',f,C.magenta,'s'),{...dsLine('Total Spend',total,C.gold),type:'line'}],kind,state.view==='monthly'); let r=chartDataFor(d.ROAS,m), ar=chartDataFor(d.Adjusted_ROAS,m); if(state.view==='ytd'){r=r.current;ar=chartDataFor(d.Adjusted_ROAS,m).current;} lineChart('roasTrend',l,[dsLine('ROAS',r,C.navy),dsLine('Adjusted ROAS',ar,C.magenta),dsLine('4.0x Reference',l.map(()=>4),C.gold)],state.view==='mom'||state.view==='yoy'?'pct':'ratio'); const attr=['Revenue_Telesales','Revenue_CX_Inbound','Revenue_Digital','Revenue_3rd_Party']; barChart('attrRev',l,attr.map((k,i)=>{let x=chartDataFor(d[k],m); if(state.view==='ytd')x=x.current; return dsBar(k.replace('Revenue_','').replace('_',' '),x,C.colors[i],'s')}),kind,state.view==='monthly');}
+function getDrillContext(isPrior){
+  if(!isPrior) return {period:state.period,view:state.view,label:execCurrentLabel(state.period,state.view),isPrior:false};
+  if(state.view==='ytd'){
+    const py=prevYearMonth(state.period);
+    return {period:py,view:'ytd',label:execCompareLabel(state.period,state.view),isPrior:true};
+  }
+  const py=prevYearMonth(state.period);
+  return {period:py,view:'monthly',label:execCompareLabel(state.period,state.view),isPrior:true};
+}
+function metricAmountFor(k,period,view){
+  const m=DASH.pl.months,a=DASH.pl.actual;
+  return view==='ytd'?ytdValue(a[k],m,period):val(a[k],idx(m,period));
+}
+function breakdownRows(keys,period,view){
+  const total=keys.reduce((acc,k)=>acc+(metricAmountFor(k,period,view)||0),0);
+  return keys.map(k=>{const amount=metricAmountFor(k,period,view)||0; return {label:k.replace('Less: ','').replace('Total: ',''),amount,share:total?amount/total*100:null};});
+}
+function ensureModal(){
+  let modal=el('execDrillModal');
+  if(modal) return modal;
+  const div=document.createElement('div');
+  div.id='execDrillModal';
+  div.className='modal-backdrop';
+  div.innerHTML=`<div class="modal-card"><div class="modal-head"><div><div class="modal-title" id="drillTitle"></div><div class="modal-sub" id="drillSub"></div></div><button class="modal-close" onclick="closeExecDrilldown()">×</button></div><div class="modal-body" id="drillBody"></div></div>`;
+  div.addEventListener('click',e=>{if(e.target.id==='execDrillModal')closeExecDrilldown();});
+  document.body.appendChild(div);
+  return div;
+}
+function openExecDrilldown(metric,isPrior){
+  if(metric==='Gross Revenue'){
+    openGrossRevenueComparisonDrilldown('channel');
+    return;
+  }
+  const ctx=getDrillContext(isPrior);
+  const modal=ensureModal();
+  modal.classList.add('open');
+  el('drillTitle').textContent=`${metric} Drilldown`;
+  el('drillSub').textContent=`${ctx.label} | ${ctx.view==='ytd'?'Cumulative YTD':'Selected month'} view`;
+  renderEbitdaDrilldown(ctx);
+}
+function closeExecDrilldown(){
+  const modal=el('execDrillModal');
+  if(modal) modal.classList.remove('open');
+  destroy('execDrillChart');
+}
+function renderGrossRevenueDrilldown(ctx,tab='channel'){
+  const channelKeys=['Telesales','Installment Recovery','Inbound','Retention'];
+  const courseKeys=['Class 6 to 8','Class 9 to 12','Board Exam Prep','Uni Admission','Skills','Other'];
+  const keys=tab==='course'?courseKeys:channelKeys;
+  const rows=breakdownRows(keys,ctx.period,ctx.view).filter(r=>r.amount!==0 && r.amount!=null);
+  const total=rows.reduce((a,b)=>a+b.amount,0);
+  const safeLabel=ctx.label.replace(/'/g,"\'");
+  const drillColor=ctx.isPrior?C.magenta:C.navy;
+  const priorFlag=ctx.isPrior?'true':'false';
+  el('drillBody').innerHTML=`<div class="modal-tabs"><button class="modal-tab ${tab==='channel'?'active':''}" onclick="renderGrossRevenueDrilldown({period:'${ctx.period}',view:'${ctx.view}',label:'${safeLabel}',isPrior:${priorFlag}},'channel')">By Channel</button><button class="modal-tab ${tab==='course'?'active':''}" onclick="renderGrossRevenueDrilldown({period:'${ctx.period}',view:'${ctx.view}',label:'${safeLabel}',isPrior:${priorFlag}},'course')">By Course</button></div><div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>${tab==='course'?'Course':'Channel'}</th><th>Amount</th><th>Share</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td>${fUSD(r.amount,false)}</td><td>${fPct(r.share)}</td></tr>`).join('')}<tr class="total-row"><td>Total</td><td>${fUSD(total,false)}</td><td>100.0%</td></tr></tbody></table></div></div>`;
+  barChart('execDrillChart',rows.map(r=>r.label),[dsBar('Gross Revenue',rows.map(r=>r.amount),drillColor)],'usd',false);
+}
+
+function grossRevenueComparisonContexts(){
+  const current={period:state.period,view:state.view,label:execCurrentLabel(state.period,state.view),color:C.navy};
+  const priorPeriod=prevYearMonth(state.period);
+  const prior={period:priorPeriod,view:state.view==='ytd'?'ytd':'monthly',label:execCompareLabel(state.period,state.view),color:C.magenta};
+  return {current,prior};
+}
+function openGrossRevenueComparisonDrilldown(tab='channel'){
+  const ctxs=grossRevenueComparisonContexts();
+  const modal=ensureModal();
+  modal.classList.add('open');
+  el('drillTitle').textContent='Gross Revenue Drilldown';
+  el('drillSub').textContent=`${ctxs.current.label} vs ${ctxs.prior.label} | ${state.view==='ytd'?'Cumulative YTD':'Selected month'} view`;
+  renderGrossRevenueComparisonDrilldown(tab);
+}
+function renderGrossRevenueComparisonDrilldown(tab='channel'){
+  const ctxs=grossRevenueComparisonContexts();
+  const channelKeys=['Telesales','Installment Recovery','Inbound','Retention'];
+  const courseKeys=['Class 6 to 8','Class 9 to 12','Board Exam Prep','Uni Admission','Skills','Other'];
+  const keys=tab==='course'?courseKeys:channelKeys;
+  const rows=keys.map(k=>{
+    const current=metricAmountFor(k,ctxs.current.period,ctxs.current.view)||0;
+    const prior=metricAmountFor(k,ctxs.prior.period,ctxs.prior.view)||0;
+    return {label:cleanLineLabel(k),current,prior,delta:current-prior,pct:pctChange(current,prior)};
+  }).filter(r=>r.current!==0||r.prior!==0);
+  const currentTotal=sum(rows.map(r=>r.current));
+  const priorTotal=sum(rows.map(r=>r.prior));
+  const deltaTotal=currentTotal-priorTotal;
+  const pctTotal=pctChange(currentTotal,priorTotal);
+  const tableRows=rows.map(r=>`<tr><td>${r.label}</td><td>${fUSD(r.current,false)}</td><td>${fUSD(r.prior,false)}</td>${varianceCell(r.delta,false,false)}${varianceCell(r.pct,true,false)}</tr>`).join('');
+  el('drillBody').innerHTML=`<div class="modal-tabs"><button class="modal-tab ${tab==='channel'?'active':''}" onclick="renderGrossRevenueComparisonDrilldown('channel')">By Channel</button><button class="modal-tab ${tab==='course'?'active':''}" onclick="renderGrossRevenueComparisonDrilldown('course')">By Course</button></div><div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>${tab==='course'?'Course':'Channel'}</th><th>${ctxs.current.label}</th><th>${ctxs.prior.label}</th><th>Variance</th><th>Var %</th></tr></thead><tbody>${tableRows}<tr class="total-row"><td>Total</td><td>${fUSD(currentTotal,false)}</td><td>${fUSD(priorTotal,false)}</td>${varianceCell(deltaTotal,false,false)}${varianceCell(pctTotal,true,false)}</tr></tbody></table></div></div>`;
+  chart('execDrillChart',{
+    type:'bar',
+    data:{labels:rows.map(r=>r.label),datasets:[
+      dsBar(ctxs.current.label,rows.map(r=>r.current),C.navy),
+      dsBar(ctxs.prior.label,rows.map(r=>r.prior),C.magenta)
+    ]},
+    options:baseOptions('usd',false)
+  });
+}
+function renderEbitdaDrilldown(ctx){
+  const wf={
+    netRevenue:metricAmountFor('Net Revenue',ctx.period,ctx.view),
+    cogs:metricAmountFor('Total: COGS',ctx.period,ctx.view),
+    academic:metricAmountFor('Total Academic Support Cost',ctx.period,ctx.view),
+    sm:metricAmountFor('Total: S&M Cost',ctx.period,ctx.view),
+    brand:metricAmountFor('Less: Brand Marketing Cost',ctx.period,ctx.view),
+    indirect:metricAmountFor('Total: Indirect Cost',ctx.period,ctx.view),
+    ebitda:metricAmountFor('EBITDA',ctx.period,ctx.view)
+  };
+  const rows=[
+    {label:'Net Revenue',amount:wf.netRevenue,type:'start'},
+    {label:'COGS',amount:-Math.abs(wf.cogs||0),type:'cost'},
+    {label:'Academic Support',amount:-Math.abs(wf.academic||0),type:'cost'},
+    {label:'S&M Cost',amount:-Math.abs(wf.sm||0),type:'cost'},
+    {label:'Brand Marketing',amount:-Math.abs(wf.brand||0),type:'cost'},
+    {label:'Indirect Cost',amount:-Math.abs(wf.indirect||0),type:'cost'},
+    {label:'EBITDA',amount:wf.ebitda,type:'end'}
+  ];
+  let running=0;
+  const ranges=rows.map(r=>{if(r.type==='start'){running=r.amount||0;return [0,running];} if(r.type==='end')return [0,r.amount||0]; const start=running; running+=r.amount||0; return [Math.min(start,running),Math.max(start,running)];});
+  el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Step</th><th>Amount</th></tr></thead><tbody>${rows.map(r=>`<tr class="${r.type==='end'?'total-row':''}"><td>${r.label}</td><td>${fUSD(r.amount,false)}</td></tr>`).join('')}</tbody></table></div></div>`;
+  chart('execDrillChart',{type:'bar',data:{labels:rows.map(r=>r.label),datasets:[{label:'Amount',data:ranges,_amounts:rows.map(r=>r.amount),_types:rows.map(r=>r.type==='start'?'checkpoint':(r.type==='end'?'ebitda':'cost')),backgroundColor:(context)=>{const r=rows[context.dataIndex]; return r.type==='start'?C.navy:(r.type==='end'?(r.amount>=0?C.green:C.red):costGradient(context.chart,false));},borderColor:(context)=>{const r=rows[context.dataIndex]; return r.type==='start'?C.navy:(r.type==='end'?(r.amount>=0?C.green:C.red):costBorder(false));},hoverBackgroundColor:(context)=>{const r=rows[context.dataIndex]; return r.type==='start'?C.navy2:(r.type==='end'?(r.amount>=0?C.green:C.red):costGradient(context.chart,true));},hoverBorderColor:(context)=>{const r=rows[context.dataIndex]; return r.type==='start'?C.navy2:(r.type==='end'?(r.amount>=0?C.green:C.red):costBorder(true));},borderWidth:1,borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28,bottom:16}},plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>`${c.label}: ${fUSD(c.dataset._amounts[c.dataIndex],false)}`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:C.grid},ticks:yTicks('usd')}}},plugins:[waterfallDataLabelPlugin]});
+}
+
+function drilldownConfigForStep(stepLabel){
+  const configs={
+    'Net Revenue':{
+      title:'Net Revenue Bridge',
+      totalKey:'Net Revenue',
+      keys:['Gross Revenue','Less: Sales VAT','Less: Refunds','Less: Gateway Discounts','Less: Payment Gateway Charge'],
+      mode:'bridge',
+      note:'Shows Gross Revenue and direct sales costs that bridge down to Net Revenue.'
+    },
+    'Direct Sales Costs':{
+      title:'Direct Sales Costs Drilldown',
+      totalKey:'Net Revenue',
+      keys:['Less: Sales VAT','Less: Refunds','Less: Gateway Discounts','Less: Payment Gateway Charge'],
+      mode:'cost',
+      note:'Shows direct sales costs between Gross Revenue and Net Revenue.'
+    },
+    'COGS':{
+      title:'COGS Drilldown',
+      totalKey:'Total: COGS',
+      keys:['Less: Teachers Team','Less: Legacy Live Class Teachers','Less: Instructor Fees','Less: Rev Sharing','Less: Streaming Costs','Less: Database & Server Costs','Less: Shikho Shop','Less: Book Production'],
+      mode:'cost',
+      note:'Shows cost categories included under COGS.'
+    },
+    'Academic Support':{
+      title:'Academic Support Drilldown',
+      totalKey:'Total Academic Support Cost',
+      keys:['Less: Program Management','Less: Live Class Operations'],
+      mode:'cost',
+      note:'Shows academic support cost categories.'
+    },
+    'S&M Cost':{
+      title:'S&M Cost Drilldown',
+      totalKey:'Total: S&M Cost',
+      keys:['Less: Sales Team Cost','Less: Acquisition Marketing Cost','Less: Laptop Rental'],
+      mode:'cost',
+      note:'Shows main sales and marketing cost categories.'
+    },
+    'Brand Marketing':{
+      title:'Brand Marketing Drilldown',
+      totalKey:'Less: Brand Marketing Cost',
+      keys:['Below the Line','Above the Line'],
+      mode:'cost',
+      note:'Shows BTL and ATL brand marketing spend.'
+    },
+    'Indirect Cost':{
+      title:'Indirect Cost Drilldown',
+      totalKey:'Total: Indirect Cost',
+      keys:['Less: G&A','Less: Infrastructure Salaries','Less: Engineering & Product Salaries','Less: Bonus','Less: Technology OpEx','Less: Vendors VDS & TDS','Less: Salary Tax'],
+      mode:'cost',
+      note:'Shows indirect cost categories included below contribution margin.'
+    }
+  };
+  return configs[stepLabel]||null;
+}
+function cleanLineLabel(k){
+  return k.replace('Less: ','').replace('Total: ','').replace('Add: ','');
+}
+function openWaterfallDrilldown(stepLabel){
+  if(stepLabel==='EBITDA'){
+    openExecDrilldown('EBITDA',false);
+    return;
+  }
+  const cfg=drilldownConfigForStep(stepLabel);
+  if(!cfg) return;
+  const ctx={period:state.period,view:state.view,label:execCurrentLabel(state.period,state.view)};
+  const modal=ensureModal();
+  modal.classList.add('open');
+  el('drillTitle').textContent=cfg.title;
+  el('drillSub').textContent=`${ctx.label} | ${ctx.view==='ytd'?'Cumulative YTD':'Selected month'} view | ${cfg.note}`;
+  renderWaterfallStepDrilldown(cfg,ctx);
+}
+function renderWaterfallStepDrilldown(cfg,ctx){
+  const rows=cfg.keys.map(k=>{
+    const raw=metricAmountFor(k,ctx.period,ctx.view);
+    const amount=raw==null?0:raw;
+    return {key:k,label:cleanLineLabel(k),amount:cfg.mode==='bridge'&&k!=='Gross Revenue'?-Math.abs(amount):Math.abs(amount)};
+  }).filter(r=>r.amount!==0);
+  const total=metricAmountFor(cfg.totalKey,ctx.period,ctx.view);
+  const denom=cfg.mode==='bridge'?Math.abs(metricAmountFor('Gross Revenue',ctx.period,ctx.view)||0):Math.abs(total||rows.reduce((a,b)=>a+Math.abs(b.amount),0));
+  const tableRows=rows.map(r=>{
+    const share=denom?Math.abs(r.amount)/denom*100:null;
+    return `<tr><td>${r.label}</td><td>${fUSD(r.amount,false)}</td><td>${fPct(share)}</td></tr>`;
+  }).join('');
+  const totalLabel=cfg.mode==='bridge'?'Net Revenue':'Total';
+  el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Category</th><th>Amount</th><th>${cfg.mode==='bridge'?'Share of Gross Revenue':'Share of Total'}</th></tr></thead><tbody>${tableRows}<tr class="total-row"><td>${totalLabel}</td><td>${fUSD(total,false)}</td><td>${cfg.mode==='bridge'?'—':'100.0%'}</td></tr></tbody></table></div></div>`;
+  if(cfg.mode==='bridge'){
+    chart('execDrillChart',{type:'bar',data:{labels:rows.map(r=>r.label),datasets:[{label:'Amount',data:rows.map(r=>r.amount),backgroundColor:(context)=>{const amount=rows[context.dataIndex]?.amount||0; return amount>=0?C.navy:costGradient(context.chart,false);},borderColor:(context)=>{const amount=rows[context.dataIndex]?.amount||0; return amount>=0?C.navy:costBorder(false);},hoverBackgroundColor:(context)=>{const amount=rows[context.dataIndex]?.amount||0; return amount>=0?C.navy2:costGradient(context.chart,true);},hoverBorderColor:(context)=>{const amount=rows[context.dataIndex]?.amount||0; return amount>=0?C.navy2:costBorder(true);},borderWidth:1,borderRadius:6,borderSkipped:false}]},options:baseOptions('usd',false)});
+  } else {
+    chart('execDrillChart',{type:'bar',data:{labels:rows.map(r=>r.label),datasets:[{label:'Cost',data:rows.map(r=>Math.abs(r.amount)),backgroundColor:(context)=>costGradient(context.chart,false),borderColor:costBorder(false),hoverBackgroundColor:(context)=>costGradient(context.chart,true),hoverBorderColor:costBorder(true),borderWidth:1,borderRadius:6,borderSkipped:false,maxBarThickness:46}]},options:baseOptions('usd',false)});
+  }
+}
+
+function render(){renderNav(); el('topbarTitle').textContent='Shikho Finance Governance Dashboard'; Object.keys(charts).forEach(destroy); if(state.page==='exec')renderExec(); if(state.page==='pl')renderPL(); if(state.page==='revenue')renderRevenue(); if(state.page==='costs')renderCosts(); if(state.page==='sales')renderSales(); if(state.page==='growth')renderGrowth(); if(state.page==='cash')renderCash(); renderNav();}
+function goto(p){state.page=p; render();}
+el('viewGroup').addEventListener('click',e=>{if(e.target.tagName==='BUTTON'){[...el('viewGroup').querySelectorAll('button')].forEach(b=>b.classList.remove('active')); e.target.classList.add('active'); state.view=e.target.dataset.view; render();}});
+el('periodSelect').addEventListener('change',e=>{state.period=e.target.value; render();});
+async function startDashboard(){
+  try{
+    showDashboardLoading();
+    await loadDashboardData();
+    initPeriod();
+    render();
+  }catch(error){
+    console.error(error);
+    showDashboardError(error);
+  }
+}
+startDashboard();
+</script>
+</body>
+</html>
