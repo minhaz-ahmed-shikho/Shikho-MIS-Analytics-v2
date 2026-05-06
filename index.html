@@ -799,9 +799,19 @@ body{
 .badge.bad,.kpi-status.bad{background:var(--red-bg);color:var(--red);border-color:color-mix(in srgb,var(--red) 24%,var(--line))}
 .badge.watch,.kpi-status.watch{background:var(--amber-bg);color:var(--amber);border-color:color-mix(in srgb,var(--amber) 24%,var(--line))}
 .chart-card-header{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:start;
+  gap:10px 14px;
   padding:15px 16px 11px;
   background:var(--surface);
   border-bottom:1px solid var(--line);
+}
+.chart-card-header>div:first-child{
+  min-width:0;
+}
+.chart-card-header.filter-header{
+  grid-template-columns:minmax(0,1fr);
 }
 .chart-card-title-row{
   display:flex;
@@ -814,7 +824,23 @@ body{
   justify-content:flex-end;
   gap:8px;
   flex-wrap:wrap;
-  min-width:max-content;
+  min-width:0;
+  max-width:100%;
+}
+.chart-actions.has-filter-actions{
+  grid-column:1 / -1;
+  width:100%;
+  justify-content:flex-start;
+  align-items:flex-start;
+  margin-top:2px;
+}
+.chart-actions.has-filter-actions .range-control{
+  flex:0 0 auto;
+}
+.chart-actions.has-filter-actions .chart-filter{
+  flex:1 1 420px;
+  min-width:0;
+  justify-content:flex-start;
 }
 .chart-title{
   color:var(--text);
@@ -827,15 +853,24 @@ body{
   color:var(--muted);
   font-size:11px;
   line-height:1.35;
+  max-width:780px;
 }
 .chart-body{height:330px;padding:14px}
 .chart-body.tall{height:392px}
+.chart-filter{
+  min-width:0;
+  max-width:100%;
+}
 .chart-filter label,.line-toggle{
   background:var(--surface-2);
   color:var(--muted);
   border:1px solid var(--line);
   box-shadow:none;
   padding:7px 10px;
+}
+.chart-filter label{
+  max-width:100%;
+  white-space:nowrap;
 }
 .chart-filter label.active,.line-toggle.active{
   background:color-mix(in srgb,var(--magenta) 10%,var(--surface));
@@ -1689,8 +1724,11 @@ function dataStatusHtml(){
   return `<div class="data-status ${statusClass}"><span><strong>Data shown through:</strong> ${h(through)}</span>${configuredText}${updated}${refreshed}${message}</div>`;
 }
 function pageScaffold(id,title,sub,num,body){return `<section class="page ${state.page===id?'active':''}" id="page-${id}"><div class="section-header"><div class="section-left"><div class="section-num">${icon(pageIcon(id))}</div><div><div class="section-title">${title}</div><div class="section-sub">${sub}</div></div></div><div class="view-note" id="note-${id}"></div></div>${body}${dataStatusHtml()}</section>`}
-function chartCard(title,sub,canvas,full=false,tall=false,action=''){return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">${title}</div></div><div class="chart-sub">${sub||''}</div></div>${action?`<div class="chart-actions">${action}</div>`:''}</div><div class="chart-body ${tall?'tall':''}"><canvas id="${canvas}"></canvas></div></div>`}
-function costDriverCard(title,sub,id,action=''){return `<div class="chart-card pl-basis-card"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">${title}</div></div><div class="chart-sub">${sub||''}</div></div>${action?`<div class="chart-actions">${action}</div>`:''}</div><div class="chart-body tall" id="${id}"></div></div>`}
+function hasFilterAction(action=''){return String(action||'').includes('chart-filter')}
+function chartHeaderClass(action=''){return `chart-card-header${hasFilterAction(action)?' filter-header':''}`}
+function chartActionClass(action=''){return `chart-actions${hasFilterAction(action)?' has-filter-actions':''}`}
+function chartCard(title,sub,canvas,full=false,tall=false,action=''){return `<div class="chart-card"><div class="${chartHeaderClass(action)}"><div><div class="chart-card-title-row"><div class="chart-title">${title}</div></div><div class="chart-sub">${sub||''}</div></div>${action?`<div class="${chartActionClass(action)}">${action}</div>`:''}</div><div class="chart-body ${tall?'tall':''}"><canvas id="${canvas}"></canvas></div></div>`}
+function costDriverCard(title,sub,id,action=''){return `<div class="chart-card pl-basis-card"><div class="${chartHeaderClass(action)}"><div><div class="chart-card-title-row"><div class="chart-title">${title}</div></div><div class="chart-sub">${sub||''}</div></div>${action?`<div class="${chartActionClass(action)}">${action}</div>`:''}</div><div class="chart-body tall" id="${id}"></div></div>`}
 function setNote(page){
   const n=el('note-'+page);
   if(!n) return;
@@ -2016,7 +2054,8 @@ function execTrendCard(){
   const filters=options.map(([key,label])=>`<label class="${state.execMargins.includes(key)?'active':''}"><input type="checkbox" ${state.execMargins.includes(key)?'checked':''} onchange="toggleExecMargin('${key}',this.checked)">${label}</label>`).join('');
   const selectedIdx=idx(DASH.pl.months,state.period);
   const trendLabels=selectedIdx>=0?DASH.pl.months.slice(0,selectedIdx+1):DASH.pl.months;
-  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">Margin Quality Trend</div></div><div class="chart-sub">Monthly margin path through selected period.</div></div><div class="chart-actions">${trendRangeControl('execRev',trendLabels)}<div class="chart-filter" id="execMarginFilter">${filters}</div></div></div><div class="chart-body tall"><canvas id="execRev"></canvas></div></div>`;
+  const action=`${trendRangeControl('execRev',trendLabels)}<div class="chart-filter" id="execMarginFilter">${filters}</div>`;
+  return `<div class="chart-card"><div class="${chartHeaderClass(action)}"><div><div class="chart-card-title-row"><div class="chart-title">Margin Quality Trend</div></div><div class="chart-sub">Monthly margin path through selected period.</div></div><div class="${chartActionClass(action)}">${action}</div></div><div class="chart-body tall"><canvas id="execRev"></canvas></div></div>`;
 }
 function renderExec(){
   const metrics=execMetricSet(state.period,state.view);
@@ -2192,7 +2231,8 @@ function renderExecCharts(){
   });
 }
 function plMarginCard(){
-  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">Margin vs Budget</div></div><div class="chart-sub">GM% and EBITDA% trend for the selected year; budget lines appear only where budget exists</div></div><div class="chart-actions">${trendRangeControl('plMargin',plTrendMonths())}<div class="chart-filter" id="plMarginToggles"></div></div></div><div class="chart-body tall"><canvas id="plMargin"></canvas></div></div>`;
+  const action=`${trendRangeControl('plMargin',plTrendMonths())}<div class="chart-filter" id="plMarginToggles"></div>`;
+  return `<div class="chart-card"><div class="${chartHeaderClass(action)}"><div><div class="chart-card-title-row"><div class="chart-title">Margin vs Budget</div></div><div class="chart-sub">GM% and EBITDA% trend for the selected year; budget lines appear only where budget exists</div></div><div class="${chartActionClass(action)}">${action}</div></div><div class="chart-body tall"><canvas id="plMargin"></canvas></div></div>`;
 }
 function renderPL(){
   state.plExpanded=state.plExpanded||{};
@@ -2971,7 +3011,8 @@ function salesFilterHtml(key){
   return `<div class="chart-filter">${options.map(t=>`<label class="${active.includes(t.id)?'active':''}"><input type="checkbox" ${active.includes(t.id)?'checked':''} onchange="toggleSalesSeries('${key}','${t.id}',this.checked)">${t.label}</label>`).join('')}</div>`;
 }
 function salesCard(title,sub,canvas,key=null,tall=true,action=''){
-  return `<div class="chart-card"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">${title}</div></div><div class="chart-sub">${sub||''}</div></div><div class="chart-actions">${action||''}${key?salesFilterHtml(key):''}</div></div><div class="chart-body ${tall?'tall':''}"><canvas id="${canvas}"></canvas></div></div>`;
+  const actions=`${action||''}${key?salesFilterHtml(key):''}`;
+  return `<div class="chart-card"><div class="${chartHeaderClass(actions)}"><div><div class="chart-card-title-row"><div class="chart-title">${title}</div></div><div class="chart-sub">${sub||''}</div></div>${actions?`<div class="${chartActionClass(actions)}">${actions}</div>`:''}</div><div class="chart-body ${tall?'tall':''}"><canvas id="${canvas}"></canvas></div></div>`;
 }
 function renderSales(){
   const labels=chartMonthsFromSource(DASH.sales.months);
