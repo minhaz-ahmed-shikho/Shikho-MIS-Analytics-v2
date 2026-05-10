@@ -1918,8 +1918,14 @@ function waterfallAmounts(period,view){
 }
 function waterfallMargins(period,view){
   const getPct=(k)=>{
-    const raw=metricAmountFor(k,period,view);
-    return raw==null?0:raw*100;
+    const numeratorMap={'GM%':'Gross Margin','CM 1 %':'Profit Contribution 1','CM 2 %':'Profit Contribution 2','CM 3 %':'Profit Contribution 3','EBITDA %':'EBITDA'};
+    if(view==='ytd'){
+      const num=metricAmountFor(numeratorMap[k],period,view);
+      const den=metricAmountFor('Net Revenue',period,view);
+      return (num!=null && den)?num/den*100:0;
+    }
+    const raw=metricAmountFor(k,period,'monthly');
+    return raw==null?0:raw;
   };
   return {
     gm:getPct('GM%'),
@@ -2152,7 +2158,7 @@ function renderExecCharts(){
   const selected=state.execMargins&&state.execMargins.length?state.execMargins:['GM%'];
   const datasets=selected.map(k=>({
     label:k==='GM%'?'Gross Margin %':k,
-    data:(a[k]||[]).slice(0,selectedIdx+1).map(v=>v==null?null:v*100),
+    data:labels.map(period=>execMetricValue(k,period,'monthly')),
     borderColor:marginColors[k]||C.navy,
     backgroundColor:marginFill[k]||'rgba(53,72,148,0.10)',
     pointRadius:2.5,
@@ -2311,7 +2317,7 @@ function plPctValue(source,pctKey,numeratorKey,period=state.period,view=state.vi
     return (num!=null && den)?num/den*100:null;
   }
   const raw=val((DASH.pl[source]||{})[pctKey],idx(DASH.pl.months,period));
-  return raw==null?null:raw*100;
+  return raw==null?null:raw;
 }
 function plMetric(row,source,period=state.period,view=state.view){
   if(row.pct) return plPctValue(source,row.key,row.numerator,period,view);
@@ -2802,8 +2808,7 @@ function renderCostLayerCharts(layer){
 }
 function pctSeriesFor(metric){
   const m=DASH.pl.months,a=DASH.pl.actual;
-  if(metric==='GM%') return m.map((_,i)=>a['Gross Margin']&&a['Net Revenue']&&a['Net Revenue'][i]?a['Gross Margin'][i]/a['Net Revenue'][i]*100:null);
-  return (a[metric]||[]).map(v=>v==null?null:v*100);
+  return (a[metric]||[]).map(v=>v==null?null:v);
 }
 function costCleanLabel(name){
   return String(name||'')
