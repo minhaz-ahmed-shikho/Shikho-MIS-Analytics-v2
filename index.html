@@ -581,27 +581,27 @@ canvas{font-family:'Poppins','Hind Siliguri','Inter',Arial,sans-serif}
 }
 
 html[data-theme="dark"]{
-  --navy:#AAB6FF;
-  --navy-2:#7F8DE8;
+  --navy:#B8C4FF;
+  --navy-2:#8EA0FF;
   --navy-deep:#070B14;
-  --magenta:#F06BB8;
-  --gold:#F0B84D;
-  --teal:#5BC7D2;
-  --green:#67C89F;
-  --green-bg:#123D2F;
-  --red:#FF7B8E;
-  --red-bg:#4B1720;
-  --amber:#F3BD61;
-  --amber-bg:#452D0A;
-  --bg:#0C111D;
-  --card:#121826;
-  --surface:#151C2B;
-  --surface-2:#0F1624;
-  --text:#F2F4F7;
-  --muted:#A6B0C3;
-  --faint:#768299;
-  --line:#253047;
-  --grid:#26344A;
+  --magenta:#FF7CC8;
+  --gold:#F5C56B;
+  --teal:#65D3DF;
+  --green:#72D6AA;
+  --green-bg:#0E3E31;
+  --red:#FF8295;
+  --red-bg:#4C1823;
+  --amber:#F6C66B;
+  --amber-bg:#4A310D;
+  --bg:#080C14;
+  --card:#111827;
+  --surface:#131B2A;
+  --surface-2:#192234;
+  --text:#F8FAFC;
+  --muted:#C5CEDD;
+  --faint:#95A3B8;
+  --line:#303A50;
+  --grid:#334258;
   --shadow:0 1px 2px rgba(0,0,0,.28),0 14px 32px rgba(0,0,0,.22);
   --shadow-soft:0 1px 2px rgba(0,0,0,.22);
 }
@@ -857,6 +857,33 @@ body{
 }
 .chart-body{height:330px;padding:14px}
 .chart-body.tall{height:392px}
+.no-data-state{
+  min-height:100%;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:28px;
+  color:var(--muted);
+  background:color-mix(in srgb,var(--surface-2) 58%,transparent);
+  border:1px dashed color-mix(in srgb,var(--line) 82%,var(--muted));
+  border-radius:8px;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.45;
+}
+.no-data-state strong{
+  display:block;
+  margin-bottom:4px;
+  color:var(--text);
+  font-size:13px;
+  font-weight:900;
+}
+.no-data-table-cell{
+  text-align:center!important;
+  padding:24px!important;
+  color:var(--muted)!important;
+  font-weight:800;
+}
 .chart-filter{
   min-width:0;
   max-width:100%;
@@ -1035,7 +1062,16 @@ tr.total-row td,.pl-flow-row td,.pl-flow-row td:first-child{
 }
 .cost-driver-title,.cost-driver-footer strong,.cost-driver-value{color:var(--text)}
 .cost-driver-track{background:var(--surface-2)}
+.cash-row-actual td{background:#F8FBFF}
+.cash-row-forecast td{background:#FFFCF2}
 .cash-note-neutral{background:var(--surface-2);border-color:var(--line);color:var(--muted)}
+html[data-theme="dark"] .cash-row-actual td{background:#121D2E;color:#EDF3FF}
+html[data-theme="dark"] .cash-row-forecast td{background:#211D12;color:#FFF2D1}
+html[data-theme="dark"] .cash-row-actual:hover td{background:#172238}
+html[data-theme="dark"] .cash-row-forecast:hover td{background:#282312}
+html[data-theme="dark"] .cash-note-inflow{background:#0E3E31;border-color:#226C54;color:#8DE3BB}
+html[data-theme="dark"] .cash-note-outflow{background:#4C1823;border-color:#7B2A3B;color:#FF9AAA}
+html[data-theme="dark"] .cash-note-neutral{background:#192234;border-color:#303A50;color:#C5CEDD}
 
 body.auth-pending,
 body.auth-locked{
@@ -1340,7 +1376,7 @@ const PAGES=[
 const C={ navy:'#394E99', navy2:'#4B60B2', blueLight:'#8EA6F4', magenta:'#C02980', gold:'#E6A600', teal:'#39A8B8', green:'#2E8B66', red:'#E03350', redLight:'#F6B5BE', redSoft:'#FAD7DD', redMid:'#F09AA8', amber:'#B97818', grey:'#7E889A', grid:'#E8EDF5', fill:'#394E99', colors:['#394E99','#8EA6F4','#C02980','#39A8B8','#2E8B66','#E6A600','#E03350','#7E889A'] };
 const THEME_COLORS={
   light:{navy:'#334487',navy2:'#5263B8',blueLight:'#8EA6F4',magenta:'#C02980',gold:'#D79A16',teal:'#1F9EAD',green:'#16815D',red:'#D1435B',redLight:'#F6B5BE',redSoft:'#FCECEF',redMid:'#E67B8B',amber:'#B26A00',grey:'#667085',grid:'#EAECF0',fill:'#334487',axis:'#667085',tooltip:'#111827',colors:['#334487','#8EA6F4','#C02980','#1F9EAD','#16815D','#D79A16','#D1435B','#667085']},
-  dark:{navy:'#AAB6FF',navy2:'#7F8DE8',blueLight:'#9FB2FF',magenta:'#F06BB8',gold:'#F0B84D',teal:'#5BC7D2',green:'#67C89F',red:'#FF7B8E',redLight:'#4B1720',redSoft:'#4B1720',redMid:'#FF9CAA',amber:'#F3BD61',grey:'#A6B0C3',grid:'#26344A',fill:'#AAB6FF',axis:'#A6B0C3',tooltip:'#060A12',colors:['#AAB6FF','#9FB2FF','#F06BB8','#5BC7D2','#67C89F','#F0B84D','#FF7B8E','#A6B0C3']}
+  dark:{navy:'#B8C4FF',navy2:'#8EA0FF',blueLight:'#9FB6FF',magenta:'#FF7CC8',gold:'#F5C56B',teal:'#65D3DF',green:'#72D6AA',red:'#FF8295',redLight:'#4C1823',redSoft:'#4C1823',redMid:'#FFA1AF',amber:'#F6C66B',grey:'#C5CEDD',grid:'#334258',fill:'#B8C4FF',axis:'#C5CEDD',tooltip:'#060A12',colors:['#B8C4FF','#9FB6FF','#FF7CC8','#65D3DF','#72D6AA','#F5C56B','#FF8295','#C5CEDD']}
 };
 function makeVerticalGradient(chart,stops){
   const ctx=chart?.ctx, area=chart?.chartArea;
@@ -2944,13 +2980,14 @@ function salesContributionPerAgent(id,i){
   const hc=salesTeamHeadcount(id,i); if(!hc) return null;
   return (salesTeamRevenue(id,i)/hc)-(salesTeamCost(id,i)/hc);
 }
-function salesContributionMetric(id){
-  const ix=selectedSalesIndexes();
+function salesContributionMetricForIndexes(id,ix){
+  if(!ix || !ix.length) return null;
   const revenue=sum(ix.map(i=>salesTeamRevenue(id,i)));
   const cost=sum(ix.map(i=>salesTeamCost(id,i)));
   const headcount=sum(ix.map(i=>salesTeamHeadcount(id,i)));
   return headcount?(revenue-cost)/headcount:null;
 }
+function salesContributionMetric(id){return salesContributionMetricForIndexes(id,selectedSalesIndexes());}
 function salesRoi(id,i){const cost=salesTeamCost(id,i); return cost?salesTeamRevenue(id,i)/cost:null;}
 function salesAverageRoi(i){
   const teams=salesTeams();
@@ -3011,8 +3048,39 @@ function salesFilterHtml(key){
   return `<div class="chart-filter">${options.map(t=>`<label class="${active.includes(t.id)?'active':''}"><input type="checkbox" ${active.includes(t.id)?'checked':''} onchange="toggleSalesSeries('${key}','${t.id}',this.checked)">${t.label}</label>`).join('')}</div>`;
 }
 function salesCard(title,sub,canvas,key=null,tall=true,action=''){
+  if(canvas==='salesContributionBar') sub=salesContributionSubtitle();
   const actions=`${action||''}${key?salesFilterHtml(key):''}`;
   return `<div class="chart-card"><div class="${chartHeaderClass(actions)}"><div><div class="chart-card-title-row"><div class="chart-title">${title}</div></div><div class="chart-sub">${sub||''}</div></div>${actions?`<div class="${chartActionClass(actions)}">${actions}</div>`:''}</div><div class="chart-body ${tall?'tall':''}"><canvas id="${canvas}"></canvas></div></div>`;
+}
+function salesPeriodText(period=state.period,view=state.view){
+  return view==='ytd'?`YTD ${monthLabelLong(period)}`:monthLabelLong(period);
+}
+function salesIndexesForPeriod(period=state.period,view=state.view){
+  const m=DASH.sales.months||[];
+  if(view==='ytd') return ytdRange(m,period).filter(i=>i>=0);
+  const i=idx(m,period);
+  return i>=0?[i]:[];
+}
+function selectedSalesIndexes(){return salesIndexesForPeriod(state.period,state.view);}
+function salesNoDataMessage(){
+  return `No Sales_Team data is available for ${salesPeriodText()}. Select a period from January 2025 onward.`;
+}
+function noDataStateHtml(message=salesNoDataMessage()){
+  return `<div class="no-data-state"><div><strong>No data for selected period</strong>${h(message)}</div></div>`;
+}
+function setChartNoData(canvasId,message=salesNoDataMessage()){
+  const canvas=el(canvasId);
+  if(!canvas || !canvas.parentElement) return;
+  destroy(canvasId);
+  canvas.parentElement.innerHTML=noDataStateHtml(message);
+}
+function salesContributionSubtitle(){
+  const currentIx=selectedSalesIndexes();
+  if(!currentIx.length) return salesNoDataMessage();
+  const priorPeriod=prevYearMonth(state.period);
+  const priorIx=salesIndexesForPeriod(priorPeriod,state.view);
+  if(priorIx.length) return `${salesPeriodText()} vs ${salesPeriodText(priorPeriod,state.view)}; click current-period bars for calculation.`;
+  return `${salesPeriodText()} shown only; prior-year Sales_Team data unavailable. Click bars for calculation.`;
 }
 function renderSales(){
   const labels=chartMonthsFromSource(DASH.sales.months);
@@ -3022,21 +3090,33 @@ function renderSales(){
 }
 function renderSalesCharts(){
   const m=DASH.sales.months, teams=salesTeams(), labels=chartMonthsFromSource(m);
-  const selectedIndexForSales=idx(m,state.period);
-  const contribValues=teams.map(t=>salesContributionMetric(t.id));
+  const currentIx=selectedSalesIndexes();
+  if(!currentIx.length){
+    ['salesContributionBar','salesRoiLine','salesContributionTrend','salesVolumeAgentLine','salesHeadcount'].forEach(id=>setChartNoData(id));
+    return;
+  }
+  const priorPeriod=prevYearMonth(state.period);
+  const priorIx=salesIndexesForPeriod(priorPeriod,state.view);
+  const currentContributionValues=teams.map(t=>salesContributionMetricForIndexes(t.id,currentIx));
+  const priorContributionValues=teams.map(t=>salesContributionMetricForIndexes(t.id,priorIx));
+  const currentContributionDatasetIndex=priorIx.length?1:0;
+  const contributionDatasets=priorIx.length
+    ? [dsBar(salesPeriodText(priorPeriod,state.view),priorContributionValues,C.blueLight),dsBar(salesPeriodText(),currentContributionValues,C.navy)]
+    : [dsBar(salesPeriodText(),currentContributionValues,C.navy)];
   chart('salesContributionBar',{
     type:'bar',
-    data:{labels:teams.map(t=>t.label),datasets:[dsBar('Contribution per Agent',contribValues,C.navy)]},
+    data:{labels:teams.map(t=>t.label),datasets:contributionDatasets},
     options:withBarDataLabels({
       ...baseOptions('usd',false),
       interaction:{mode:'nearest',intersect:true},
       onHover:(event,elements,chartObj)=>{
         const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
-        event.native.target.style.cursor=active.length?'pointer':'default';
+        event.native.target.style.cursor=(active.length && active[0].datasetIndex===currentContributionDatasetIndex)?'pointer':'default';
       },
       onClick:(event,elements,chartObj)=>{
         const active=chartObj.getElementsAtEventForMode(event,'nearest',{intersect:true},true);
         if(!active.length) return;
+        if(active[0].datasetIndex!==currentContributionDatasetIndex) return;
         openSalesContributionDrilldown(teams[active[0].index].id);
       }
     }),
@@ -3070,17 +3150,18 @@ function renderSalesCharts(){
   const volumeRange=applyTrendRange('salesVolumeAgentLine',labels,volumeDatasets);
   lineChart('salesVolumeAgentLine',volumeRange.labels,volumeRange.datasets,'num');
 
-  const totalHc=m.map((_,i)=>teams.reduce((a,t)=>a+salesTeamHeadcount(t.id,i),0));
-  const selectedIx=idx(m,state.period);
-  const headcountColors=m.map((_,i)=>i===selectedIx?C.navy:'rgba(53,72,148,.28)');
+  const totalHc=labels.map(month=>{
+    const i=idx(m,month);
+    return i<0?null:teams.reduce((a,t)=>a+salesTeamHeadcount(t.id,i),0);
+  });
+  const headcountColors=labels.map(month=>month===state.period?C.navy:'rgba(53,72,148,.28)');
   chart('salesHeadcount',{
     type:'bar',
     data:{labels,datasets:[{...dsBar('Total Sales Team Headcount',totalHc,C.navy),backgroundColor:headcountColors,borderColor:C.navy}]},
-    options:withBarDataLabels({...baseOptions('num',false),onClick:(evt,elements)=>{ if(elements.length) openSalesHeadcountDrilldown(elements[0].index); }},{format:'num',forceOutside:true,color:C.navy}),
+    options:withBarDataLabels({...baseOptions('num',false),onClick:(evt,elements)=>{ if(elements.length){ const monthIndex=idx(m,labels[elements[0].index]); if(monthIndex>=0) openSalesHeadcountDrilldown(monthIndex); } }},{format:'num',forceOutside:true,color:C.navy}),
     plugins:[barDataLabelPlugin]
   });
 }
-function selectedSalesIndexes(){const m=DASH.sales.months; if(state.view==='ytd'){const r=ytdRange(m,state.period).filter(i=>i>=0); return r.length?r:[m.length-1];} const i=idx(m,state.period); return i>=0?[i]:[m.length-1];}
 function salesPeriodAgg(id){
   const ix=selectedSalesIndexes(); const rev=sum(ix.map(i=>salesTeamRevenue(id,i))); const vol=sum(ix.map(i=>salesTeamVolume(id,i))); const aov=vol?rev/vol:null;
   return {rev,vol,aov};
@@ -3090,16 +3171,26 @@ function renderSalesBubble(){
   const datasets=teams.map(t=>{const a=salesPeriodAgg(t.id); return {type:'bubble',label:t.label,backgroundColor:t.color+'99',borderColor:t.color,borderWidth:2,data:[{x:a.vol,y:a.aov,r:8+Math.sqrt(a.rev/maxRev)*26,revenue:a.rev}]};});
   chart('salesBubble',{type:'bubble',data:{datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,boxWidth:8,padding:16,font:{weight:700}}},tooltip:{callbacks:{label:(ctx)=>`${ctx.dataset.label}: Volume ${fInt(ctx.raw.x)}, AOV ${fUSD(ctx.raw.y,false)}, Revenue ${fUSD(ctx.raw.revenue,false)}`}}},scales:{x:{title:{display:true,text:'Sales Volume'},beginAtZero:true,min:0,grid:{color:C.grid},ticks:yTicks('num')},y:{title:{display:true,text:'AOV'},beginAtZero:false,min:0,grid:{color:C.grid},ticks:yTicks('usd')}}}});
 }
-function salesTableValue(id,fn){const ix=selectedSalesIndexes(); return state.view==='ytd'?sum(ix.map(i=>fn(id,i))):fn(id,ix[0]);}
+function salesTableValue(id,fn){
+  const ix=selectedSalesIndexes();
+  if(!ix.length) return null;
+  return state.view==='ytd'?sum(ix.map(i=>fn(id,i))):fn(id,ix[0]);
+}
 function renderSalesTable(){
+  const ix=selectedSalesIndexes();
+  if(!ix.length){
+    el('salesTable').innerHTML=`<tr><td class="no-data-table-cell" colspan="8">${h(salesNoDataMessage())}</td></tr>`;
+    return;
+  }
   const teams=salesTeams();
-  const rows=teams.map(t=>{const revenue=salesTableValue(t.id,salesTeamRevenue); const volume=salesTableValue(t.id,salesTeamVolume); const salary=salesTableValue(t.id,salesTeamSalary); const incentive=salesTableValue(t.id,salesTeamIncentive); const cost=salary+incentive; const hc=state.view==='ytd'?salesTableValue(t.id,salesTeamHeadcount):salesTeamHeadcount(t.id,selectedSalesIndexes()[0]); const aov=volume?revenue/volume:null; const roi=cost?revenue/cost:null; const contrib=hc?(revenue-cost)/hc:null; return {t,revenue,volume,cost,hc,aov,roi,contrib};});
+  const rows=teams.map(t=>{const revenue=salesTableValue(t.id,salesTeamRevenue); const volume=salesTableValue(t.id,salesTeamVolume); const salary=salesTableValue(t.id,salesTeamSalary); const incentive=salesTableValue(t.id,salesTeamIncentive); const cost=salary+incentive; const hc=state.view==='ytd'?salesTableValue(t.id,salesTeamHeadcount):salesTeamHeadcount(t.id,ix[0]); const aov=volume?revenue/volume:null; const roi=cost?revenue/cost:null; const contrib=hc?(revenue-cost)/hc:null; return {t,revenue,volume,cost,hc,aov,roi,contrib};});
   const totals={revenue:sum(rows.map(r=>r.revenue)),volume:sum(rows.map(r=>r.volume)),cost:sum(rows.map(r=>r.cost)),hc:sum(rows.map(r=>r.hc))}; totals.aov=totals.volume?totals.revenue/totals.volume:null; totals.roi=totals.cost?totals.revenue/totals.cost:null; totals.contrib=totals.hc?(totals.revenue-totals.cost)/totals.hc:null;
   el('salesTable').innerHTML=rows.map(r=>`<tr><td>${r.t.label}</td><td>${fUSD(r.revenue,false)}</td><td>${fInt(r.volume)}</td><td>${fUSD(r.aov,false)}</td><td>${fInt(r.hc)}</td><td>${fUSD(r.cost,false)}</td><td>${fRatio(r.roi)}</td><td>${fUSD(r.contrib,false)}</td></tr>`).join('')+`<tr class="total-row"><td>Total</td><td>${fUSD(totals.revenue,false)}</td><td>${fInt(totals.volume)}</td><td>${fUSD(totals.aov,false)}</td><td>${fInt(totals.hc)}</td><td>${fUSD(totals.cost,false)}</td><td>${fRatio(totals.roi)}</td><td>${fUSD(totals.contrib,false)}</td></tr>`;
 }
 function openSalesContributionDrilldown(teamId){
   const teams=salesTeams(); const team=teams.find(t=>t.id===teamId)||teams[0];
   const ix=selectedSalesIndexes();
+  if(!ix.length) return;
   const revenue=sum(ix.map(i=>salesTeamRevenue(teamId,i)));
   const salary=sum(ix.map(i=>salesTeamSalary(teamId,i)));
   const incentive=sum(ix.map(i=>salesTeamIncentive(teamId,i)));
@@ -3452,10 +3543,10 @@ function renderCashTable(){
   tb.innerHTML=rows.map(r=>{
     const type=actuals.has(r.Month)?'Actual':'Forecast';
     const scenarioLabel=type==='Actual'?'Actual':r.Scenario;
-    const rowShade=type==='Actual'?'background:#F8FBFF;':'background:#FFFCF2;';
+    const rowClass=type==='Actual'?'cash-row-actual':'cash-row-forecast';
     const netBurn=r.Net_Cash_Burn!=null?r.Net_Cash_Burn:r.Cash_Burn;
     const grossBurn=r.Gross_Cash_Burn!=null?r.Gross_Cash_Burn:r.Total_Costs;
-    return `<tr style="${rowShade}"><td>${r.Month}</td><td><span class="badge ${type==='Actual'?'good':'watch'}">${type}</span></td><td>${scenarioLabel}</td><td>${fUSD(r.Net_Revenue,false)}</td><td>${fUSD(grossBurn,false)}</td><td class="${netBurn>=0?'pos-var':'neg-var'}">${fUSD(netBurn,false)}</td><td class="${cashBalanceClass(r.Opening_Balance)}">${fUSD(r.Opening_Balance,false)}</td><td class="${cashBalanceClass(r.Closing_Balance)}">${fUSD(r.Closing_Balance,false)}</td><td class="cash-notes-cell">${cashNoteHtml(r.Notes)}</td></tr>`;
+    return `<tr class="${rowClass}"><td>${r.Month}</td><td><span class="badge ${type==='Actual'?'good':'watch'}">${type}</span></td><td>${scenarioLabel}</td><td>${fUSD(r.Net_Revenue,false)}</td><td>${fUSD(grossBurn,false)}</td><td class="${netBurn>=0?'pos-var':'neg-var'}">${fUSD(netBurn,false)}</td><td class="${cashBalanceClass(r.Opening_Balance)}">${fUSD(r.Opening_Balance,false)}</td><td class="${cashBalanceClass(r.Closing_Balance)}">${fUSD(r.Closing_Balance,false)}</td><td class="cash-notes-cell">${cashNoteHtml(r.Notes)}</td></tr>`;
   }).join('');
 }
 
