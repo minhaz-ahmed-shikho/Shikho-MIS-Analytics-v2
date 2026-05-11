@@ -2872,6 +2872,11 @@ function accValue(arr,months,period,view){
   if(view==='ytd') return ytdValue(arr,months,period);
   return val(arr,idx(months,period));
 }
+function accHasMonthData(data,months,period){
+  const periodIndex=idx(months,period);
+  if(periodIndex<0) return false;
+  return Object.values(data||{}).some(arr=>Number.isFinite(val(arr,periodIndex)));
+}
 function accPriorPeriod(period){return prevYearMonth(period);}
 function yearColor(period){
   const yr=currentYearLabel(period);
@@ -2912,11 +2917,15 @@ function renderAccrualCostChart(layer){
   const src=DASH.accrualCosts[layer.sheet]; if(!src) return;
   const months=src.months, data=src.data;
   const currentPeriod=state.period, priorPeriod=accPriorPeriod(state.period);
+  const chartId='accCost_'+layer.id;
+  if(!accHasMonthData(data,months,currentPeriod)){
+    setChartNoData(chartId,`${monthLabelLong(currentPeriod)} accrual data pending.`);
+    return;
+  }
   const labels=[state.view==='ytd'?`YTD ${currentYearLabel(currentPeriod)-1}`:monthLabelLong(priorPeriod), state.view==='ytd'?`YTD ${currentYearLabel(currentPeriod)}`:monthLabelLong(currentPeriod)];
   const totals=[accTotalFromBreakdown(layer,data,months,priorPeriod,state.view),accTotalFromBreakdown(layer,data,months,currentPeriod,state.view)];
   const bg=[yearColor(priorPeriod),yearColor(currentPeriod)];
   const hover=[yearHoverColor(priorPeriod),yearHoverColor(currentPeriod)];
-  const chartId='accCost_'+layer.id;
   chart(chartId,{type:'bar',data:{labels,datasets:[{label:'Total Accrual Cost',data:totals,_labelValues:totals,backgroundColor:bg,borderColor:bg,hoverBackgroundColor:hover,hoverBorderColor:hover,borderRadius:8,borderSkipped:false,maxBarThickness:74,barPercentage:.55,categoryPercentage:.55}]},options:{...cleanAccrualBarOptions(),onHover:(event,elements)=>{event.native.target.style.cursor=elements.length?'pointer':'default';},onClick:(evt,elements)=>{ if(elements.length){ openAccrualDrilldown(layer.id, elements[0].index===0); } }},plugins:[barDataLabelPlugin]});
 }
 function getAccrualContext(isPrior){
@@ -2928,6 +2937,7 @@ function openAccrualDrilldown(layerId,isPrior){
   const layer=costLayers().find(l=>l.id===layerId); if(!layer) return;
   const src=DASH.accrualCosts[layer.sheet]; if(!src) return;
   const ctx=getAccrualContext(isPrior);
+  if(!accHasMonthData(src.data,src.months,ctx.period)) return;
   const rows=accBreakdownKeys(layer,src.data).map(k=>({label:k,amount:accValue(src.data[k],src.months,ctx.period,ctx.view)||0})).filter(r=>Math.abs(r.amount)>0.0001);
   const total=rows.reduce((a,b)=>a+b.amount,0);
   const modal=ensureModal();

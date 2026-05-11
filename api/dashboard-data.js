@@ -454,6 +454,36 @@ function validateActualPeriod(dash, period) {
   ];
 }
 
+const ACCRUAL_WARNING_LABELS = {
+  cogs: "COGS_Accrual",
+  academic: "Academic Support_Accrual",
+  sm: "S&M Cost_Accrual",
+  brand: "Brand Marketing Cost_Accrual",
+  indirect: "Indirect Cost_Accrual"
+};
+
+function hasAnyNumericValueAtPeriod(source, period) {
+  const months = source.months || [];
+  const index = months.indexOf(period);
+  if (index < 0) return false;
+
+  return Object.values(source.data || {}).some(series => {
+    if (!Array.isArray(series)) return false;
+    return Number.isFinite(series[index]);
+  });
+}
+
+function accrualPeriodWarnings(dash, period) {
+  if (!period) return [];
+
+  return Object.entries(ACCRUAL_WARNING_LABELS).flatMap(([key, label]) => {
+    const source = (dash.accrualCosts || {})[key] || {};
+    return hasAnyNumericValueAtPeriod(source, period)
+      ? []
+      : [`${label}: ${period} accrual data pending`];
+  });
+}
+
 function findLatestCompleteActualPeriod(dash, configuredActualPeriod) {
   const ceiling = periodSerial(configuredActualPeriod);
   const months = (dash.pl.months || [])
@@ -496,6 +526,8 @@ function buildPeriodMetadata(dash, meta) {
       `${configuredForecastFrom} is set as Forecast_From in Config, but forecast should start after ${displayActual}. Using ${forecastFrom || "the next period"} for dashboard shading.`
     );
   }
+
+  warnings.push(...accrualPeriodWarnings(dash, displayActual || configuredActual));
 
   return {
     periods: {
