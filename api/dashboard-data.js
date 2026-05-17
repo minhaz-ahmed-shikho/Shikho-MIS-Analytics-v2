@@ -552,8 +552,8 @@ function buildPeriodMetadata(dash, meta) {
 
 async function getGoogleSheetsClient() {
   const sheetId = process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID;
-  const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+  const serviceAccountEmail = cleanText(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL);
+  const privateKey = normalizePrivateKey(process.env.GOOGLE_PRIVATE_KEY);
 
   if (!serviceAccountEmail || !privateKey) {
     return {
@@ -568,7 +568,7 @@ async function getGoogleSheetsClient() {
   const auth = new google.auth.JWT(
     serviceAccountEmail,
     null,
-    privateKey.replace(/\\n/g, "\n"),
+    privateKey,
     ["https://www.googleapis.com/auth/spreadsheets.readonly"]
   );
 
@@ -577,6 +577,34 @@ async function getGoogleSheetsClient() {
     sheets: google.sheets({ version: "v4", auth }),
     sourceMode: "service_account"
   };
+}
+
+function normalizePrivateKey(value) {
+  let key = cleanText(value);
+  if (!key) return "";
+
+  if (key.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(key);
+      key = cleanText(parsed.private_key);
+    } catch (error) {
+      // Keep the original value so auth returns a useful credential error.
+    }
+  }
+
+  if (
+    (key.startsWith('"') && key.endsWith('"')) ||
+    (key.startsWith("'") && key.endsWith("'"))
+  ) {
+    key = key.slice(1, -1);
+  }
+
+  return key
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .trim();
 }
 
 async function readPublicCsvTab(sheetId, tab) {
@@ -683,10 +711,14 @@ module.exports = async function handler(req, res) {
 
     return res.status(200).json(dash);
   } catch (error) {
+    const message = error.message && error.message.includes("DECODER routines")
+      ? "Google Sheets service account private key could not be decoded. Re-save GOOGLE_PRIVATE_KEY from the service account JSON private_key value."
+      : error.message;
+
     return res.status(500).json({
       ok: false,
       stage: "dashboard_data_build",
-      error: error.message
+      error: message
     });
   }
 };
