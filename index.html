@@ -3100,11 +3100,6 @@ function salesContributionSubtitle(){
   if(priorIx.length) return `${salesPeriodText()} vs ${salesPeriodText(priorPeriod,state.view)}; click any bar for calculation.`;
   return `${salesPeriodText()} shown only; prior-year Sales_Team data unavailable. Click bars for calculation.`;
 }
-const SALES_INCENTIVE_FORECAST_PERIOD='Apr-26';
-const SALES_INCENTIVE_FORECAST_NOTE='April incentives are forecasted; final payouts may vary.';
-function salesIncentiveForecastApplies(period=state.period){return period===SALES_INCENTIVE_FORECAST_PERIOD;}
-function salesIncentiveForecastChipHtml(){return `<span class="sales-forecast-note">${icon('alert','sales-note-icon')}${SALES_INCENTIVE_FORECAST_NOTE}</span>`;}
-function salesIncentiveForecastNoteHtml(period=state.period){return salesIncentiveForecastApplies(period)?`<div class="sales-note-row">${salesIncentiveForecastChipHtml()}</div>`:'';}
 function salesContributionValueForSeries(id,i){return i<0?null:(id==='avg'?salesAverageContributionPerAgent(i):salesContributionPerAgent(id,i));}
 function salesContributionYoyOptions(){return salesSeriesOptions('salesContributionActive');}
 function salesContributionYoyMetric(){
@@ -3147,7 +3142,7 @@ function salesContributionYoySubtitle(){
 }
 function renderSales(){
   const labels=chartMonthsFromSource(DASH.sales.months);
-  const body=`${salesIncentiveForecastNoteHtml()}<div class="chart-grid">${salesCard('Contribution per Agent','Revenue less salaries + incentives, divided by headcount; click bars for calculation','salesContributionBar',null,true,drillNote())}${salesCard('Sales ROI','Sales ROI = revenue / sales salaries and incentives.','salesRoiLine','salesRoiActive',true,trendRangeControl('salesRoiLine',labels))}</div><div class="chart-grid">${salesCard('Contribution per Agent Trend','Contribution per agent = revenue per agent minus salary and incentive cost per agent.','salesContributionTrend','salesContributionActive',true,trendRangeControl('salesContributionTrend',labels))}${salesCard('Sales Volume per Agent by Team','Sales volume per agent = sales volume / sales team headcount.','salesVolumeAgentLine','salesVolumeActive',true,trendRangeControl('salesVolumeAgentLine',labels))}</div><div class="chart-grid">${salesCard('Contribution per Agent YoY',salesContributionYoySubtitle(),'salesContributionYoyLine',null,true,salesContributionYoyControl())}${salesCard('Sales Team Headcount','Total headcount trend; selected month is highlighted; click any bar to see team breakdown','salesHeadcount',null,true,drillNote())}</div><div class="table-wrap"><table><thead><tr><th>Team</th><th>Revenue</th><th>Sales Volume</th><th>AOV</th><th>Headcount</th><th>Salaries + Incentives</th><th>Sales ROI</th><th>Contribution/Agent</th></tr></thead><tbody id="salesTable"></tbody></table></div>`;
+  const body=`<div class="chart-grid">${salesCard('Contribution per Agent','Revenue less salaries + incentives, divided by headcount; click bars for calculation','salesContributionBar',null,true,drillNote())}${salesCard('Sales ROI','Sales ROI = revenue / sales salaries and incentives.','salesRoiLine','salesRoiActive',true,trendRangeControl('salesRoiLine',labels))}</div><div class="chart-grid">${salesCard('Contribution per Agent Trend','Contribution per agent = revenue per agent minus salary and incentive cost per agent.','salesContributionTrend','salesContributionActive',true,trendRangeControl('salesContributionTrend',labels))}${salesCard('Sales Volume per Agent by Team','Sales volume per agent = sales volume / sales team headcount.','salesVolumeAgentLine','salesVolumeActive',true,trendRangeControl('salesVolumeAgentLine',labels))}</div><div class="chart-grid">${salesCard('Contribution per Agent YoY',salesContributionYoySubtitle(),'salesContributionYoyLine',null,true,salesContributionYoyControl())}${salesCard('Sales Team Headcount','Total headcount trend; selected month is highlighted; click any bar to see team breakdown','salesHeadcount',null,true,drillNote())}</div><div class="table-wrap"><table><thead><tr><th>Team</th><th>Revenue</th><th>Sales Volume</th><th>AOV</th><th>Headcount</th><th>Salaries + Incentives</th><th>Sales ROI</th><th>Contribution/Agent</th></tr></thead><tbody id="salesTable"></tbody></table></div>`;
   el('main').innerHTML=pageScaffold('sales','Sales Team Efficiency','Productivity, ROI and headcount for revenue execution',5,body);
   setNote('sales'); renderSalesCharts(); renderSalesTable();
 }
@@ -3281,7 +3276,7 @@ function openSalesContributionDrilldown(teamId,period=state.period,view=state.vi
     {label:'Headcount',amount:headcount,type:'count'},
     {label:'Contribution per Agent',amount:contributionPerAgent,type:'perAgent'}
   ];
-  el('drillBody').innerHTML=`${salesIncentiveForecastNoteHtml(period)}<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Calculation Step</th><th>Value</th></tr></thead><tbody>${rows.map(r=>`<tr class="${r.type==='total'||r.type==='perAgent'?'total-row':''}"><td>${r.label}</td><td>${r.type==='count'?fInt(r.amount):fUSD(r.amount,false)}</td></tr>`).join('')}</tbody></table></div></div>`;
+  el('drillBody').innerHTML=`<div class="modal-grid"><div class="modal-chart-box"><canvas id="execDrillChart"></canvas></div><div class="modal-table"><table><thead><tr><th>Calculation Step</th><th>Value</th></tr></thead><tbody>${rows.map(r=>`<tr class="${r.type==='total'||r.type==='perAgent'?'total-row':''}"><td>${r.label}</td><td>${r.type==='count'?fInt(r.amount):fUSD(r.amount,false)}</td></tr>`).join('')}</tbody></table></div></div>`;
   const chartRows=rows.filter(r=>['positive','negative','total','perAgent'].includes(r.type));
   chart('execDrillChart',{
     type:'bar',
