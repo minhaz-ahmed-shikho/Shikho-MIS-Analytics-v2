@@ -154,6 +154,9 @@ table{width:100%;border-collapse:collapse;font-size:12px} th{background:var(--na
 .usd-component-grid{display:grid;grid-template-columns:1fr auto;gap:5px 12px;font-size:11px;font-weight:800;color:var(--muted)}
 .usd-component-grid span:nth-child(even){text-align:right;color:var(--text)}
 .usd-component-grid .col-tax{color:var(--amber)!important}
+.usd-component-grid .vat-label,.usd-component-grid .vat-value{margin-top:2px;padding:5px 8px;background:color-mix(in srgb,var(--magenta) 8%,var(--surface));border-top:1px solid color-mix(in srgb,var(--magenta) 18%,var(--line));border-bottom:1px solid color-mix(in srgb,var(--magenta) 18%,var(--line))}
+.usd-component-grid .vat-label{border-left:1px solid color-mix(in srgb,var(--magenta) 18%,var(--line));border-radius:8px 0 0 8px;color:var(--magenta)}
+.usd-component-grid .vat-value{border-right:1px solid color-mix(in srgb,var(--magenta) 18%,var(--line));border-radius:0 8px 8px 0;color:var(--magenta)!important}
 .usd-component-legend{display:flex;flex-wrap:wrap;gap:9px 14px;margin:0 0 14px;font-size:11px;font-weight:850;color:var(--muted)}
 .usd-legend-item{display:inline-flex;align-items:center;gap:6px}
 .usd-swatch{width:10px;height:10px;border-radius:3px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
@@ -857,6 +860,13 @@ body{
   min-width:0;
   max-width:100%;
 }
+.chart-actions .btn-group{
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.chart-actions .btn-group button{
+  white-space:nowrap;
+}
 .chart-actions.has-filter-actions{
   grid-column:1 / -1;
   width:100%;
@@ -1409,7 +1419,7 @@ const PAGES=[
   ['pl','Budget vs Actual Performance','Revenue, margin and EBITDA control against budget','activity'],
   ['revenue','Revenue Analysis','Channel, course and repeat revenue drivers over time','coins'],
   ['costs','Cost & Margins','COGS, payroll and operating leverage','receipt'],
-  ['usd','USD Payment Structure','Dollar purchase cost build-up and service tax treatment','scale'],
+  ['usd','USD Payment Structure','Dollar purchase cost build-up and VAT impact','scale'],
   ['sales','Sales Team Efficiency','Sales productivity, ROI, headcount and package mix','users'],
   ['growth','Marketing & Growth Efficiency','Platform spend, actual spend and paid user activity','target'],
   ['cash','Cash & Runway','Cash balance, burn and scenario risk','wallet']
@@ -1803,7 +1813,7 @@ function dataStatusHtml(){
 function pageScaffold(id,title,sub,num,body){return `<section class="page ${state.page===id?'active':''}" id="page-${id}"><div class="section-header"><div class="section-left"><div class="section-num">${icon(pageIcon(id))}</div><div><div class="section-title">${title}</div><div class="section-sub">${sub}</div></div></div><div class="view-note" id="note-${id}"></div></div>${body}${dataStatusHtml()}</section>`}
 function hasFilterAction(action=''){
   const value=String(action||'');
-  return value.includes('chart-filter') || value.includes('btn-group');
+  return value.includes('chart-filter');
 }
 function chartHeaderClass(action=''){return `chart-card-header${hasFilterAction(action)?' filter-header':''}`}
 function chartActionClass(action=''){return `chart-actions${hasFilterAction(action)?' has-filter-actions':''}`}
@@ -3158,6 +3168,10 @@ function usdPaymentCategoryTable(period=state.period){
 function usdComponentPct(row,field){
   return row?.vendorBillUsd?((row[field]||0)/row.vendorBillUsd*100):null;
 }
+function usdExtraOverVendor(row){
+  if(!row) return null;
+  return (row.allInCostUsd||0)-(row.vendorBillUsd||0);
+}
 function usdPremiumCard(row,title){
   if(!row) return '';
   const colors=usdComponentColors();
@@ -3168,7 +3182,7 @@ function usdPremiumCard(row,title){
     ['VAT',row.vatUsd||0,colors.vat]
   ];
   const bar=parts.map(([label,value,color])=>value>0?`<div class="usd-component-segment" title="${h(label)}: ${fUSD(value,false)}" style="flex:${value};background:${color}"></div>`:'').join('');
-  return `<div class="usd-premium-card"><div class="usd-premium-head"><div><div class="usd-premium-label">${h(title)}</div><div class="usd-premium-value">${fPct(row.allInUpliftPct,0)}</div></div><div class="usd-rate-value">$${rate==null?'--':rate.toFixed(2)}<span class="subline">per $1 vendor bill</span></div></div><div class="usd-component-bar">${bar}</div><div class="usd-component-grid"><span>BB rate uplift</span><span>${fPct(usdComponentPct(row,'bbRateUpliftUsd'),1)}</span><span>Agency commission</span><span>${fPct(usdComponentPct(row,'agencyCommissionUsd'),1)}</span><span>VAT</span><span>${fPct(usdComponentPct(row,'vatUsd'),1)}</span><span>Tax treatment</span><span class="col-tax">${fUSD(row.taxUsd,false)}</span></div></div>`;
+  return `<div class="usd-premium-card"><div class="usd-premium-head"><div><div class="usd-premium-label">${h(title)}</div><div class="usd-premium-value">${fPct(row.allInUpliftPct,0)}</div></div><div class="usd-rate-value">$${rate==null?'--':rate.toFixed(2)}<span class="subline">per $1 vendor bill</span></div></div><div class="usd-component-bar">${bar}</div><div class="usd-component-grid"><span>BB rate uplift</span><span>${fPct(usdComponentPct(row,'bbRateUpliftUsd'),1)}</span><span>Agency commission</span><span>${fPct(usdComponentPct(row,'agencyCommissionUsd'),1)}</span><span class="vat-label">VAT</span><span class="vat-value">${fPct(usdComponentPct(row,'vatUsd'),1)}</span></div></div>`;
 }
 function usdPaymentPremiumCards(period=state.period){
   const media=usdPaymentSelectedRow('media',period);
@@ -3178,8 +3192,7 @@ function usdPaymentPremiumCards(period=state.period){
   return `<div class="usd-premium-grid">${usdPremiumCard(media,'Media Buying Premium')}${usdPremiumCard(content,'Digital Content Premium')}${usdPremiumCard(total,'Total Blended Premium')}</div>`;
 }
 function usdPaymentInsights(row){
-  const taxText=row?.taxUsd?`${fUSD(row.taxUsd,false)} tax disclosed within agency/tax treatment.`:'Tax is disclosed but not added as a separate waterfall step.';
-  return `<div class="insight-grid"><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('scale')}</span>Service Rules</div><div class="insight-body"><ul><li>Media Buying uses 15% VAT and 0.60% tax treatment.</li><li>Digital Content uses 5% VAT and 0% tax treatment.</li></ul></div></div><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('receipt')}</span>Cost Build-up</div><div class="insight-body"><ul><li>Waterfalls show Vendor Bill, BB rate uplift, agency commission, VAT, and sheet All-in Cost.</li><li>${taxText}</li></ul></div></div><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('wallet')}</span>CEO Read</div><div class="insight-body"><ul><li>Extra payment over BB cost is ${fUSD(row?.extraPaymentOverBbUsd,false)}.</li><li>All-in uplift is ${fPct(row?.allInUpliftPct,0)} on the internal USD-equivalent basis.</li></ul></div></div></div>`;
+  return `<div class="insight-grid"><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('scale')}</span>VAT Rules</div><div class="insight-body"><ul><li>Media Buying uses 15% VAT.</li><li>Digital Content uses 5% VAT.</li></ul></div></div><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('receipt')}</span>Cost Build-up</div><div class="insight-body"><ul><li>Waterfalls show Vendor Bill, BB rate uplift, agency commission, VAT, and sheet All-in Cost.</li><li>VAT is highlighted because it drives the main service-level premium difference.</li></ul></div></div><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('wallet')}</span>CEO Read</div><div class="insight-body"><ul><li>Extra payment over vendor invoice is ${fUSD(usdExtraOverVendor(row),false)}.</li><li>All-in uplift is ${fPct(row?.allInUpliftPct,0)} on the internal USD-equivalent basis.</li></ul></div></div></div>`;
 }
 function renderUsdPayments(){
   state.usdKpiMode=usdServiceMode('usdKpiMode');
@@ -3188,7 +3201,7 @@ function renderUsdPayments(){
   const totalRow=usdPaymentSelectedRow('total');
   if(!totalRow){
     const body=`<div class="chart-grid full"><div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">USD Payment Structure</div><div class="chart-sub">${usdPaymentAvailableText()}</div></div></div><div class="chart-body">${noDataStateHtml(`No USD_Payment_Summary row is available for ${monthLabelLong(state.period)}.`)}</div></div></div>`;
-    el('main').innerHTML=pageScaffold('usd','USD Payment Structure','Dollar purchase cost build-up and service tax treatment',5,body);
+    el('main').innerHTML=pageScaffold('usd','USD Payment Structure','Dollar purchase cost build-up and VAT impact',5,body);
     setNote('usd');
     return;
   }
@@ -3203,12 +3216,12 @@ function renderUsdPayments(){
   const kpis=[
     usdPaymentKpi('Vendor Bill',kpiRow.vendorBillUsd,'Original vendor invoice'),
     usdPaymentKpi('All-in Cost',kpiRow.allInCostUsd,'Internal USD-equivalent basis'),
-    usdPaymentKpi('Total Extra Payment',kpiRow.extraPaymentOverBbUsd,'Over BB-rate cost'),
+    usdPaymentKpi('Total Extra Payment',usdExtraOverVendor(kpiRow),'Over vendor invoice'),
     usdPaymentKpi('Uplift',kpiRow.allInUpliftPct,`${kpiCfg.label} payment structure`,'%',v=>fPct(v,0))
   ].join('');
   const tableTitle=`Category Breakdown (${monthLabelLong(state.period)})`;
   const body=`<div class="usd-control-row"><div class="usd-control-copy"><div class="usd-control-label">KPI View</div><div class="usd-control-sub">${monthLabelLong(state.period)} | ${kpiCfg.label}</div></div>${kpiAction}</div><div class="kpi-grid">${kpis}</div><div class="chart-grid"><div class="chart-card"><div class="${chartHeaderClass(serviceAction)}"><div><div class="chart-card-title-row"><div class="chart-title">Service Build-up Waterfall</div></div><div class="chart-sub">${monthLabelLong(state.period)} | ${serviceCfg.label} | Tax is disclosed outside the additive waterfall</div></div><div class="${chartActionClass(serviceAction)}">${serviceAction}</div></div><div class="chart-body tall">${usdPaymentLegend(true)}<div class="usd-chart-canvas"><canvas id="usdPaymentWaterfall"></canvas></div></div></div><div class="chart-card"><div class="${chartHeaderClass(categoryAction)}"><div><div class="chart-card-title-row"><div class="chart-title">MIS Category Waterfall</div></div><div class="chart-sub">${monthLabelLong(state.period)} | ${h(categoryRow?.misCategory||'No category')} | Category-specific cost build-up</div></div><div class="${chartActionClass(categoryAction)}">${categoryAction}</div></div><div class="chart-body tall">${usdPaymentLegend(true)}<div class="usd-chart-canvas"><canvas id="usdCategoryWaterfall"></canvas></div></div></div></div>${usdPaymentPremiumCards()}<div class="table-wrap"><div class="pl-table-head"><div class="pl-table-title-wrap"><div class="pl-table-title">${tableTitle}</div><div class="pl-table-note">Sheet values are used exactly; totals are not recomputed from category rows.</div></div></div><table class="usd-table"><thead><tr><th>MIS Category</th><th>Service</th><th class="col-vendor">Vendor Bill</th><th class="col-fx">BB Uplift</th><th class="col-agency">Agency Comm.</th><th class="col-tax">Tax</th><th class="col-vat">VAT</th><th>All-in Cost</th><th>Extra Payment</th><th>Uplift</th></tr></thead>${usdPaymentCategoryTable()}</table></div>${usdPaymentInsights(totalRow)}`;
-  el('main').innerHTML=pageScaffold('usd','USD Payment Structure','Dollar purchase cost build-up and service tax treatment',5,body);
+  el('main').innerHTML=pageScaffold('usd','USD Payment Structure','Dollar purchase cost build-up and VAT impact',5,body);
   setNote('usd');
   renderUsdPaymentWaterfall('usdPaymentWaterfall',serviceRow);
   renderUsdPaymentCategoryWaterfall(categoryRow,state.period);
