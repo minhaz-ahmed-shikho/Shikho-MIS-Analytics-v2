@@ -514,7 +514,7 @@ canvas{font-family:'Poppins','Hind Siliguri','Inter',Arial,sans-serif}
 .table-wrap table th:last-child{
   text-align:center;
 }
-.cash-notes-cell,.cash-flow-cell{
+.cash-notes-cell,.cash-flow-cell,th.cash-flow-header{
   text-align:left!important;
   white-space:normal;
 }
@@ -3714,7 +3714,7 @@ function renderCash(){
       </div>
     </div>
     <div class="metric-pills"><span class="pill"><strong>Actuals:</strong> ${cashActualLabel()} shown once only</span><span class="pill"><strong>Forecast:</strong> ${cashForecastRangeLabel()} shaded in the charts</span><span class="pill"><strong>Table scenario:</strong> Forecast rows use the table selector below</span></div>
-    <div class="table-wrap"><div class="pl-table-head"><div class="pl-table-title-wrap"><div class="pl-table-title">Cash Position</div><div class="pl-table-note">Actual rows stay fixed; forecast rows use the selected table scenario.</div></div><div class="pl-controls"><select class="small-select" id="cashTableScenarioSelector">${tableScenarioOptions}</select></div></div><table><thead><tr><th>Month</th><th>Type</th><th>Scenario</th><th>Net Revenue</th><th>Gross Cash Burn</th><th>Net Cash Burn</th><th>Opening</th><th>Closing</th><th>Inflows</th><th>Outflows</th></tr></thead><tbody id="cashTable"></tbody></table></div>`;
+    <div class="table-wrap"><div class="pl-table-head"><div class="pl-table-title-wrap"><div class="pl-table-title">Cash Position</div><div class="pl-table-note">Actual rows stay fixed; forecast rows use the selected table scenario.</div></div><div class="pl-controls"><select class="small-select" id="cashTableScenarioSelector">${tableScenarioOptions}</select></div></div><table><thead><tr><th>Month</th><th>Type</th><th>Scenario</th><th>Net Revenue</th><th>Gross Cash Burn</th><th>Net Cash Burn</th><th>Opening</th><th>Closing</th><th class="cash-flow-header">Inflows</th><th class="cash-flow-header">Outflows</th></tr></thead><tbody id="cashTable"></tbody></table></div>`;
   el('main').innerHTML=pageScaffold('cash','Cash & Runway','Liquidity pressure and scenario planning for management decisions',7,body);
   setNote('cash');
   const n=el('note-cash'); if(n)n.textContent=`Scenario view; forecast starts from ${cashForecastStart()||'the next forecast month'}.`;
