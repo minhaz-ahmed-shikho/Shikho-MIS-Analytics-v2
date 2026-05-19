@@ -746,6 +746,17 @@ async function readAllRequiredTabs(sheets, sheetId) {
   return result;
 }
 
+function val(arr, i) {
+  if (!Array.isArray(arr) || i == null || i < 0 || i >= arr.length) return null;
+  const v = arr[i];
+  return v === undefined || v === null ? null : v;
+}
+
+function idx(months, period) {
+  if (!Array.isArray(months) || !period) return -1;
+  return months.indexOf(period);
+}
+
 function parseScenarios(values) {
   const defaults = [
     { key: "base", label: "Base Case", revMultiplier: 1.00, costMultiplier: 1.00, description: "Current forecast" },
