@@ -1,4 +1,4 @@
-const DEFAULT_SHEET_ID = "1010WS28NGeh6CkQlXX6GoeLfewA_EYDYkp-y-84QqDo";
+const DEFAULT_SHEET_ID = "1McboPqpTdsiQUoScdaN0_cmQPu1tmH_2BfH11VVIWUk";
 const { requireSession } = require("./_auth");
 
 const SHEETS = {
@@ -18,10 +18,12 @@ const SHEETS = {
   CASH: "Cash_Position",
   KPI: "KPI",
   MAU: "MAU_Registrations",
-  USD_PAYMENT_SUMMARY: "USD_Payment_Summary"
+  USD_PAYMENT_SUMMARY: "USD_Payment_Summary",
+  SCENARIOS: "Scenarios"
 };
 
-const REQUIRED_TABS = Object.values(SHEETS);
+const REQUIRED_TABS = Object.values(SHEETS).filter(t => t !== "Scenarios");
+const OPTIONAL_TABS = ["Scenarios"];
 
 function cleanText(value) {
   if (value === undefined || value === null) return "";
@@ -717,10 +719,15 @@ async function readAllRequiredTabs(sheets, sheetId) {
     await Promise.all(REQUIRED_TABS.map(async tab => {
       result[tab] = await readPublicCsvTab(sheetId, tab);
     }));
+    await Promise.all(OPTIONAL_TABS.map(async tab => {
+      try { result[tab] = await readPublicCsvTab(sheetId, tab); }
+      catch (_) { result[tab] = []; }
+    }));
     return result;
   }
 
-  const ranges = REQUIRED_TABS.map(tab => `'${tab}'!A1:AZ1000`);
+  const allTabs = [...REQUIRED_TABS, ...OPTIONAL_TABS];
+  const ranges = allTabs.map(tab => `'${tab}'!A1:AZ1000`);
 
   const response = await sheets.spreadsheets.values.batchGet({
     spreadsheetId: sheetId,
@@ -737,6 +744,181 @@ async function readAllRequiredTabs(sheets, sheetId) {
   }
 
   return result;
+}
+
+function parseScenarios(values) {
+  const defaults = [
+    { key: "base", label: "Base Case", revMultiplier: 1.00, costMultiplier: 1.00, description: "Current forecast" },
+    { key: "bull", label: "Bull Case", revMultiplier: 1.12, costMultiplier: 0.95, description: "+12% revenue, −5% costs" },
+    { key: "bear", label: "Bear Case", revMultiplier: 0.88, costMultiplier: 1.05, description: "−15% revenue, +5% costs" }
+  ];
+  if (!values || values.length < 2) return defaults;
+  const scenarios = [];
+  for (const row of values.slice(1)) {
+    const key = cleanText(row[0]).toLowerCase().replace(/\s+/g, "_");
+    if (!key) continue;
+    scenarios.push({
+      key,
+      label: cleanText(row[1]) || key,
+      revMultiplier: toNumber(row[2]) ?? 1,
+      costMultiplier: toNumber(row[3]) ?? 1,
+      description: cleanText(row[4]) || ""
+    });
+  }
+  return scenarios.length ? scenarios : defaults;
+}
+
+function computeRunway(cashRows, plMonths, plActual, displayActual) {
+  const baseRows = (cashRows || [])
+    .filter(r => r.Scenario === "Base")
+    .sort((a, b) => periodSerial(a.Month) - periodSerial(b.Month));
+
+  if (!baseRows.length) return { months: null, cashOutMonth: null, currentBalance: null, isSafe: false };
+
+  const currentSerial = periodSerial(displayActual);
+  const currentRow = baseRows.find(r => r.Month === displayActual)
+    || baseRows.filter(r => periodSerial(r.Month) <= currentSerial).pop();
+  const currentBalance = currentRow ? currentRow.Closing_Balance : null;
+  if (currentBalance === null) return { months: null, cashOutMonth: null, currentBalance: null, isSafe: false };
+
+  const lastCashRow = baseRows[baseRows.length - 1];
+  const lastCashSerial = periodSerial(lastCashRow.Month);
+
+  let runwayMonths = 0;
+  let cashOutMonth = null;
+
+  for (const row of baseRows) {
+    if (periodSerial(row.Month) <= currentSerial) continue;
+    if (row.Closing_Balance !== null && row.Closing_Balance < 0) {
+      cashOutMonth = row.Month;
+      break;
+    }
+    runwayMonths++;
+  }
+
+  if (!cashOutMonth) {
+    let balance = lastCashRow.Closing_Balance || 0;
+    const extraMonths = (plMonths || []).filter(m => periodSerial(m) > lastCashSerial);
+    for (const m of extraMonths) {
+      const burn = val((plActual || {})["Net Cash Burn"] || [], idx(plMonths, m));
+      if (burn === null) break;
+      balance += burn;
+      if (periodSerial(m) > currentSerial) {
+        runwayMonths++;
+        if (balance < 0) { cashOutMonth = m; break; }
+      }
+    }
+  }
+
+  const lastModeledMonth = (() => {
+    if (!plMonths || !plMonths.length) return lastCashRow.Month;
+    const burnMonths = plMonths.filter(m => {
+      const v = val((plActual || {})["Net Cash Burn"] || [], idx(plMonths, m));
+      return v !== null;
+    });
+    return burnMonths.length ? burnMonths[burnMonths.length - 1] : lastCashRow.Month;
+  })();
+
+  return {
+    months: cashOutMonth ? runwayMonths : null,
+    visibleMonths: runwayMonths,
+    cashOutMonth,
+    currentBalance,
+    isSafe: !cashOutMonth,
+    lastModeledMonth
+  };
+}
+
+function computeEoyLanding(pl, cashRows, scenarios, forecastFrom, budgetYear) {
+  const year = budgetYear || 2026;
+  const yyStr = String(year).slice(-2);
+  const yearMonths = (pl.months || []).filter(m => m.endsWith(`-${yyStr}`));
+  const forecastSerial = periodSerial(forecastFrom);
+
+  const revenueKeys = new Set(["Gross Revenue", "Net Revenue", "Gross Margin"]);
+
+  function sumActual(key, revMult, costMult) {
+    return yearMonths.reduce((sum, m) => {
+      const v = val((pl.actual || {})[key] || [], idx(pl.months, m));
+      if (v === null) return sum;
+      if (periodSerial(m) < forecastSerial) return sum + v;
+      return sum + v * (revenueKeys.has(key) ? revMult : costMult);
+    }, 0);
+  }
+
+  function eoyEbitda(revMult, costMult) {
+    return yearMonths.reduce((sum, m) => {
+      const ebitda = val((pl.actual || {})["EBITDA"] || [], idx(pl.months, m));
+      if (ebitda === null) return sum;
+      if (periodSerial(m) < forecastSerial) return sum + ebitda;
+      const netRev = val((pl.actual || {})["Net Revenue"] || [], idx(pl.months, m)) || 0;
+      const totalCosts = netRev - ebitda;
+      return sum + (netRev * revMult - totalCosts * costMult);
+    }, 0);
+  }
+
+  function sumBudget(key) {
+    return yearMonths.reduce((sum, m) => {
+      const v = val((pl.budget || {})[key] || [], idx(pl.months, m));
+      return sum + (v || 0);
+    }, 0);
+  }
+
+  const budget = {
+    grossRevenue: sumBudget("Gross Revenue"),
+    netRevenue: sumBudget("Net Revenue"),
+    grossMargin: sumBudget("Gross Margin"),
+    ebitda: sumBudget("EBITDA")
+  };
+
+  const baseRows = (cashRows || [])
+    .filter(r => r.Scenario === "Base")
+    .sort((a, b) => periodSerial(a.Month) - periodSerial(b.Month));
+  const lastCashRow = baseRows[baseRows.length - 1];
+  let eoyCashBase = lastCashRow ? lastCashRow.Closing_Balance : null;
+  if (lastCashRow && eoyCashBase !== null) {
+    const lastSerial = periodSerial(lastCashRow.Month);
+    const extraMonths = yearMonths.filter(m => periodSerial(m) > lastSerial);
+    for (const m of extraMonths) {
+      const burn = val((pl.actual || {})["Net Cash Burn"] || [], idx(pl.months, m));
+      if (burn !== null) eoyCashBase += burn;
+    }
+  }
+
+  const scenarioResults = (scenarios || []).map(sc => {
+    let eoyCash = lastCashRow ? lastCashRow.Closing_Balance : null;
+    if (lastCashRow && eoyCash !== null) {
+      const lastSerial = periodSerial(lastCashRow.Month);
+      const extraMonths = yearMonths.filter(m => periodSerial(m) > lastSerial);
+      for (const m of extraMonths) {
+        const netRev = val((pl.actual || {})["Net Revenue"] || [], idx(pl.months, m)) || 0;
+        const burnBase = val((pl.actual || {})["Net Cash Burn"] || [], idx(pl.months, m));
+        if (burnBase !== null) {
+          const costs = netRev - burnBase;
+          eoyCash += netRev * sc.revMultiplier - costs * sc.costMultiplier;
+        }
+      }
+    }
+    return {
+      key: sc.key,
+      label: sc.label,
+      description: sc.description,
+      revMultiplier: sc.revMultiplier,
+      costMultiplier: sc.costMultiplier,
+      grossRevenue: sumActual("Gross Revenue", sc.revMultiplier, sc.costMultiplier),
+      netRevenue: sumActual("Net Revenue", sc.revMultiplier, sc.costMultiplier),
+      grossMargin: sumActual("Gross Margin", sc.revMultiplier, sc.costMultiplier),
+      ebitda: eoyEbitda(sc.revMultiplier, sc.costMultiplier),
+      eoyCash
+    };
+  });
+
+  return {
+    year,
+    budget,
+    scenarios: scenarioResults,
+    cashDataThrough: lastCashRow ? lastCashRow.Month : null
+  };
 }
 
 function buildDash(raw, sourceMode = "service_account") {
@@ -760,6 +942,7 @@ function buildDash(raw, sourceMode = "service_account") {
   const cash = parseCash(raw[SHEETS.CASH] || []);
   const kpi = parseKPI(raw[SHEETS.KPI] || []);
   const usdPayments = parseUsdPaymentSummary(raw[SHEETS.USD_PAYMENT_SUMMARY] || []);
+  const scenarios = parseScenarios(raw[SHEETS.SCENARIOS] || []);
 
   const dash = {
     meta,
@@ -787,10 +970,18 @@ function buildDash(raw, sourceMode = "service_account") {
   };
 
   const periodMetadata = buildPeriodMetadata(dash, meta);
+  const displayActual = periodMetadata.periods ? periodMetadata.periods.displayActual : meta.actualsTo;
+  const forecastFrom = periodMetadata.periods ? periodMetadata.periods.forecastFrom : meta.forecastFrom;
+
+  const runway = computeRunway(cash, pl.months, pl.actual, displayActual);
+  const eoyLanding = computeEoyLanding(pl, cash, scenarios, forecastFrom, meta.budgetYear);
 
   return {
     ...dash,
-    ...periodMetadata
+    ...periodMetadata,
+    scenarios,
+    runway,
+    eoyLanding
   };
 }
 

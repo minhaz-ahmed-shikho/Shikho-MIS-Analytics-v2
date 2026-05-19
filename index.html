@@ -1289,6 +1289,75 @@ body.auth-ready .auth-screen{display:none}
   .main{margin-left:0}
 }
 
+/* ===== Runway Hero Card ===== */
+.runway-hero{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card,22px);padding:22px 26px;box-shadow:var(--shadow);position:relative;overflow:hidden;display:flex;align-items:center;gap:24px;margin-bottom:22px}
+.runway-hero:before{content:'';position:absolute;inset:0 auto 0 0;width:6px;border-radius:6px 0 0 6px}
+.runway-hero.safe:before{background:var(--green)}
+.runway-hero.watch:before{background:var(--amber)}
+.runway-hero.danger:before{background:var(--red)}
+.runway-hero-left{flex:1;min-width:0}
+.runway-hero-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;font-weight:900;color:var(--faint);margin-bottom:8px}
+.runway-hero-value{font-size:52px;line-height:1;font-weight:900;letter-spacing:-2px;margin-bottom:6px}
+.runway-hero.safe .runway-hero-value{color:var(--green)}
+.runway-hero.watch .runway-hero-value{color:var(--amber)}
+.runway-hero.danger .runway-hero-value{color:var(--red)}
+.runway-hero-sub{font-size:12px;font-weight:700;color:var(--muted);line-height:1.4}
+.runway-hero-right{display:flex;flex-direction:column;gap:10px;min-width:220px}
+.runway-stat{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;font-weight:800;color:var(--muted)}
+.runway-stat strong{color:var(--text)}
+.runway-bar-wrap{height:8px;background:#E5E9F2;border-radius:99px;overflow:hidden;margin-top:4px}
+.runway-bar-fill{height:100%;border-radius:99px;transition:width .4s ease}
+.runway-bar-fill.safe{background:var(--green)}
+.runway-bar-fill.watch{background:var(--amber)}
+.runway-bar-fill.danger{background:var(--red)}
+
+/* ===== Exec KPI 5-up grid ===== */
+.exec-kpi-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:22px}
+@media(max-width:1400px){.exec-kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.exec-kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:580px){.exec-kpi-grid{grid-template-columns:1fr}}
+
+/* ===== Scenario Cards ===== */
+.scenario-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:22px}
+@media(max-width:960px){.scenario-grid{grid-template-columns:1fr}}
+.scenario-card{background:var(--card);border:2px solid var(--line);border-radius:var(--radius-card,22px);padding:22px;box-shadow:var(--shadow);cursor:pointer;transition:border-color .18s,box-shadow .18s;position:relative;overflow:hidden}
+.scenario-card.active{border-color:var(--navy);box-shadow:0 0 0 3px rgba(57,78,153,.12),var(--shadow)}
+.scenario-card.bull.active{border-color:var(--green);box-shadow:0 0 0 3px rgba(46,139,102,.12),var(--shadow)}
+.scenario-card.bear.active{border-color:var(--red);box-shadow:0 0 0 3px rgba(224,51,80,.12),var(--shadow)}
+.scenario-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.scenario-label{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;padding:5px 10px;border-radius:999px;display:inline-block}
+.scenario-label.base{background:#EEF2FB;color:var(--navy)}
+.scenario-label.bull{background:var(--green-bg);color:var(--green)}
+.scenario-label.bear{background:var(--red-bg);color:var(--red)}
+.scenario-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;transition:.18s}
+.scenario-card.active .scenario-check{background:var(--navy);border-color:var(--navy)}
+.scenario-card.bull.active .scenario-check{background:var(--green);border-color:var(--green)}
+.scenario-card.bear.active .scenario-check{background:var(--red);border-color:var(--red)}
+.scenario-assumption{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:18px;line-height:1.45}
+.scenario-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.scenario-metric{display:flex;flex-direction:column;gap:3px}
+.scenario-metric-label{font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--faint)}
+.scenario-metric-value{font-size:17px;font-weight:900;color:var(--navy);letter-spacing:-.4px;line-height:1.1}
+.scenario-metric-delta{font-size:10px;font-weight:800}
+.scenario-metric-delta.good{color:var(--green)} .scenario-metric-delta.bad{color:var(--red)} .scenario-metric-delta.watch{color:var(--amber)}
+
+/* ===== Landing page EOY chart area ===== */
+.landing-chart-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:18px}
+@media(max-width:1180px){.landing-chart-grid{grid-template-columns:1fr}}
+.budget-vs-actual-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+@media(max-width:900px){.budget-vs-actual-strip{grid-template-columns:repeat(2,1fr)}}
+.bva-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow)}
+.bva-label{font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--faint);margin-bottom:10px}
+.bva-value{font-size:22px;font-weight:900;color:var(--navy);letter-spacing:-.5px;line-height:1.1;margin-bottom:6px}
+.bva-budget-line{font-size:10.5px;font-weight:800;color:var(--muted);margin-bottom:6px}
+.bva-bar{height:6px;background:#E5E9F2;border-radius:99px;overflow:hidden;margin-bottom:6px}
+.bva-bar-fill{height:100%;border-radius:99px}
+.bva-bar-fill.good{background:var(--green)}
+.bva-bar-fill.watch{background:var(--amber)}
+.bva-bar-fill.bad{background:var(--red)}
+.bva-delta{font-size:10px;font-weight:900}
+.bva-delta.good{color:var(--green)} .bva-delta.bad{color:var(--red)} .bva-delta.watch{color:var(--amber)}
+
 </style>
 </head>
 <body class="auth-pending">
@@ -1419,6 +1488,7 @@ function metricIcon(label){
 function labelIcon(label){return `${icon(metricIcon(label),'kpi-icon')}<span>${label}</span>`;}
 const PAGES=[
   ['exec','Executive Summary','Command-center view of financial health and action signals','dashboard'],
+  ['landing','Year-End Landing','EOY forecast vs budget with scenario planning','target'],
   ['pl','Budget vs Actual Performance','Revenue, margin and EBITDA control against budget','activity'],
   ['revenue','Revenue Analysis','Channel, course and repeat revenue drivers over time','coins'],
   ['costs','Cost & Margins','COGS, payroll and operating leverage','receipt'],
@@ -2157,9 +2227,82 @@ function execTrendCard(){
   const action=`${trendRangeControl('execRev',trendLabels)}<div class="chart-filter" id="execMarginFilter">${filters}</div>`;
   return `<div class="chart-card"><div class="${chartHeaderClass(action)}"><div><div class="chart-card-title-row"><div class="chart-title">Margin Quality Trend</div></div><div class="chart-sub">Monthly margin path through selected period.</div></div><div class="${chartActionClass(action)}">${action}</div></div><div class="chart-body tall"><canvas id="execRev"></canvas></div></div>`;
 }
+function runwayHeroHtml(){
+  const r=DASH.runway||{};
+  const months=r.months;
+  const isSafe=r.isSafe;
+  const balance=r.currentBalance;
+  const cashOut=r.cashOutMonth;
+  const lastModeled=r.lastModeledMonth||'';
+  let cls='watch', label='Months of Runway', valueText='—', subText='';
+  if(isSafe){
+    cls='safe';
+    valueText=`>${r.visibleMonths||'?'}`;
+    subText=`Cash stays positive through ${lastModeled}. No cash-out risk in modeled period.`;
+  } else if(months!=null){
+    cls=months<=3?'danger':months<=6?'watch':'safe';
+    valueText=String(months);
+    subText=`Projected cash-out: ${cashOut||'—'}. Current balance: ${fUSD(balance)}.`;
+  } else {
+    subText=`Current balance: ${fUSD(balance)}. Runway modeled through ${lastModeled||'—'}.`;
+  }
+  const budgetAchievePct=()=>{
+    const base=(DASH.eoyLanding?.scenarios||[]).find(s=>s.key==='base');
+    const budget=DASH.eoyLanding?.budget;
+    if(!base||!budget||!budget.grossRevenue) return null;
+    return base.grossRevenue/budget.grossRevenue*100;
+  };
+  const pct=budgetAchievePct();
+  const barPct=Math.min(100,Math.max(0,pct||0));
+  const barCls=barPct>=95?'safe':barPct>=80?'watch':'danger';
+  return `<div class="runway-hero ${cls}">
+    <div class="runway-hero-left">
+      <div class="runway-hero-label">Months of Runway</div>
+      <div class="runway-hero-value">${valueText}</div>
+      <div class="runway-hero-sub">${subText}</div>
+    </div>
+    <div class="runway-hero-right">
+      <div class="runway-stat"><span>Current Cash</span><strong>${fUSD(balance)}</strong></div>
+      <div class="runway-stat"><span>EOY Rev vs Budget</span><strong>${pct!=null?fPct(pct,0):'—'}</strong></div>
+      <div class="runway-bar-wrap"><div class="runway-bar-fill ${barCls}" style="width:${barPct}%"></div></div>
+      <div class="runway-stat"><span>Cash-out risk</span><strong>${isSafe?'None in range':cashOut||'Assess'}</strong></div>
+    </div>
+  </div>`;
+}
+function execBudgetKpi(label,actual,budget,fmt,lowerIsBetter=false){
+  if(actual==null) return `<div class="kpi-card watch"><div class="kpi-top"><div class="kpi-label">${labelIcon(label)}</div><div class="kpi-status watch">No data</div></div><div class="kpi-value">—</div><div class="kpi-meta"></div></div>`;
+  const hasBudget=budget!=null;
+  const delta=hasBudget?actual-budget:null;
+  const pct=hasBudget?pctChange(actual,budget):null;
+  let klass='watch';
+  if(hasBudget){
+    const isPositive=lowerIsBetter?(actual<=budget):(actual>=budget);
+    klass=isPositive?'good':'bad';
+  }
+  const budgetBadge=hasBudget?`<span class="badge">Budget: ${fmt(budget)}</span>`:'';
+  const deltaBadge=hasBudget?badge(delta,pct,klass,'vs budget'):'';
+  return `<div class="kpi-card ${klass}"><div class="kpi-top"><div class="kpi-label">${labelIcon(label)}</div><div class="kpi-status ${klass}">${klass==='good'?'On track':klass==='bad'?'Off plan':'—'}</div></div><div class="kpi-value">${fmt(actual)}</div><div class="kpi-meta">${budgetBadge}${deltaBadge}</div></div>`;
+}
 function renderExec(){
   const metrics=execMetricSet(state.period,state.view);
-  const body=`<div class="kpi-grid">${execKpi('Gross Revenue',metrics.grossRevenue,metrics.grossRevenuePrior,fUSD)}${execKpi('Gross Margin %',metrics.gmPct,metrics.gmPctPrior,v=>fPct(v))}${execKpi('EBITDA',metrics.ebitda,metrics.ebitdaPrior,fUSD)}${execKpi('Net Cash Burn',metrics.netCashBurn,metrics.netCashBurnPrior,fUSD)}</div><div class="chart-grid">${execTrendCard()}<div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">Revenue & EBITDA vs Prior Year</div></div><div class="chart-sub">Selected period vs prior year.</div></div><div class="chart-actions">${drillNote()}</div></div><div class="chart-body tall"><canvas id="execCompare"></canvas></div></div></div><div class="chart-grid full"><div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">Gross Revenue to EBITDA Bridge</div></div><div class="chart-sub">Revenue, costs and EBITDA flow.</div></div><div class="chart-actions">${drillNote()}</div></div><div class="chart-body tall"><canvas id="execWaterfall"></canvas></div></div></div><div class="insight-grid"><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('sparkles')}</span>Headlines</div><div class="insight-body"><ul id="insightHead"></ul></div></div><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('alert')}</span>Risks</div><div class="insight-body"><ul id="insightRisk"></ul></div></div><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('checklist')}</span>Actions</div><div class="insight-body"><ul id="insightAction"></ul></div></div></div>`;
+  const m=DASH.pl.months, bud=DASH.pl.budget;
+  const periodIdx=idx(m,state.period);
+  const budgetGrossRev=val(bud['Gross Revenue'],periodIdx);
+  const budgetEbitda=val(bud['EBITDA'],periodIdx);
+  const baseLanding=(DASH.eoyLanding?.scenarios||[]).find(s=>s.key==='base');
+  const eoyRevBudget=DASH.eoyLanding?.budget?.grossRevenue;
+  const cashRow=(DASH.cash||[]).filter(r=>r.Scenario==='Base').find(r=>r.Month===state.period)||
+    (DASH.cash||[]).filter(r=>r.Scenario==='Base').sort((a,b)=>periodSerial(b.Month)-periodSerial(a.Month))[0];
+  const cashBalance=cashRow?cashRow.Closing_Balance:null;
+  const hero=runwayHeroHtml();
+  const kpis=`<div class="exec-kpi-grid">
+    ${execKpi('Gross Revenue',metrics.grossRevenue,metrics.grossRevenuePrior,fUSD)}
+    ${execBudgetKpi('Revenue vs Budget',metrics.grossRevenue,budgetGrossRev,fUSD)}
+    ${execBudgetKpi('EBITDA vs Budget',metrics.ebitda,budgetEbitda,fUSD)}
+    ${execBudgetKpi('EOY Revenue Landing',baseLanding?baseLanding.grossRevenue:null,eoyRevBudget,fUSD)}
+    ${execKpi('Net Cash Burn',metrics.netCashBurn,metrics.netCashBurnPrior,fUSD,{lowerIsBetter:true})}
+  </div>`;
+  const body=`${hero}${kpis}<div class="chart-grid">${execTrendCard()}<div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">Revenue & EBITDA vs Prior Year</div></div><div class="chart-sub">Selected period vs prior year.</div></div><div class="chart-actions">${drillNote()}</div></div><div class="chart-body tall"><canvas id="execCompare"></canvas></div></div></div><div class="chart-grid full"><div class="chart-card clickable"><div class="chart-card-header"><div><div class="chart-card-title-row"><div class="chart-title">Gross Revenue to EBITDA Bridge</div></div><div class="chart-sub">Revenue, costs and EBITDA flow.</div></div><div class="chart-actions">${drillNote()}</div></div><div class="chart-body tall"><canvas id="execWaterfall"></canvas></div></div></div><div class="insight-grid"><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('sparkles')}</span>Headlines</div><div class="insight-body"><ul id="insightHead"></ul></div></div><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('alert')}</span>Risks</div><div class="insight-body"><ul id="insightRisk"></ul></div></div><div class="insight-card"><div class="insight-head"><span class="insight-icon">${icon('checklist')}</span>Actions</div><div class="insight-body"><ul id="insightAction"></ul></div></div></div>`;
   el('main').innerHTML=pageScaffold('exec','Executive Summary','Cash basis view of financial health, business health and immediate decisions',1,body);
   setNote('exec');
   renderExecCharts();
@@ -2334,6 +2477,214 @@ function plMarginCard(){
   const action=`${trendRangeControl('plMargin',plTrendMonths())}<div class="chart-filter" id="plMarginToggles"></div>`;
   return `<div class="chart-card"><div class="${chartHeaderClass(action)}"><div><div class="chart-card-title-row"><div class="chart-title">Margin vs Budget</div></div><div class="chart-sub">Monthly GM% and EBITDA% trend for the selected year; budget lines appear only where budget exists</div></div><div class="${chartActionClass(action)}">${action}</div></div><div class="chart-body tall"><canvas id="plMargin"></canvas></div></div>`;
 }
+/* ===== Year-End Landing & Scenarios page ===== */
+function scenarioCardHtml(sc, isActive, baseScenario){
+  const cls=sc.key==='bull'?'bull':sc.key==='bear'?'bear':'';
+  const labelCls=sc.key==='bull'?'bull':sc.key==='bear'?'bear':'base';
+  const budg=DASH.eoyLanding?.budget||{};
+  const eoyYear=DASH.eoyLanding?.year||'';
+  function metricDelta(actual, budget){
+    if(actual==null||budget==null) return '';
+    const pct=pctChange(actual,budget);
+    const good=(actual>=budget);
+    return `<span class="scenario-metric-delta ${good?'good':'bad'}">${good?'▲':'▼'} ${pct!=null?Math.abs(pct).toFixed(0)+'% vs budget':'—'}</span>`;
+  }
+  function ebitdaDelta(actual, budget){
+    if(actual==null||budget==null) return '';
+    const good=(actual>=budget);
+    return `<span class="scenario-metric-delta ${good?'good':'bad'}">${good?'▲':'▼'} ${fUSD(actual-budget)} vs budget</span>`;
+  }
+  const cashLabel=sc.eoyCash!=null?fUSD(sc.eoyCash):'—';
+  const cashNote=DASH.eoyLanding?.cashDataThrough?`<span class="scenario-metric-delta watch">Extrapolated beyond ${DASH.eoyLanding.cashDataThrough}</span>`:'';
+  return `<div class="scenario-card ${cls} ${isActive?'active':''}" onclick="setScenario('${sc.key}')">
+    <div class="scenario-card-head">
+      <span class="scenario-label ${labelCls}">${sc.label}</span>
+      <div class="scenario-check">${isActive?`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+      </div>
+    </div>
+    <div class="scenario-assumption">${h(sc.description)}</div>
+    <div class="scenario-metrics">
+      <div class="scenario-metric">
+        <div class="scenario-metric-label">EOY Revenue</div>
+        <div class="scenario-metric-value">${sc.grossRevenue!=null?fUSD(sc.grossRevenue):'—'}</div>
+        ${metricDelta(sc.grossRevenue,budg.grossRevenue)}
+      </div>
+      <div class="scenario-metric">
+        <div class="scenario-metric-label">EOY EBITDA</div>
+        <div class="scenario-metric-value" style="color:${sc.ebitda!=null&&sc.ebitda>=0?'var(--green)':'var(--red)'}">${sc.ebitda!=null?fUSD(sc.ebitda):'—'}</div>
+        ${ebitdaDelta(sc.ebitda,budg.ebitda)}
+      </div>
+      <div class="scenario-metric">
+        <div class="scenario-metric-label">EOY Gross Margin</div>
+        <div class="scenario-metric-value">${sc.grossMargin!=null?fUSD(sc.grossMargin):'—'}</div>
+        ${metricDelta(sc.grossMargin,budg.grossMargin)}
+      </div>
+      <div class="scenario-metric">
+        <div class="scenario-metric-label">EOY Cash (Dec)</div>
+        <div class="scenario-metric-value">${cashLabel}</div>
+        ${cashNote}
+      </div>
+    </div>
+  </div>`;
+}
+function bvaCardHtml(label, actual, budget, fmt, lowerIsBetter=false){
+  if(actual==null) return `<div class="bva-card"><div class="bva-label">${label}</div><div class="bva-value">—</div></div>`;
+  const hasBudget=budget!=null&&budget!==0;
+  const pct=hasBudget?actual/budget*100:null;
+  const isGood=hasBudget?(lowerIsBetter?actual<=budget:actual>=budget):null;
+  const cls=isGood===null?'watch':isGood?'good':'bad';
+  const barPct=pct!=null?Math.min(120,Math.max(0,pct)):0;
+  const delta=hasBudget?actual-budget:null;
+  return `<div class="bva-card">
+    <div class="bva-label">${label}</div>
+    <div class="bva-value">${fmt(actual)}</div>
+    ${hasBudget?`<div class="bva-budget-line">Budget: ${fmt(budget)}</div><div class="bva-bar"><div class="bva-bar-fill ${cls}" style="width:${barPct}%"></div></div><div class="bva-delta ${cls}">${isGood?'▲':'▼'} ${delta!=null?fmt(Math.abs(delta)):''} (${pct!=null?pct.toFixed(0)+'%':'—'} of budget)</div>`:''}
+  </div>`;
+}
+function renderLanding(){
+  if(!window.landingScenario) window.landingScenario='base';
+  const landing=DASH.eoyLanding||{};
+  const scenarios=landing.scenarios||[];
+  const budget=landing.budget||{};
+  const activeScenario=scenarios.find(s=>s.key===window.landingScenario)||scenarios[0];
+  const baseScenario=scenarios.find(s=>s.key==='base')||scenarios[0];
+  const scenarioCards=scenarios.map(sc=>scenarioCardHtml(sc,sc.key===window.landingScenario,baseScenario)).join('');
+  const bvaStrip=`<div class="budget-vs-actual-strip">
+    ${bvaCardHtml('EOY Gross Revenue',activeScenario?.grossRevenue,budget.grossRevenue,fUSD)}
+    ${bvaCardHtml('EOY Gross Margin',activeScenario?.grossMargin,budget.grossMargin,fUSD)}
+    ${bvaCardHtml('EOY EBITDA',activeScenario?.ebitda,budget.ebitda,fUSD)}
+    ${bvaCardHtml('EOY Cash (Dec)',activeScenario?.eoyCash,null,fUSD)}
+  </div>`;
+  const body=`
+    <div class="scenario-grid">${scenarioCards}</div>
+    ${bvaStrip}
+    <div class="landing-chart-grid">
+      <div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">Monthly Revenue: Actuals + Forecast by Scenario</div><div class="chart-sub">Shaded area = forecast period (${DASH.periods?.forecastFrom||''}–${DASH.periods?.forecastTo||''}). Active scenario highlighted.</div></div><div class="chart-actions">${trendRangeControl('landingRevChart',DASH.pl.months)}</div></div><div class="chart-body tall"><canvas id="landingRevChart"></canvas></div></div>
+      <div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">12-Month Cash Projection</div><div class="chart-sub">Base scenario cash balance. ${landing.cashDataThrough?`Tracked through ${landing.cashDataThrough}; extrapolated beyond.`:''}</div></div></div><div class="chart-body"><canvas id="landingCashChart"></canvas></div></div>
+    </div>
+    <div class="chart-grid full"><div class="chart-card"><div class="chart-card-header"><div><div class="chart-title">EBITDA: Actuals + Forecast by Scenario</div><div class="chart-sub">Monthly EBITDA path with scenario projections.</div></div><div class="chart-actions">${trendRangeControl('landingEbitdaChart',DASH.pl.months)}</div></div><div class="chart-body tall"><canvas id="landingEbitdaChart"></canvas></div></div></div>`;
+  el('main').innerHTML=pageScaffold('landing','Year-End Landing & Scenarios',`${landing.year||''} forecast vs budget — select a scenario to see the impact`,2,body);
+  setNote('landing');
+  renderLandingCharts();
+}
+function setScenario(key){
+  window.landingScenario=key;
+  renderLanding();
+}
+function renderLandingCharts(){
+  const landing=DASH.eoyLanding||{};
+  const scenarios=landing.scenarios||[];
+  const activeScenario=scenarios.find(s=>s.key===window.landingScenario)||scenarios[0];
+  const baseScenario=scenarios.find(s=>s.key==='base')||scenarios[0];
+  const m=DASH.pl.months;
+  const a=DASH.pl.actual;
+  const b=DASH.pl.budget;
+  const forecastFrom=DASH.periods?.forecastFrom||'';
+  const forecastSerial=periodSerial(forecastFrom);
+  const allMonths=m;
+  const labels=allMonths;
+
+  function isForecast(period){ return forecastSerial && periodSerial(period)>=forecastSerial; }
+
+  const revActual=allMonths.map(mo=>isForecast(mo)?null:val(a['Gross Revenue']||[],idx(m,mo)));
+  const revBase=allMonths.map(mo=>isForecast(mo)?val(a['Gross Revenue']||[],idx(m,mo)):null);
+  const revBull=scenarios.find(s=>s.key==='bull');
+  const revBear=scenarios.find(s=>s.key==='bear');
+
+  function scenarioRevSeries(sc){
+    if(!sc) return allMonths.map(()=>null);
+    return allMonths.map(mo=>{
+      if(!isForecast(mo)) return null;
+      const base=val(a['Gross Revenue']||[],idx(m,mo));
+      return base!=null?base*sc.revMultiplier:null;
+    });
+  }
+
+  const budgetRev=allMonths.map(mo=>val(b['Gross Revenue']||[],idx(m,mo)));
+
+  const scColors={base:C.navy,bull:C.green,bear:C.red};
+  const activeKey=window.landingScenario||'base';
+
+  // Revenue chart
+  const revRange=applyTrendRange('landingRevChart',labels,[]);
+  const revLabels=revRange.labels||labels;
+  function sliceToRange(arr){ const start=labels.indexOf(revLabels[0]); const end=labels.indexOf(revLabels[revLabels.length-1]); return arr.slice(start<0?0:start,(end<0?arr.length-1:end)+1); }
+
+  barLineComboChart('landingRevChart', sliceToRange(labels), [
+    {type:'bar',label:'Actual Revenue',data:sliceToRange(revActual),backgroundColor:'rgba(57,78,153,0.55)',borderColor:C.navy,borderWidth:1.5,borderRadius:4},
+    {type:'bar',label:'Base Forecast',data:sliceToRange(revBase),backgroundColor:'rgba(57,78,153,0.22)',borderColor:C.navy,borderWidth:1,borderDash:[],borderRadius:4},
+    ...(revBull?[{type:'line',label:'Bull',data:sliceToRange(scenarioRevSeries(revBull)),borderColor:C.green,backgroundColor:'transparent',borderWidth:activeKey==='bull'?2.5:1.2,borderDash:[4,3],pointRadius:2,tension:0}]:[]),
+    ...(revBear?[{type:'line',label:'Bear',data:sliceToRange(scenarioRevSeries(revBear)),borderColor:C.red,backgroundColor:'transparent',borderWidth:activeKey==='bear'?2.5:1.2,borderDash:[4,3],pointRadius:2,tension:0}]:[]),
+    {type:'line',label:'Budget',data:sliceToRange(budgetRev),borderColor:C.gold,backgroundColor:'transparent',borderWidth:1.5,borderDash:[6,4],pointRadius:0,tension:0}
+  ],'usd');
+
+  // EBITDA chart
+  const ebitdaActual=allMonths.map(mo=>isForecast(mo)?null:val(a['EBITDA']||[],idx(m,mo)));
+  const ebitdaBase=allMonths.map(mo=>isForecast(mo)?val(a['EBITDA']||[],idx(m,mo)):null);
+  function scenarioEbitdaSeries(sc){
+    if(!sc) return allMonths.map(()=>null);
+    return allMonths.map(mo=>{
+      if(!isForecast(mo)) return null;
+      const netRev=val(a['Net Revenue']||[],idx(m,mo))||0;
+      const ebitda=val(a['EBITDA']||[],idx(m,mo));
+      if(ebitda===null) return null;
+      const costs=netRev-ebitda;
+      return netRev*sc.revMultiplier - costs*sc.costMultiplier;
+    });
+  }
+  const budgetEbitda=allMonths.map(mo=>val(b['EBITDA']||[],idx(m,mo)));
+  const ebitdaRange=applyTrendRange('landingEbitdaChart',labels,[]);
+  const eLabels=ebitdaRange.labels||labels;
+  function sliceE(arr){ const start=labels.indexOf(eLabels[0]); const end=labels.indexOf(eLabels[eLabels.length-1]); return arr.slice(start<0?0:start,(end<0?arr.length-1:end)+1); }
+  lineChart('landingEbitdaChart',sliceE(labels),[
+    {label:'Actual EBITDA',data:sliceE(ebitdaActual),borderColor:C.navy,backgroundColor:'rgba(57,78,153,0.10)',fill:{target:'origin',above:'rgba(57,78,153,0.08)',below:'rgba(200,79,94,0.12)'},borderWidth:2.5,pointRadius:2.5,tension:0},
+    {label:'Base Forecast',data:sliceE(ebitdaBase),borderColor:C.navy,backgroundColor:'transparent',borderWidth:2,borderDash:[5,4],pointRadius:2,tension:0},
+    ...(revBull?[{label:'Bull EBITDA',data:sliceE(scenarioEbitdaSeries(revBull)),borderColor:C.green,backgroundColor:'transparent',borderWidth:activeKey==='bull'?2.5:1.2,borderDash:[4,3],pointRadius:2,tension:0}]:[]),
+    ...(revBear?[{label:'Bear EBITDA',data:sliceE(scenarioEbitdaSeries(revBear)),borderColor:C.red,backgroundColor:'transparent',borderWidth:activeKey==='bear'?2.5:1.2,borderDash:[4,3],pointRadius:2,tension:0}]:[]),
+    {label:'Budget',data:sliceE(budgetEbitda),borderColor:C.gold,backgroundColor:'transparent',borderWidth:1.5,borderDash:[6,4],pointRadius:0,tension:0}
+  ],'usd');
+
+  // Cash chart
+  const cashRows=(DASH.cash||[]).filter(r=>r.Scenario==='Base').sort((a,b)=>periodSerial(a.Month)-periodSerial(b.Month));
+  const cashMonths=cashRows.map(r=>r.Month);
+  const cashClose=cashRows.map(r=>r.Closing_Balance);
+  const lastCashRow=cashRows[cashRows.length-1];
+  const lastCashSerial=lastCashRow?periodSerial(lastCashRow.Month):-Infinity;
+  const extraMonths=m.filter(mo=>periodSerial(mo)>lastCashSerial&&periodSerial(mo)<=periodSerial(DASH.periods?.forecastTo||'Dec-26'));
+  let runningBal=lastCashRow?lastCashRow.Closing_Balance:0;
+  const extraClose=extraMonths.map(mo=>{
+    const burn=val(a['Net Cash Burn']||[],idx(m,mo));
+    if(burn!==null) runningBal+=burn;
+    return runningBal;
+  });
+  const allCashMonths=[...cashMonths,...extraMonths];
+  const allCashClose=[...cashClose,...extraClose];
+  const isExtrapolated=allCashMonths.map((_,i)=>i>=cashMonths.length);
+  const cashBgColors=allCashClose.map((v,i)=>isExtrapolated[i]?'rgba(57,78,153,0.20)':v<0?'rgba(200,79,94,0.7)':v<100000?'rgba(185,120,24,0.65)':'rgba(46,139,102,0.7)');
+  barLineComboChart('landingCashChart',allCashMonths,[
+    {type:'bar',label:'Cash Balance',data:allCashClose,backgroundColor:cashBgColors,borderRadius:4,borderWidth:0},
+    {type:'line',label:'Zero line',data:allCashMonths.map(()=>0),borderColor:'rgba(200,79,94,0.4)',borderWidth:1,borderDash:[4,3],pointRadius:0,fill:false}
+  ],'usd');
+}
+
+function barLineComboChart(id,labels,datasets,yType='usd'){
+  destroy(id);
+  const canvas=el(id); if(!canvas) return;
+  const isUsd=yType==='usd';
+  const fmt=isUsd?v=>(v==null?'':fUSD(v,false)):v=>(v==null?'':fPct(v,0));
+  charts[id]=new Chart(canvas,{
+    data:{labels,datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'top',labels:{font:{family:'Poppins,Inter,sans-serif',weight:'700',size:11},usePointStyle:true,boxWidth:10}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`}}},
+      scales:{
+        x:{grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{family:'Poppins,Inter,sans-serif',weight:'700',size:10},maxRotation:45,minRotation:0}},
+        y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{family:'Poppins,Inter,sans-serif',weight:'700',size:10},callback:fmt}}
+      }
+    }
+  });
+}
+
 function renderPL(){
   state.plExpanded=state.plExpanded||{};
   const compareMode=state.plCompare||'budget';
@@ -4373,7 +4724,7 @@ function renderWaterfallStepDrilldown(cfg,ctx){
   else renderWaterfallStepSingleDrilldown(cfg,ctx);
 }
 
-function render(){renderNav(); el('topbarTitle').textContent='Shikho MIS Analytics'; const current=PAGES.find(p=>p[0]===state.page); const subtitle=el('topbarSubtitle'); if(subtitle) subtitle.textContent=current?current[2]:'Finance control room'; Object.keys(charts).forEach(destroy); if(state.page==='exec')renderExec(); if(state.page==='pl')renderPL(); if(state.page==='revenue')renderRevenue(); if(state.page==='costs')renderCosts(); if(state.page==='usd')renderUsdPayments(); if(state.page==='sales')renderSales(); if(state.page==='growth')renderGrowth(); if(state.page==='cash')renderCash(); renderNav();}
+function render(){renderNav(); el('topbarTitle').textContent='Shikho MIS Analytics'; const current=PAGES.find(p=>p[0]===state.page); const subtitle=el('topbarSubtitle'); if(subtitle) subtitle.textContent=current?current[2]:'Finance control room'; Object.keys(charts).forEach(destroy); if(state.page==='exec')renderExec(); if(state.page==='landing')renderLanding(); if(state.page==='pl')renderPL(); if(state.page==='revenue')renderRevenue(); if(state.page==='costs')renderCosts(); if(state.page==='usd')renderUsdPayments(); if(state.page==='sales')renderSales(); if(state.page==='growth')renderGrowth(); if(state.page==='cash')renderCash(); renderNav();}
 function goto(p){
   const previous=state.page;
   state.page=p;
